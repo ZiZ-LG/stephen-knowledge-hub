@@ -311,8 +311,17 @@ describe('SAAS-608 bounded filesystem CLI', () => {
     );
     const approvalPath = join(dirname(promotionPath), 'approval.json');
     const publishedPath = join(root, 'src/content/published/ED-FIXTURE-REVIEWED.json');
+    const sitemapPath = join(root, 'public/sitemap.xml');
     const manifestBytes = await readFile(FIXTURE_MANIFEST, 'utf8');
     const ledgerBytes = await readFile(FIXTURE_LEDGER, 'utf8');
+    const baseSitemap = [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+      '  <url><loc>https://stephen.lake2ocean.top/</loc></url>',
+      '  <url><loc>https://stephen.lake2ocean.top/items/seed-item/</loc></url>',
+      '</urlset>',
+      '',
+    ].join('\n');
 
     const installInputs = async () => {
       await mkdir(dirname(manifestPath), { recursive: true });
@@ -341,11 +350,36 @@ describe('SAAS-608 bounded filesystem CLI', () => {
 
     try {
       await installInputs();
+      await mkdir(dirname(sitemapPath), { recursive: true });
+      await writeFile(sitemapPath, baseSitemap, 'utf8');
       await chmod(manifestPath, 0o755);
       const executable = run(promoteArgs);
       expect(executable.status).toBe(1);
       expect(executable.stderr).toContain('review manifest must be a regular non-executable file');
       await chmod(manifestPath, 0o644);
+
+      await writeFile(sitemapPath, `${baseSitemap}unexpected trailing content`, 'utf8');
+      const malformedSitemap = run(promoteArgs);
+      expect(malformedSitemap.status).toBe(1);
+      expect(malformedSitemap.stderr)
+        .toContain('public sitemap must contain exactly one final urlset closing tag');
+      await expect(readFile(manifestPath, 'utf8')).resolves.toBe(manifestBytes);
+      await expect(readFile(publishedPath, 'utf8')).rejects.toMatchObject({ code: 'ENOENT' });
+
+      const promotedLocation = 'https://stephen.lake2ocean.top/items/fixture-reviewed-inference-tier/';
+      await writeFile(
+        sitemapPath,
+        baseSitemap.replace('</urlset>', `  <url><loc>${promotedLocation}</loc></url>\n</urlset>`),
+        'utf8',
+      );
+      const duplicateSitemap = run(promoteArgs);
+      expect(duplicateSitemap.status).toBe(1);
+      expect(duplicateSitemap.stderr)
+        .toContain('public sitemap already contains promoted item: fixture-reviewed-inference-tier');
+      await expect(readFile(ledgerPath, 'utf8')).resolves.toBe(ledgerBytes);
+      await expect(readFile(promotionPath, 'utf8')).rejects.toMatchObject({ code: 'ENOENT' });
+
+      await writeFile(sitemapPath, baseSitemap, 'utf8');
       const promoted = run(promoteArgs);
       expect(promoted.status, promoted.stderr).toBe(0);
       expect(JSON.parse(promoted.stdout)).toMatchObject({
@@ -362,6 +396,12 @@ describe('SAAS-608 bounded filesystem CLI', () => {
       expect(JSON.parse(await readFile(promotionPath, 'utf8'))).toMatchObject({
         candidateSha: CANDIDATE_SHA,
       });
+      const promotedSitemap = await readFile(sitemapPath, 'utf8');
+      expect(promotedSitemap.match(
+        /https:\/\/stephen\.lake2ocean\.top\/items\/fixture-reviewed-inference-tier\//g,
+      )).toEqual([promotedLocation]);
+      expect(promotedSitemap).toContain('<lastmod>2026-08-27</lastmod>');
+      expect(promotedSitemap).toContain('https://stephen.lake2ocean.top/items/seed-item/');
       await expect(readFile(manifestPath, 'utf8')).rejects.toMatchObject({ code: 'ENOENT' });
       await expect(readFile(ledgerPath, 'utf8')).rejects.toMatchObject({ code: 'ENOENT' });
 
