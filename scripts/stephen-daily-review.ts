@@ -1192,8 +1192,9 @@ function renderPrBody(
     '',
     `1. 打开 \`${context.manifestPath}\`，逐条核对原文、候选摘要和风险提示。`,
     '2. 不合格拟发布候选请删除 `candidates` 中对应的完整对象；已处理的采集异常请删除 `manualReviewRecords` 中对应的完整对象。',
-    '3. 发现 ledger 会保留被删除对象的 ID，后续同日运行不会把它重新加回。',
-    '4. 保留条目仍是 `pending_owner_review / not_published`。本 Draft PR 不能代表批准或发布。',
+    '3. 为每个保留候选人工补齐并复核 `publicationDraft`；字段说明见 `docs/reviewed-release-runbook.md`。AI 生成的字段不能替代这一步。',
+    '4. 发现 ledger 会保留被删除对象的 ID，后续同日运行不会把它重新加回。',
+    '5. 保留条目仍是 `pending_owner_review / not_published`。只有项目所有者对当前完整 SHA 发起独立批准，才会进入正式集合。',
     '',
     '## 拟发布条目',
     '',
@@ -1212,6 +1213,7 @@ function renderPrBody(
         `  - 风险：\`${candidate.riskLevel}\` · ${reasons}`,
         `  - 候选摘要：${markdownText(candidate.editorialDraft.summaryZh, 240)}`,
         `  - 文案模式：\`${candidate.editorialDraft.mode}\`；审核状态：\`pending_owner_review\`；发布状态：\`not_published\``,
+        `  - 正式内容字段：\`${candidate.publicationDraft ? 'complete-for-owner-review' : 'publicationDraft-required'}\``,
         '',
       );
     });

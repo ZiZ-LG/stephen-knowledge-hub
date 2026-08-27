@@ -504,6 +504,9 @@ describe('SAAS-606 same-day Draft PR review state', () => {
     expect(artifacts.prBody).toContain('fixture 验收');
     expect(artifacts.prBody).toContain('删除 `candidates` 中对应的完整对象');
     expect(artifacts.prBody).toContain('删除 `manualReviewRecords` 中对应的完整对象');
+    expect(artifacts.prBody).toContain('`publicationDraft`');
+    expect(artifacts.prBody).toContain('`publicationDraft-required`');
+    expect(artifacts.prBody).toContain('当前完整 SHA');
     expect(artifacts.prBody).toContain('不会修改正式公开集合');
     expect(artifacts.prBody).toContain('本仓库是 public 仓库');
     expect(artifacts.prBody).toContain('会随本 Draft PR 对公众可见');
