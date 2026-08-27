@@ -8,10 +8,10 @@ import {
 
 const FULL_GIT_SHA = /^[0-9a-f]{40}$/;
 const SHA256 = /^[0-9a-f]{64}$/;
+const SHA256_WITH_ALGORITHM = /^sha256:[0-9a-f]{64}$/;
 const SAFE_REPOSITORY = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const SAFE_ITEM_ID = /^[A-Z0-9]+(?:-[A-Z0-9]+)*$/;
 
-export const REVIEWED_RELEASE_CHECK_NAME = 'stephen-reviewed-release';
 export const RELEASE_TAG_SUFFIX_RULE = '<seal-sha-12>';
 
 export interface PromotedCandidateProvenance {
@@ -556,14 +556,31 @@ export interface ReviewedReleasePullRequest {
   readonly baseRef: string;
 }
 
-export interface ReviewedReleaseCheckRun {
+export interface ReviewedApprovalHandoffArtifact {
+  readonly id: number;
   readonly name: string;
-  readonly headSha: string;
+  readonly expired: boolean;
+  readonly digest: string;
+  readonly workflowRunId: number;
+}
+
+export interface ReviewedApprovalJobStep {
+  readonly number: number;
+  readonly name: string;
   readonly status: string;
   readonly conclusion: string | null;
-  readonly appSlug: string;
-  readonly externalId: string | null;
-  readonly detailsUrl: string | null;
+}
+
+export interface ReviewedApprovalJob {
+  readonly name: string;
+  readonly status: string;
+  readonly conclusion: string | null;
+  readonly steps: readonly ReviewedApprovalJobStep[];
+}
+
+export interface ReviewedExactSealRebuild {
+  readonly sealSha: string;
+  readonly verified: boolean;
 }
 
 export interface ReviewedApprovalWorkflowRun {
@@ -616,8 +633,10 @@ export interface ReviewedReleaseRequestInput {
   readonly mergeReachableFromDefault: boolean;
   readonly payload: ReviewedReleaseHandoffPayload;
   readonly pr: ReviewedReleasePullRequest;
-  readonly checkRuns: readonly ReviewedReleaseCheckRun[];
   readonly approvalRun: ReviewedApprovalWorkflowRun;
+  readonly approvalArtifact: ReviewedApprovalHandoffArtifact;
+  readonly approvalJob: ReviewedApprovalJob;
+  readonly exactSealRebuild: ReviewedExactSealRebuild;
   readonly writeCollaborators: readonly ReviewedRepositoryWriteCollaborator[];
   readonly releaseTagRuleset: ReviewedReleaseTagRuleset;
   readonly immutableReleases: { readonly enabled: boolean };
@@ -720,28 +739,55 @@ export function evaluateReviewedReleaseRequest(
   if (!approvalPathPattern.test(input.payload.approvalRecord)) {
     throw new Error('approval record path does not match the approved candidate');
   }
-  const expectedRunUrl = `https://github.com/${input.repository}/actions/runs/${input.payload.approvalRunId}/attempts/${input.payload.approvalRunAttempt}`;
-  const expectedExternalId = `${REVIEWED_RELEASE_CHECK_NAME}:${input.payload.approvalRunId}:${input.payload.approvalRunAttempt}:${input.payload.sealSha}`;
-  const successfulCheck = input.checkRuns.some((check) => (
-    check.name === REVIEWED_RELEASE_CHECK_NAME
-    && check.headSha === input.payload.sealSha
-    && check.status === 'completed'
-    && check.conclusion === 'success'
-    && check.appSlug === 'github-actions'
-    && check.externalId === expectedExternalId
-    && check.detailsUrl === expectedRunUrl
-  ));
-  if (!successfulCheck) throw new Error('successful exact-seal check is missing');
   if (input.approvalRun.id !== input.payload.approvalRunId
     || input.approvalRun.runAttempt !== input.payload.approvalRunAttempt
     || input.approvalRun.event !== 'workflow_dispatch'
     || input.approvalRun.status !== 'completed'
-    || typeof input.approvalRun.conclusion !== 'string'
+    || input.approvalRun.conclusion !== 'success'
     || input.approvalRun.headSha !== input.payload.controlSha
     || input.approvalRun.path !== '.github/workflows/approve-reviewed-content.yml'
     || input.approvalRun.actor !== repositoryOwner
     || input.approvalRun.triggeringActor !== repositoryOwner) {
     throw new Error('approval workflow run provenance is invalid');
+  }
+  const expectedArtifactName = `stephen-reviewed-release-handoff-${input.payload.approvalRunId}-${input.payload.approvalRunAttempt}`;
+  if (!Number.isInteger(input.approvalArtifact.id)
+    || input.approvalArtifact.id < 1
+    || input.approvalArtifact.name !== expectedArtifactName
+    || input.approvalArtifact.expired !== false
+    || !SHA256_WITH_ALGORITHM.test(input.approvalArtifact.digest)
+    || input.approvalArtifact.workflowRunId !== input.payload.approvalRunId) {
+    throw new Error('approval handoff artifact provenance is invalid');
+  }
+  const requiredApprovalSteps = [
+    'Run the complete exact-seal CI gate',
+    'Verify the seal chain before merge',
+    'Build the durable reviewed-release handoff',
+    'Persist the immutable reviewed-release handoff',
+    'Make the reviewed PR ready and merge its exact seal SHA',
+  ];
+  if (input.approvalJob.name !== 'approve'
+    || input.approvalJob.status !== 'completed'
+    || input.approvalJob.conclusion !== 'success') {
+    throw new Error('trusted approval step sequence is invalid');
+  }
+  let priorStepNumber = 0;
+  for (const stepName of requiredApprovalSteps) {
+    const matchingSteps = input.approvalJob.steps.filter((step) => step.name === stepName);
+    const step = matchingSteps[0];
+    if (matchingSteps.length !== 1
+      || !step
+      || !Number.isInteger(step.number)
+      || step.number <= priorStepNumber
+      || step.status !== 'completed'
+      || step.conclusion !== 'success') {
+      throw new Error('trusted approval step sequence is invalid');
+    }
+    priorStepNumber = step.number;
+  }
+  if (input.exactSealRebuild.verified !== true
+    || input.exactSealRebuild.sealSha !== input.payload.sealSha) {
+    throw new Error('exact approval seal rebuild is missing');
   }
   if (input.writeCollaborators.length !== 1
     || input.writeCollaborators[0]?.login !== repositoryOwner) {
