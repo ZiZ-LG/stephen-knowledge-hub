@@ -24,9 +24,11 @@ AI 和每日候选工作流只能生成 `pending_owner_review / not_published` �
 - SAAS-608 工作流 PR 已经单独批准并合入 `main`；
 - 合并后的 `main` 精确 SHA CI 全绿；
 - 仓库原生 Immutable Releases 设置已由项目所有者单独启用，并经 API 复核为 `enabled: true`；
-- 仓库存在启用中的 `Protect Stephen immutable Release tags` tag ruleset，仅匹配 `refs/tags/stephen-content-*`，无 bypass actor，并禁止 update 与 deletion；
+- 仓库存在启用中的 `Protect Stephen immutable Release tags` tag ruleset，include 仅匹配 `refs/tags/stephen-content-*`、exclude 必须为空、无 bypass actor，并禁止 update 与 deletion；
 - 仓库只有 `ZiZ-LG` 一个具备 push 权限的 collaborator；每日候选与人工批准共用 `stephen-public-content-writer` 并发组，Release 使用按审批 run ID 与 attempt 区分的独立并发组，避免待运行交接被后续每日任务或另一审批 attempt 替换；静态审计禁止候选/批准工作流调用 tag 或 Release 接口；
 - 仓库 Secret `STEPHEN_RELEASE_GOVERNANCE_TOKEN` 已存在。其值必须是 fine-grained token，resource owner 为 `ZiZ-LG`，repository access 仅选择 `ZiZ-LG/stephen-knowledge-hub`，Repository permissions 仅授予 `Administration: read`；不得增加 contents、actions、pull requests 或任何 write 权限；
+- 公共审计必须继续以解析后的 YAML 结构把该 Secret 仅绑定到两个指定治理读取步骤的 `env.GH_TOKEN`，并锁定顶层/job 执行结构、步骤顺序和这两个步骤的只读命令体；两个步骤必须使用绝对路径的无 profile Bash、固定系统 PATH，并清空 Bash 启动加载变量。不得使用 workflow/job defaults、job env、container、services、意外步骤、anchor/alias 转移、`secrets: inherit`、外传命令或非 GET API 调用；
+- 原批准工作流的 handoff artifact 必须按工作流固定的 `retention-days: 90` 保留且尚未过期；恢复窗口以该 90 天保留期为上限，过期后不得伪造或手工替代证据；
 - 当日候选由默认分支上的 live 工作流形成，分支名为 `codex/stephen-daily-YYYY-MM-DD`；
 - 候选 PR 仍为 open Draft，且相对 `main` 只增加或修改当日 `review-manifest.json` 与 `discovery-ledger.json`。
 
@@ -163,8 +165,9 @@ approval seal commit：
 - merge SHA 仍可从当前远端默认分支 head 到达；默认分支可以在之后正常向前演进；
 - 两个父提交、批准记录、仓库身份和标签全部一致；
 - Immutable Releases 设置仍为开启；
-- push collaborator 仍只有仓库所有者，标签规则集仍启用、无 bypass 且禁止 update/deletion；
+- push collaborator 仍只有仓库所有者，标签规则集仍启用、exclude 为空、无 bypass 且禁止 update/deletion；
 - 已有 tag、Draft Release 和已上传资产没有发生身份或 digest 漂移。
+- 两次 tag 探测都只能把 GitHub REST 的明确 `404` 解释为“不存在”；`403`、`5xx`、超时、DNS 或其他传输错误全部失败关闭，不得继续发布。
 
 Release 严格按以下顺序形成：
 
@@ -190,6 +193,7 @@ Release 严格按以下顺序形成：
 | merge compare-and-swap 失败 | 未合并 | 重新读取 PR head，不重用旧批准 |
 | Release 工作流失败 | 已合并，原成功 approval run 与 handoff artifact 已持久化 | 修复 Release 控制代码并合入 `main`，待精确 `main` SHA CI 全绿后，从 `main` 用原 run ID/attempt 执行恢复 dispatch；不重跑批准、不重新合并 |
 | 治理 token 缺失或权限不符 | 在 Release mutation 前失败关闭 | 创建/轮换仅限本仓库且只有 `Administration: read` 的 fine-grained token，保存为指定 Secret 后重跑恢复 dispatch；不得改用宽权限 token |
+| tag 读取返回 `403`、`5xx` 或网络错误 | 在发布前失败关闭，不能解释为 tag 不存在 | 保留 Draft 与运行证据；排除权限或 GitHub API 故障后重新运行同一 recovery dispatch |
 | Draft Release 已有部分资产 | Draft 保留 | 同一事件只补上传 digest 匹配的缺少资产 |
 | 已有 tag、Release 或资产不匹配 | 失败关闭 | 人工调查，不删除或覆盖证据 |
 | 不可变 API 状态未出现 | Release 不宣告成功 | 保留运行证据并调查仓库设置/API 状态 |

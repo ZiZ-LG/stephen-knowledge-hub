@@ -605,6 +605,7 @@ export interface ReviewedReleaseTagRuleset {
   readonly enforcement: string;
   readonly bypassActorCount: number;
   readonly includedRefs: readonly string[];
+  readonly excludedRefs: readonly string[];
   readonly ruleTypes: readonly string[];
 }
 
@@ -799,6 +800,8 @@ export function evaluateReviewedReleaseRequest(
     || input.releaseTagRuleset.enforcement !== 'active'
     || input.releaseTagRuleset.bypassActorCount !== 0
     || !equalStrings(input.releaseTagRuleset.includedRefs, ['refs/tags/stephen-content-*'])
+    || !Array.isArray(input.releaseTagRuleset.excludedRefs)
+    || input.releaseTagRuleset.excludedRefs.length !== 0
     || !equalStrings(
       [...input.releaseTagRuleset.ruleTypes].sort((left, right) => left.localeCompare(right)),
       expectedTagRules,

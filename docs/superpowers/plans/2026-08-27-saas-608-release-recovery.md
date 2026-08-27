@@ -15,7 +15,7 @@
 - Keep `STEPHEN_RELEASE_GOVERNANCE_TOKEN` out of source, logs, artifacts, build steps, and Release mutation steps.
 - The governance token must be a fine-grained repository token limited to `ZiZ-LG/stephen-knowledge-hub` with only `Administration: read`.
 - Recovery must be owner-only, run from the default branch, and bind exact `approval_run_id` plus `approval_run_attempt`.
-- Release mutation remains fail-closed behind immutable-release, single-writer, no-bypass tag-ruleset, merged-PR, artifact, approval-step, commit-chain, asset, and exact-seal rebuild checks.
+- Release mutation remains fail-closed behind immutable-release, single-writer, empty-exclude/no-bypass tag-ruleset, merged-PR, artifact, approval-step, commit-chain, asset, exact-seal rebuild, and explicit-404-only tag-absence checks.
 - Preserve merge commits; do not force-push.
 
 ---
@@ -247,6 +247,14 @@ git add scripts/public-repo-audit.ts src/content/public-repo-audit.test.ts docs/
 git commit -m "docs: close reviewed release recovery controls"
 ```
 
+- [x] **Security review follow-up: make optional tag reads fail closed**
+
+Add a real HTTP regression test for `200`, explicit `404`, `403`, `5xx`, and transport failure; route both initial and immediate-prepublish tag probes through the tested helper; and require both helper invocations in the public workflow audit. Only `404` may become JSON `null`; every other failure stops before immutable publication.
+
+- [x] **Adversarial review follow-up: close effective-policy bypasses**
+
+Parse the effective workflow YAML, reject job-level GitHub token permission overrides, and bind the governance Secret to the exact `env.GH_TOKEN` paths and complete read-only command bodies of the two named governance steps. Lock reviewed workflows to the expected top-level keys, single `ubuntu-latest` job and approved step sequence; give privileged reads an absolute non-profile Bash shell, fixed system PATH and cleared shell-loader variables. Reject inherited defaults, job environments, containers, services, unexpected steps, non-approved secrets-context syntax, alias relocation, secret inheritance, exfiltration commands, and non-GET API calls. Carry the ruleset exclude list into both policy snapshots and require that list to be exactly empty. Mutation tests must prove these prior bypasses fail closed.
+
 ### Task 4: Review, merge, and recover the immutable Release
 
 **Files:**
@@ -256,13 +264,13 @@ git commit -m "docs: close reviewed release recovery controls"
 - Consumes: all prior commits plus repository secret `STEPHEN_RELEASE_GOVERNANCE_TOKEN`.
 - Produces: one merged repair PR, green exact-main CI, and immutable Release `stephen-content-2026-08-27-d24d2128bc5b`.
 
-- [ ] **Step 1: Run fresh final local verification**
+- [x] **Step 1: Run fresh final local verification**
 
 Run: `npm run check`
 
 Expected: all checks pass on a clean worktree.
 
-- [ ] **Step 2: Audit scope and secrets**
+- [x] **Step 2: Audit scope and secrets**
 
 Run: `git diff --check origin/main...HEAD`
 

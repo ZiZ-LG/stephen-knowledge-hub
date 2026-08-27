@@ -52,6 +52,17 @@ declare module 'node:fs/promises' {
 }
 
 declare module 'node:child_process' {
+  interface ChildReadableStream {
+    setEncoding(encoding: 'utf8'): void;
+    on(event: 'data', listener: (chunk: string) => void): void;
+  }
+
+  interface ChildProcess {
+    readonly stderr: ChildReadableStream;
+    on(event: 'error', listener: (error: Error) => void): void;
+    on(event: 'close', listener: (code: number | null) => void): void;
+  }
+
   export interface SpawnSyncResult {
     readonly status: number | null;
     readonly stdout: string;
@@ -68,6 +79,12 @@ declare module 'node:child_process' {
       readonly input?: Uint8Array;
     },
   ): SpawnSyncResult;
+
+  export function spawn(
+    command: string,
+    args: readonly string[],
+    options: { readonly env?: Record<string, string | undefined> },
+  ): ChildProcess;
 }
 
 declare module 'node:crypto' {
@@ -90,4 +107,35 @@ declare module 'node:path' {
 
 declare module 'node:os' {
   export function tmpdir(): string;
+}
+
+declare module 'node:http' {
+  interface IncomingMessage {
+    readonly headers: Record<string, string | readonly string[] | undefined>;
+    readonly url?: string;
+  }
+
+  interface ServerResponse {
+    writeHead(statusCode: number, headers: Readonly<Record<string, string>>): void;
+    end(body?: string): void;
+  }
+
+  interface AddressInfo {
+    readonly port: number;
+  }
+
+  interface Server {
+    readonly listening: boolean;
+    listen(port: number, hostname: string, callback: () => void): void;
+    address(): AddressInfo | string | null;
+    close(callback: (error?: Error) => void): void;
+  }
+
+  export function createServer(
+    listener: (request: IncomingMessage, response: ServerResponse) => void,
+  ): Server;
+}
+
+declare module 'node:url' {
+  export function fileURLToPath(url: URL): string;
 }

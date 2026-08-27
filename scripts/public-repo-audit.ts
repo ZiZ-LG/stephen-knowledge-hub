@@ -3,6 +3,7 @@
 import { spawnSync } from 'node:child_process';
 import { lstat, readFile } from 'node:fs/promises';
 import { basename, join, resolve } from 'node:path';
+import { parse } from 'yaml';
 
 export interface PublicAuditEntry {
   readonly path: string;
@@ -80,55 +81,308 @@ function candidateDate(branchName: string) {
   return dailyBranchPattern.exec(branchName)?.[2];
 }
 
-function topLevelWorkflowPermissions(text: string) {
-  const permissions = new Map<string, string>();
-  const lines = text.split('\n');
-  const start = lines.findIndex((line) => /^permissions:\s*$/.test(line));
-  if (start < 0) return permissions;
-  for (const line of lines.slice(start + 1)) {
-    const parsed = /^ {2}([a-z-]+):\s*(read|write|none)\s*$/.exec(line);
-    if (!parsed) break;
-    permissions.set(parsed[1], parsed[2]);
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function parseWorkflowDocument(text: string) {
+  try {
+    const document = parse(text, { maxAliasCount: 100, merge: true }) as unknown;
+    return isRecord(document) ? document : undefined;
+  } catch {
+    return undefined;
   }
-  return permissions;
+}
+
+function topLevelWorkflowPermissions(document: Readonly<Record<string, unknown>> | undefined) {
+  const permissions = document?.permissions;
+  return isRecord(permissions) ? permissions : undefined;
 }
 
 function exactPermissions(
-  actual: ReadonlyMap<string, string>,
+  actual: Readonly<Record<string, unknown>> | undefined,
   expected: Readonly<Record<string, string>>,
 ) {
+  if (!actual) return false;
   const entries = Object.entries(expected);
-  return actual.size === entries.length
-    && entries.every(([name, access]) => actual.get(name) === access);
+  return Object.keys(actual).length === entries.length
+    && entries.every(([name, access]) => actual[name] === access);
+}
+
+function hasJobLevelPermissionOverride(
+  document: Readonly<Record<string, unknown>> | undefined,
+) {
+  if (!document || !isRecord(document.jobs)) return true;
+  return Object.values(document.jobs).some((job) => (
+    !isRecord(job) || Object.prototype.hasOwnProperty.call(job, 'permissions')
+  ));
 }
 
 const releaseGovernanceSecret = '${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}';
 
-function reviewedWorkflowHasUnsafeSurface(path: string, text: string) {
+function hasSecretsContextAccess(text: string) {
+  return [...text.matchAll(/\$\{\{([\s\S]*?)\}\}/g)]
+    .some((match) => /\bsecrets\b/.test(match[1] ?? ''));
+}
+
+interface WorkflowSecretReference {
+  readonly path: readonly (string | number)[];
+  readonly value: string;
+}
+
+function collectSecretsContextReferences(
+  value: unknown,
+  path: readonly (string | number)[] = [],
+  ancestors = new Set<object>(),
+): WorkflowSecretReference[] {
+  if (typeof value === 'string') {
+    return hasSecretsContextAccess(value) ? [{ path, value }] : [];
+  }
+  if (typeof value !== 'object' || value === null) return [];
+  if (ancestors.has(value)) return [];
+
+  ancestors.add(value);
+  const entries: readonly (readonly [string | number, unknown])[] = Array.isArray(value)
+    ? value.map((child, index) => [index, child] as const)
+    : Object.entries(value);
+  const matches = entries.flatMap(([key, child]) => (
+    collectSecretsContextReferences(child, [...path, key], ancestors)
+  ));
+  ancestors.delete(value);
+  return matches;
+}
+
+function governanceReadRun(prefix: '' | 'prepublish-') {
+  const output = (name: string) => `$RUNNER_TEMP/saas-608-${prefix}${name}`;
+  return [
+    'set -euo pipefail',
+    '[[ -n "$GH_TOKEN" ]]',
+    'gh api --method GET "repos/$GH_REPO/immutable-releases" \\',
+    `  > "${output('immutability.json')}"`,
+    'gh api --paginate --slurp --method GET \\',
+    '  "repos/$GH_REPO/collaborators?affiliation=all&per_page=100" \\',
+    `  > "${output('collaborator-pages.json')}"`,
+    "jq '[.[][] | select(.permissions.push == true) | { login }]' \\",
+    `  "${output('collaborator-pages.json')}" \\`,
+    `  > "${output('write-collaborators.json')}"`,
+    'gh api --paginate --slurp --method GET \\',
+    '  "repos/$GH_REPO/rulesets?includes_parents=true&per_page=100" \\',
+    `  > "${output('ruleset-pages.json')}"`,
+    "jq -r '[.[][] | select(.name == \"Protect Stephen immutable Release tags\") | .id]",
+    '  | if length == 1 then .[0] else error("missing or duplicate Stephen tag ruleset") end\' \\',
+    `  "${output('ruleset-pages.json')}" \\`,
+    `  > "${output('tag-ruleset-id.txt')}"`,
+    `tag_ruleset_id=$(cat "${output('tag-ruleset-id.txt')}")`,
+    'gh api --method GET "repos/$GH_REPO/rulesets/$tag_ruleset_id" \\',
+    `  > "${output('tag-ruleset.json')}"`,
+    '',
+  ].join('\n');
+}
+
+function equalWorkflowPath(
+  left: readonly (string | number)[],
+  right: readonly (string | number)[],
+) {
+  return left.length === right.length && left.every((part, index) => part === right[index]);
+}
+
+function equalSequence(left: readonly unknown[], right: readonly unknown[]) {
+  return left.length === right.length && left.every((value, index) => value === right[index]);
+}
+
+function containsMappingKey(
+  value: unknown,
+  key: string,
+  ancestors = new Set<object>(),
+): boolean {
+  if (typeof value !== 'object' || value === null) return false;
+  if (ancestors.has(value)) return false;
+  ancestors.add(value);
+  if (!Array.isArray(value) && Object.prototype.hasOwnProperty.call(value, key)) {
+    ancestors.delete(value);
+    return true;
+  }
+  const children = Array.isArray(value) ? value : Object.values(value);
+  const found = children.some((child) => containsMappingKey(child, key, ancestors));
+  ancestors.delete(value);
+  return found;
+}
+
+function hasExactWorkflowJob(
+  document: Readonly<Record<string, unknown>>,
+  jobName: string,
+) {
+  return isRecord(document.jobs)
+    && Object.keys(document.jobs).length === 1
+    && Object.prototype.hasOwnProperty.call(document.jobs, jobName);
+}
+
+const approvalStepNames = [
+  'Reject an untrusted dispatch identity',
+  'Check out trusted default-branch controls',
+  'Set up Node.js',
+  'Read the current PR and changed-file facts',
+  'Check out the exact candidate tree',
+  'Validate the exact owner-review request',
+  'Require the candidate to contain the current trusted base',
+  'Promote only the retained reviewed candidates',
+  'Seal the exact approval chain',
+  'Push the two-commit chain without overwriting head drift',
+  'Install exact-seal dependencies',
+  'Run the complete exact-seal CI gate',
+  'Verify the seal chain before merge',
+  'Build the durable reviewed-release handoff',
+  'Persist the immutable reviewed-release handoff',
+  'Make the reviewed PR ready and merge its exact seal SHA',
+] as const;
+
+const releaseStepNames = [
+  'Resolve and authenticate the exact source approval run',
+  'Read the exact approval artifact and trusted job facts',
+  'Download the durable approval-run handoff',
+  'Validate the bounded workflow-run handoff',
+  'Check out trusted Release controls',
+  'Bind trusted Release controls to this workflow SHA',
+  'Set up Node.js',
+  'Read merged PR and repository Release facts',
+  'Read fail-closed repository governance facts',
+  'Check out the exact approval seal tree',
+  'Build and bind the exact seal artifact',
+  'Create deterministic Release assets',
+  'Verify the exact Release request before mutation',
+  'Create or reuse the matching Draft Release',
+  'Upload only missing matching assets',
+  'Refresh governance facts before immutable publication',
+  'Verify fresh policy immediately before immutable publication',
+  'Publish the complete Release',
+  'Require final immutable API state and matching assets',
+  'Summarize immutable Release completion',
+] as const;
+
+function reviewedWorkflowExecutionShapeIsExact(
+  path: string,
+  document: Readonly<Record<string, unknown>>,
+) {
+  const topLevelKeys = ['concurrency', 'jobs', 'name', 'on', 'permissions'];
+  if (!equalSequence(Object.keys(document).sort(), topLevelKeys)) return false;
+  const jobName = path === releaseWorkflowPath ? 'release' : 'approve';
+  if (!hasExactWorkflowJob(document, jobName) || !isRecord(document.jobs)) return false;
+  const job = document.jobs[jobName];
+  if (!isRecord(job) || !Array.isArray(job.steps)) return false;
+  const expectedJobKeys = path === releaseWorkflowPath
+    ? ['if', 'runs-on', 'steps', 'timeout-minutes']
+    : ['runs-on', 'steps', 'timeout-minutes'];
+  if (!equalSequence(Object.keys(job).sort(), expectedJobKeys)
+    || job['runs-on'] !== 'ubuntu-latest'
+    || job['timeout-minutes'] !== 25) {
+    return false;
+  }
+  if (path === releaseWorkflowPath
+    && job.if !== [
+      "github.event_name == 'workflow_dispatch' || (",
+      "  github.event_name == 'workflow_run'",
+      "  && github.event.workflow_run.event == 'workflow_dispatch'",
+      "  && github.event.workflow_run.status == 'completed'",
+      ')',
+    ].join('\n')) {
+    return false;
+  }
+  const expectedStepNames = path === releaseWorkflowPath ? releaseStepNames : approvalStepNames;
+  const actualStepNames = job.steps.map((step) => (isRecord(step) ? step.name : undefined));
+  return equalSequence(actualStepNames, expectedStepNames);
+}
+
+function releaseGovernanceStepsAreExact(
+  document: Readonly<Record<string, unknown>>,
+  secretReferences: readonly WorkflowSecretReference[],
+) {
+  if (!isRecord(document.jobs) || !isRecord(document.jobs.release)) return false;
+  const steps = document.jobs.release.steps;
+  if (!Array.isArray(steps)) return false;
+
+  const expectedSteps = [
+    {
+      name: 'Read fail-closed repository governance facts',
+      condition: undefined,
+      prefix: '' as const,
+    },
+    {
+      name: 'Refresh governance facts before immutable publication',
+      condition: "steps.policy.outputs.status != 'already_immutable'",
+      prefix: 'prepublish-' as const,
+    },
+  ];
+  const allowedSecretPaths: (string | number)[][] = [];
+  for (const expected of expectedSteps) {
+    const matches = steps
+      .map((step, index) => ({ index, step }))
+      .filter(({ step }) => isRecord(step) && step.name === expected.name);
+    const match = matches[0];
+    if (matches.length !== 1 || !match || !isRecord(match.step)) return false;
+    const step = match.step;
+    const allowedKeys = new Set(['id', 'name', 'if', 'shell', 'env', 'run']);
+    if (Object.keys(step).some((key) => !allowedKeys.has(key))) return false;
+    if (step.id !== undefined && typeof step.id !== 'string') return false;
+    if (step.if !== expected.condition
+      || step.shell !== '/usr/bin/bash --noprofile --norc -euo pipefail {0}'
+      || step.run !== governanceReadRun(expected.prefix)) {
+      return false;
+    }
+    if (!isRecord(step.env)
+      || !exactPermissions(step.env, {
+        GH_TOKEN: releaseGovernanceSecret,
+        GH_REPO: '${{ github.repository }}',
+        PATH: '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+        BASH_ENV: '/dev/null',
+        ENV: '/dev/null',
+        LD_PRELOAD: '',
+        LD_LIBRARY_PATH: '',
+      })) {
+      return false;
+    }
+    allowedSecretPaths.push([
+      'jobs',
+      'release',
+      'steps',
+      match.index,
+      'env',
+      'GH_TOKEN',
+    ]);
+  }
+
+  return secretReferences.length === allowedSecretPaths.length
+    && secretReferences.every((reference) => (
+      reference.value === releaseGovernanceSecret
+      && allowedSecretPaths.some((path) => equalWorkflowPath(reference.path, path))
+    ));
+}
+
+function reviewedWorkflowHasUnsafeSurface(
+  path: string,
+  text: string,
+  document: Readonly<Record<string, unknown>> | undefined,
+) {
+  if (!document) return true;
+  const expectedJob = path === releaseWorkflowPath ? 'release' : 'approve';
+  if (!hasExactWorkflowJob(document, expectedJob)
+    || !reviewedWorkflowExecutionShapeIsExact(path, document)
+    || containsMappingKey(document, 'secrets')) {
+    return true;
+  }
   const governanceSecretMatches = text.match(
     /\$\{\{\s*secrets\.STEPHEN_RELEASE_GOVERNANCE_TOKEN\s*\}\}/g,
   ) ?? [];
   if (path === releaseWorkflowPath && governanceSecretMatches.length !== 2) return true;
-  if (path === releaseWorkflowPath) {
-    const allowedSecretSteps = [
-      'Read fail-closed repository governance facts',
-      'Refresh governance facts before immutable publication',
-    ];
-    const actualSecretSteps = text
-      .split(/(?=^ {6}- name: )/m)
-      .filter((block) => block.includes(releaseGovernanceSecret))
-      .map((block) => /^ {6}- name: (.+)$/m.exec(block)?.[1] ?? '');
-    if (actualSecretSteps.length !== allowedSecretSteps.length
-      || !allowedSecretSteps.every((name) => actualSecretSteps.includes(name))) {
-      return true;
-    }
-  }
+  const secretReferences = collectSecretsContextReferences(document);
+  if (path === releaseWorkflowPath
+    && !releaseGovernanceStepsAreExact(document, secretReferences)) return true;
+  if (path === approvalWorkflowPath && secretReferences.length !== 0) return true;
   const secretSanitizedText = path === releaseWorkflowPath
     ? text.split(releaseGovernanceSecret).join('')
     : text;
+  if (hasSecretsContextAccess(secretSanitizedText)) return true;
   return [
     /^\s*environment\s*:/m,
-    /\$\{\{\s*secrets\./,
     /\bpull_request_target\b/i,
     /\bself-hosted\b/i,
     /\bssh\b/i,
@@ -186,6 +440,7 @@ function releaseWorkflowContract(text: string) {
     /actions\/runs\/\$APPROVAL_RUN_ID\/attempts\/\$APPROVAL_RUN_ATTEMPT\/jobs\?per_page=100/,
     /actions\/download-artifact@[0-9a-f]{40}/,
     /stephen-reviewed-release-handoff-/,
+    /trusted\/scripts\/github-api-read-optional\.sh/,
     /repos\/\$GH_REPO\/immutable-releases/,
     /secrets\.STEPHEN_RELEASE_GOVERNANCE_TOKEN/,
     /name:\s*Read fail-closed repository governance facts/,
@@ -213,6 +468,7 @@ function releaseWorkflowContract(text: string) {
     /\.immutable == true/,
     /\.status == "already_immutable"/,
   ].every((pattern) => pattern.test(text))
+    && (text.match(/trusted\/scripts\/github-api-read-optional\.sh/g) ?? []).length === 2
     && !/commits\/\$SEAL_SHA\/check-runs/.test(text)
     && !/checks:\s*(?:read|write)/.test(text)
     && !/git\/refs/.test(text)
@@ -318,6 +574,7 @@ export function auditPublicEntries(
 
     if (workflowPathPattern.test(entry.path)) {
       workflowFiles += 1;
+      const workflowDocument = parseWorkflowDocument(text);
       for (const match of text.matchAll(/^\s*-?\s*uses:\s*([^\s#]+)/gm)) {
         const reference = match[1];
         if (!reference.startsWith('./') && !/@[0-9a-f]{40}$/.test(reference)) {
@@ -337,15 +594,16 @@ export function auditPublicEntries(
         pushFinding(findings, findingKeys, 'ci-write-boundary', entry.path);
       }
       if (entry.path === approvalWorkflowPath || entry.path === releaseWorkflowPath) {
-        if (reviewedWorkflowHasUnsafeSurface(entry.path, text)) {
+        if (reviewedWorkflowHasUnsafeSurface(entry.path, text, workflowDocument)) {
           pushFinding(findings, findingKeys, 'reviewed-workflow-boundary', entry.path);
         }
       }
       if (entry.path === approvalWorkflowPath) {
-        if (!exactPermissions(topLevelWorkflowPermissions(text), {
+        if (hasJobLevelPermissionOverride(workflowDocument)
+          || !exactPermissions(topLevelWorkflowPermissions(workflowDocument), {
           contents: 'write',
           'pull-requests': 'write',
-        })) {
+          })) {
           pushFinding(findings, findingKeys, 'reviewed-workflow-permissions', entry.path);
         }
         if (!approvalWorkflowContract(text)) {
@@ -353,11 +611,12 @@ export function auditPublicEntries(
         }
       }
       if (entry.path === releaseWorkflowPath) {
-        if (!exactPermissions(topLevelWorkflowPermissions(text), {
+        if (hasJobLevelPermissionOverride(workflowDocument)
+          || !exactPermissions(topLevelWorkflowPermissions(workflowDocument), {
           contents: 'write',
           actions: 'read',
           'pull-requests': 'read',
-        })) {
+          })) {
           pushFinding(findings, findingKeys, 'reviewed-workflow-permissions', entry.path);
         }
         if (!releaseWorkflowContract(text)) {

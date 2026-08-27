@@ -63,5 +63,6 @@ Direct dependency inventory for the extraction baseline:
 | TypeScript | 5.6.3 | Apache-2.0 |
 | Vite | 8.1.4 | MIT |
 | Vitest | 4.1.10 | MIT |
+| yaml | 2.9.0 | ISC |
 
 Transitive dependency versions and integrity hashes are fixed by `package-lock.json`. Consumers must retain the notices required by those packages' own license files.

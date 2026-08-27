@@ -673,6 +673,7 @@ describe('SAAS-608 immutable Release request policy', () => {
         enforcement: 'active',
         bypassActorCount: 0,
         includedRefs: ['refs/tags/stephen-content-*'],
+        excludedRefs: [],
         ruleTypes: ['update', 'deletion'],
       },
       immutableReleases: { enabled: true },
@@ -734,6 +735,14 @@ describe('SAAS-608 immutable Release request policy', () => {
     const input = releaseInput();
     expect(() => evaluateReviewedReleaseRequest({
       ...input,
+      approvalArtifact: { ...input.approvalArtifact, id: 0 },
+    })).toThrow('approval handoff artifact provenance is invalid');
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      approvalArtifact: { ...input.approvalArtifact, id: 1.5 },
+    })).toThrow('approval handoff artifact provenance is invalid');
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
       approvalArtifact: { ...input.approvalArtifact, name: 'other-artifact' },
     })).toThrow('approval handoff artifact provenance is invalid');
     expect(() => evaluateReviewedReleaseRequest({
@@ -754,6 +763,18 @@ describe('SAAS-608 immutable Release request policy', () => {
     const input = releaseInput();
     expect(() => evaluateReviewedReleaseRequest({
       ...input,
+      approvalJob: { ...input.approvalJob, name: 'other-job' },
+    })).toThrow('trusted approval step sequence is invalid');
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      approvalJob: { ...input.approvalJob, status: 'in_progress' },
+    })).toThrow('trusted approval step sequence is invalid');
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      approvalJob: { ...input.approvalJob, conclusion: 'failure' },
+    })).toThrow('trusted approval step sequence is invalid');
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
       approvalJob: { ...input.approvalJob, steps: input.approvalJob.steps.slice(1) },
     })).toThrow('trusted approval step sequence is invalid');
     expect(() => evaluateReviewedReleaseRequest({
@@ -772,6 +793,16 @@ describe('SAAS-608 immutable Release request policy', () => {
         steps: input.approvalJob.steps.map((step, index) => (
           index === 2 ? { ...step, conclusion: 'failure' } : step
         )),
+      },
+    })).toThrow('trusted approval step sequence is invalid');
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      approvalJob: {
+        ...input.approvalJob,
+        steps: [
+          ...input.approvalJob.steps,
+          { ...input.approvalJob.steps[0], number: 19 },
+        ],
       },
     })).toThrow('trusted approval step sequence is invalid');
   });
@@ -834,6 +865,13 @@ describe('SAAS-608 immutable Release request policy', () => {
       ...input,
       releaseTagRuleset: { ...input.releaseTagRuleset, ruleTypes: ['deletion'] },
     })).toThrow('Release tag protection ruleset is invalid');
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      releaseTagRuleset: {
+        ...input.releaseTagRuleset,
+        excludedRefs: ['refs/tags/stephen-content-*'],
+      },
+    })).toThrow('Release tag protection ruleset is invalid');
   });
 
   it('rejects tag drift, a mutable published Release or changed asset digest', () => {
@@ -886,6 +924,44 @@ describe('SAAS-608 immutable Release request policy', () => {
         assets: [],
       },
     })).toThrow('Release tag must not exist before immutable publication');
+  });
+
+  it('reuses a matching Draft Release and uploads only missing assets', () => {
+    const input = releaseInput();
+    const assets = input.expectedAssets.map((asset, index) => ({
+      id: index + 1,
+      name: asset.name,
+      digest: `sha256:${asset.sha256}`,
+    }));
+    const partialDraft = {
+      id: 7,
+      tagName: input.payload.releaseTag,
+      targetCommitish: SEAL_SHA,
+      draft: true,
+      immutable: false,
+      assets: [assets[0]],
+    } as const;
+
+    expect(evaluateReviewedReleaseRequest({
+      ...input,
+      existingRelease: partialDraft,
+    })).toEqual({
+      status: 'reuse_draft',
+      releaseTag: input.payload.releaseTag,
+      targetCommitish: SEAL_SHA,
+      releaseId: 7,
+      missingAssets: ['.stephen-release.json'],
+    });
+    expect(evaluateReviewedReleaseRequest({
+      ...input,
+      existingRelease: { ...partialDraft, assets },
+    })).toEqual({
+      status: 'reuse_draft',
+      releaseTag: input.payload.releaseTag,
+      targetCommitish: SEAL_SHA,
+      releaseId: 7,
+      missingAssets: [],
+    });
   });
 
   it('treats a matching immutable Release as an idempotent success and rejects server fields', () => {

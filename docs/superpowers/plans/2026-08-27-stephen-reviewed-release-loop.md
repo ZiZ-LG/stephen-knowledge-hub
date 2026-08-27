@@ -6,7 +6,7 @@
 
 **Goal:** Build a fail-closed Stephen content release loop that binds owner approval to an exact candidate SHA, promotes only the retained candidates into the public collection, merges the reviewed PR after exact-head CI, and publishes an immutable GitHub Release without any production deployment.
 
-**Architecture:** A trusted `workflow_dispatch` running from the default branch verifies the owner, PR identity, exact head SHA, current-base ancestry, and candidate-only diff. It writes a promotion commit whose parent is the approved candidate SHA, then an approval-seal commit whose parent and record bind the promotion SHA; the same runner checks out the seal SHA, runs the complete repository gate, records a check run, persists a private immutable handoff artifact, and merges with the GitHub merge API using the seal SHA as a compare-and-swap guard. A separate trusted `workflow_run` workflow verifies the completed approval run, merged PR, current default-branch ancestry, two-commit chain, single-owner write boundary, protected-tag ruleset, and immutable-release setting; it builds the seal SHA, creates a Draft Release without a pre-existing tag, uploads bounded assets, and lets GitHub atomically create the protected tag when publishing.
+**Architecture:** A trusted `workflow_dispatch` running from the default branch verifies the owner, PR identity, exact head SHA, current-base ancestry, and candidate-only diff. It writes a promotion commit whose parent is the approved candidate SHA, then an approval-seal commit whose parent and record bind the promotion SHA; the same runner checks out the seal SHA, runs the complete repository gate, persists a private immutable handoff artifact, and merges with the GitHub merge API using the seal SHA as a compare-and-swap guard. A separate trusted `workflow_run` or owner-only recovery dispatch verifies the original completed approval run, exact handoff artifact, trusted approval-step order, merged PR, current default-branch ancestry, two-commit chain, exact-seal rebuild, single-owner write boundary, protected-tag ruleset, and immutable-release setting; it builds the seal SHA, creates a Draft Release without a pre-existing tag, uploads bounded assets, and lets GitHub atomically create the protected tag when publishing. The former custom check run is retired and is not part of the evidence chain.
 
 **Tech Stack:** TypeScript, Vitest, Vite, Node.js 22.12+, GitHub Actions on `ubuntu-latest`, GitHub REST API, Git merge commits, native immutable GitHub Releases.
 
@@ -226,7 +226,7 @@ git commit -m "feat(saas-608): add reviewed promotion CLI"
 
 **Interfaces:**
 - Consumes workflow inputs: `pr_number`, `candidate_sha`, `confirmation`.
-- Produces two commits on the same daily branch and a `stephen-reviewed-release` check run on the seal SHA.
+- Produces two commits on the same daily branch, runs the complete gate on the seal SHA, and persists a run/attempt-bound handoff artifact before merge; it does not create a custom check run.
 - Produces an exact-SHA merge via `PUT /repos/{repo}/pulls/{number}/merge` with `sha=<sealSha>` and `merge_method=merge`.
 - Produces a private handoff artifact before merge; the successful approval run is the durable trigger for Release verification, and a later owner-only recovery dispatch can bind the original run ID/attempt after a Release-workflow failure.
 
@@ -287,7 +287,7 @@ git commit -m "feat(saas-608): approve and merge exact reviewed SHA"
 
 - [ ] **Step 1: Write failing release-policy tests**
 
-Assert release preparation rejects an unmerged PR, unreachable or mismatched merge/seal SHA, missing successful reviewed-release check, broken commit chain, disabled release immutability, multiple push collaborators, missing/bypassed tag protection, any pre-publish tag, mutable existing release, changed asset digest, or any production/deployment field. A completed approval run that failed only after merge remains recoverable when every durable gate proves the exact seal.
+Assert release preparation rejects an unmerged PR, unreachable or mismatched merge/seal SHA, invalid or expired handoff artifact, unsuccessful or reordered trusted approval steps, missing exact-seal rebuild, broken commit chain, disabled release immutability, multiple push collaborators, missing/bypassed tag protection, any pre-publish tag, mutable existing release, changed asset digest, or any production/deployment field. A completed approval run that failed only after merge remains recoverable when every durable gate proves the exact seal.
 
 - [ ] **Step 2: Verify RED and implement release policy**
 
