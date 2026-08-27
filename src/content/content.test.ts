@@ -283,7 +283,8 @@ describe('SAAS-608 approved daily collection', () => {
   it('admits only complete owner-approved non-seed items through the manual publication gate', () => {
     const valid = buildApprovedDailyItem();
 
-    expect(approvedDailyItems).toEqual([]);
+    expect(approvedDailyItems.every((item) => item.seedContent === false)).toBe(true);
+    expect(() => validateApprovedReviewedItems(approvedDailyItems)).not.toThrow();
     expect(() => validateApprovedReviewedItems([valid])).not.toThrow();
 
     const invalidCases: Array<[string, ReviewedKnowledgeItem]> = [

@@ -32,7 +32,7 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: stephen-daily-candidate-review
+  group: stephen-public-content-writer
   cancel-in-progress: false
 
 jobs:

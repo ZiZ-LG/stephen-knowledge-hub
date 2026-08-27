@@ -121,8 +121,10 @@ function reviewedWorkflowHasUnsafeSurface(text: string) {
 function approvalWorkflowContract(text: string) {
   return [
     /^on:\s*\n\s{2}workflow_dispatch:/m,
+    /group:\s*stephen-public-content-writer/,
     /github\.event\.repository\.default_branch/,
     /github\.triggering_actor/,
+    /ref:\s*\$\{\{ github\.sha \}\}/,
     /validate-request --request/,
     /stephen-reviewed-release-cli\.ts promote/,
     /stephen-reviewed-release-cli\.ts seal/,
@@ -131,20 +133,36 @@ function approvalWorkflowContract(text: string) {
     /stephen-release-cli\.ts verify/,
     /repos\/\$GH_REPO\/check-runs/,
     /name=stephen-reviewed-release/,
+    /external_id="stephen-reviewed-release:/,
+    /\.base\.sha == \$baseSha/,
+    /merge-base --is-ancestor "\$BASE_SHA" "\$CANDIDATE_SHA"/,
+    /merge-base --is-ancestor "\$BASE_SHA" "\$SEAL_SHA"/,
+    /commits\/\$DEFAULT_BRANCH/,
     /pulls\/\$PR_NUMBER\/merge/,
     /-f sha="\$SEAL_SHA"/,
     /-f merge_method=merge/,
-    /stephen_release_approved/,
-  ].every((pattern) => pattern.test(text));
+    /actions\/upload-artifact@[0-9a-f]{40}/,
+    /stephen-reviewed-release-handoff-\$\{\{ github\.run_id \}\}-\$\{\{ github\.run_attempt \}\}/,
+  ].every((pattern) => pattern.test(text))
+    && !/repos\/\$GH_REPO\/dispatches/.test(text)
+    && !/(?:repos\/\$GH_REPO\/releases|git\/refs|uploads\.github\.com)/.test(text);
 }
 
 function releaseWorkflowContract(text: string) {
   return [
-    /^on:\s*\n\s{2}repository_dispatch:/m,
-    /stephen_release_approved/,
+    /^on:\s*\n\s{2}workflow_run:/m,
+    /Stephen approve reviewed content/,
+    /group:\s*stephen-reviewed-release-\$\{\{ github\.event\.workflow_run\.id \}\}-\$\{\{ github\.event\.workflow_run\.run_attempt \}\}/,
+    /actions\/download-artifact@[0-9a-f]{40}/,
+    /stephen-reviewed-release-handoff-/,
     /repos\/\$GH_REPO\/immutable-releases/,
     /commits\/\$SEAL_SHA\/check-runs/,
-    /ref:\s*\$\{\{ github\.event\.client_payload\.sealSha \}\}/,
+    /ref:\s*\$\{\{ steps\.handoff\.outputs\.control_sha \}\}/,
+    /commits\/\$DEFAULT_BRANCH/,
+    /merge-base --is-ancestor "\$merge_sha" "\$current_default_sha"/,
+    /collaborators\?affiliation=all/,
+    /Protect Stephen immutable Release tags/,
+    /rulesets\/\$tag_ruleset_id/,
     /validate-release --request/,
     /npm run check/,
     /stephen-release-cli\.ts verify/,
@@ -152,10 +170,14 @@ function releaseWorkflowContract(text: string) {
     /gzip -n -9/,
     /-F draft=true/,
     /uploads\.github\.com/,
+    /Release tag must not exist before GitHub atomically publishes the Draft/,
     /-F draft=false/,
+    /saas-608-prepublish-policy\.json/,
     /\.immutable == true/,
     /\.status == "already_immutable"/,
-  ].every((pattern) => pattern.test(text));
+  ].every((pattern) => pattern.test(text))
+    && !/git\/refs/.test(text)
+    && !/repository_dispatch/.test(text);
 }
 
 function pushFinding(
@@ -296,6 +318,7 @@ export function auditPublicEntries(
         if (!exactPermissions(topLevelWorkflowPermissions(text), {
           contents: 'write',
           checks: 'read',
+          actions: 'read',
         })) {
           pushFinding(findings, findingKeys, 'reviewed-workflow-permissions', entry.path);
         }

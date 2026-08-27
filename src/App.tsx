@@ -134,7 +134,13 @@ export default function App() {
           />
         );
       case 'topics':
-        return <TopicsPage topics={knowledgeTopics} language={language} />;
+        return (
+          <TopicsPage
+            topics={knowledgeTopics}
+            items={approvedKnowledgeItems}
+            language={language}
+          />
+        );
       case 'topic': {
         const topic = getKnowledgeTopicBySlug(knowledgeTopics, route.slug);
         return topic

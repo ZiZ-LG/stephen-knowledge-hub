@@ -22,7 +22,7 @@ permissions:
   checks: write
 
 concurrency:
-  group: stephen-reviewed-content-approval
+  group: stephen-public-content-writer
   cancel-in-progress: false
 
 jobs:
@@ -37,6 +37,7 @@ jobs:
           REPOSITORY_OWNER: ${{ github.repository_owner }}
           CURRENT_REF: ${{ github.ref_name }}
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          CONTROL_SHA: ${{ github.sha }}
           PR_NUMBER: ${{ inputs.pr_number }}
           CANDIDATE_SHA: ${{ inputs.candidate_sha }}
           CONFIRMATION: ${{ inputs.confirmation }}
@@ -45,6 +46,7 @@ jobs:
           [[ "$ACTOR" == "$REPOSITORY_OWNER" ]]
           [[ "$TRIGGERING_ACTOR" == "$REPOSITORY_OWNER" ]]
           [[ "$CURRENT_REF" == "$DEFAULT_BRANCH" ]]
+          [[ "$CONTROL_SHA" =~ ^[0-9a-f]{40}$ ]]
           [[ "$PR_NUMBER" =~ ^[1-9][0-9]*$ ]]
           [[ "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]]
           [[ "$CONFIRMATION" == "APPROVE $CANDIDATE_SHA" ]]
@@ -52,7 +54,7 @@ jobs:
       - name: Check out trusted default-branch controls
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ github.event.repository.default_branch }}
+          ref: ${{ github.sha }}
           path: trusted
           persist-credentials: false
 
@@ -133,7 +135,8 @@ jobs:
                 },
                 base: {
                   ref: $pr[0].base.ref,
-                  repository: $pr[0].base.repo.full_name
+                  repository: $pr[0].base.repo.full_name,
+                  sha: $pr[0].base.sha
                 }
               },
               changedFiles: ($files[0] | map({ filename, status })),
@@ -147,7 +150,19 @@ jobs:
             echo "editorial_date=$(jq -r .editorialDate "$RUNNER_TEMP/saas-608-verified-request.json")"
             echo "manifest_path=$(jq -r .manifestPath "$RUNNER_TEMP/saas-608-verified-request.json")"
             echo "ledger_path=$(jq -r .ledgerPath "$RUNNER_TEMP/saas-608-verified-request.json")"
+            echo "base_sha=$(jq -r .baseSha "$RUNNER_TEMP/saas-608-verified-request.json")"
           } >> "$GITHUB_OUTPUT"
+
+      - name: Require the candidate to contain the current trusted base
+        env:
+          CONTROL_SHA: ${{ github.sha }}
+          BASE_SHA: ${{ steps.request.outputs.base_sha }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+        run: |
+          set -euo pipefail
+          [[ "$CONTROL_SHA" == "$BASE_SHA" ]]
+          git -C candidate fetch --no-tags origin "$BASE_SHA"
+          git -C candidate merge-base --is-ancestor "$BASE_SHA" "$CANDIDATE_SHA"
 
       - name: Promote only the retained reviewed candidates
         id: promote
@@ -269,16 +284,68 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           SEAL_SHA: ${{ steps.seal.outputs.seal_sha }}
+          APPROVAL_RUN_ID: ${{ github.run_id }}
+          APPROVAL_RUN_ATTEMPT: ${{ github.run_attempt }}
         run: |
           set -euo pipefail
           gh api --method POST "repos/$GH_REPO/check-runs" \
             -f name=stephen-reviewed-release \
             -f head_sha="$SEAL_SHA" \
+            -f external_id="stephen-reviewed-release:$APPROVAL_RUN_ID:$APPROVAL_RUN_ATTEMPT:$SEAL_SHA" \
+            -f details_url="https://github.com/$GH_REPO/actions/runs/$APPROVAL_RUN_ID/attempts/$APPROVAL_RUN_ATTEMPT" \
             -f status=completed \
             -f conclusion=success \
             -f 'output[title]=Stephen reviewed release gate passed' \
             -f 'output[summary]=The exact approval seal passed the complete repository gate.' \
             > "$RUNNER_TEMP/saas-608-check.json"
+
+      - name: Build the durable reviewed-release handoff
+        env:
+          PR_NUMBER: ${{ inputs.pr_number }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          PROMOTION_SHA: ${{ steps.promote.outputs.promotion_sha }}
+          SEAL_SHA: ${{ steps.seal.outputs.seal_sha }}
+          APPROVAL_RECORD: ${{ steps.seal.outputs.approval_record }}
+          RELEASE_TAG: ${{ steps.seal.outputs.release_tag }}
+          APPROVAL_RUN_ID: ${{ github.run_id }}
+          APPROVAL_RUN_ATTEMPT: ${{ github.run_attempt }}
+          CONTROL_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/saas-608-handoff"
+          jq -n \
+            --argjson schemaVersion 1 \
+            --arg task "SAAS-608" \
+            --argjson pr "$PR_NUMBER" \
+            --arg candidateSha "$CANDIDATE_SHA" \
+            --arg promotionSha "$PROMOTION_SHA" \
+            --arg sealSha "$SEAL_SHA" \
+            --arg approvalRecord "$APPROVAL_RECORD" \
+            --arg releaseTag "$RELEASE_TAG" \
+            --argjson approvalRunId "$APPROVAL_RUN_ID" \
+            --argjson approvalRunAttempt "$APPROVAL_RUN_ATTEMPT" \
+            --arg controlSha "$CONTROL_SHA" \
+            '{
+              schemaVersion: $schemaVersion,
+              task: $task,
+              pr: $pr,
+              candidateSha: $candidateSha,
+              promotionSha: $promotionSha,
+              sealSha: $sealSha,
+              approvalRecord: $approvalRecord,
+              releaseTag: $releaseTag,
+              approvalRunId: $approvalRunId,
+              approvalRunAttempt: $approvalRunAttempt,
+              controlSha: $controlSha
+            }' > "$RUNNER_TEMP/saas-608-handoff/release-handoff.json"
+
+      - name: Persist the immutable reviewed-release handoff
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: stephen-reviewed-release-handoff-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/saas-608-handoff/release-handoff.json
+          if-no-files-found: error
+          retention-days: 90
 
       - name: Make the reviewed PR ready and merge its exact seal SHA
         id: merge
@@ -287,10 +354,32 @@ jobs:
           GH_REPO: ${{ github.repository }}
           PR_NUMBER: ${{ inputs.pr_number }}
           SEAL_SHA: ${{ steps.seal.outputs.seal_sha }}
+          HEAD_REF: ${{ steps.request.outputs.head_ref }}
+          BASE_SHA: ${{ steps.request.outputs.base_sha }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           set -euo pipefail
-          current_head=$(gh api --method GET "repos/$GH_REPO/pulls/$PR_NUMBER" --jq .head.sha)
-          [[ "$current_head" == "$SEAL_SHA" ]]
+          gh api --method GET "repos/$GH_REPO/pulls/$PR_NUMBER" \
+            > "$RUNNER_TEMP/saas-608-final-pr.json"
+          jq -e \
+            --arg repository "$GH_REPO" \
+            --arg defaultBranch "$DEFAULT_BRANCH" \
+            --arg headRef "$HEAD_REF" \
+            --arg headSha "$SEAL_SHA" \
+            --arg baseSha "$BASE_SHA" \
+            '.state == "open"
+              and .draft == true
+              and .head.repo.full_name == $repository
+              and .base.repo.full_name == $repository
+              and .head.ref == $headRef
+              and .head.sha == $headSha
+              and .base.ref == $defaultBranch
+              and .base.sha == $baseSha' \
+            "$RUNNER_TEMP/saas-608-final-pr.json" >/dev/null
+          current_default_sha=$(gh api --method GET \
+            "repos/$GH_REPO/commits/$DEFAULT_BRANCH" --jq .sha)
+          [[ "$current_default_sha" == "$BASE_SHA" ]]
+          git -C candidate merge-base --is-ancestor "$BASE_SHA" "$SEAL_SHA"
           gh pr ready "$PR_NUMBER" --repo "$GH_REPO"
           gh api --method PUT "repos/$GH_REPO/pulls/$PR_NUMBER/merge" \
             -f sha="$SEAL_SHA" \
@@ -298,61 +387,14 @@ jobs:
             > "$RUNNER_TEMP/saas-608-merge.json"
           jq -e '.merged == true and (.sha | test("^[0-9a-f]{40}$"))' \
             "$RUNNER_TEMP/saas-608-merge.json" >/dev/null
-          echo "merge_sha=$(jq -r .sha "$RUNNER_TEMP/saas-608-merge.json")" >> "$GITHUB_OUTPUT"
-
-      - name: Dispatch immutable Release publication
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          PR_NUMBER: ${{ inputs.pr_number }}
-          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
-          PROMOTION_SHA: ${{ steps.promote.outputs.promotion_sha }}
-          SEAL_SHA: ${{ steps.seal.outputs.seal_sha }}
-          MERGE_SHA: ${{ steps.merge.outputs.merge_sha }}
-          APPROVAL_RECORD: ${{ steps.seal.outputs.approval_record }}
-          RELEASE_TAG: ${{ steps.seal.outputs.release_tag }}
-        run: |
-          set -euo pipefail
-          jq -n \
-            --argjson pr "$PR_NUMBER" \
-            --arg candidateSha "$CANDIDATE_SHA" \
-            --arg promotionSha "$PROMOTION_SHA" \
-            --arg sealSha "$SEAL_SHA" \
-            --arg mergeSha "$MERGE_SHA" \
-            --arg approvalRecord "$APPROVAL_RECORD" \
-            --arg releaseTag "$RELEASE_TAG" \
-            '{
-              event_type: "stephen_release_approved",
-              client_payload: {
-                pr: $pr,
-                candidateSha: $candidateSha,
-                promotionSha: $promotionSha,
-                sealSha: $sealSha,
-                mergeSha: $mergeSha,
-                approvalRecord: $approvalRecord,
-                releaseTag: $releaseTag
-              }
-            }' > "$RUNNER_TEMP/saas-608-dispatch.json"
-          gh api --method POST "repos/$GH_REPO/dispatches" \
-            --input "$RUNNER_TEMP/saas-608-dispatch.json"
-
-      - name: Summarize the reviewed publication boundary
-        env:
-          PR_NUMBER: ${{ inputs.pr_number }}
-          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
-          PROMOTION_SHA: ${{ steps.promote.outputs.promotion_sha }}
-          SEAL_SHA: ${{ steps.seal.outputs.seal_sha }}
-          MERGE_SHA: ${{ steps.merge.outputs.merge_sha }}
-          RELEASE_TAG: ${{ steps.seal.outputs.release_tag }}
-        run: |
+          merge_sha=$(jq -r .sha "$RUNNER_TEMP/saas-608-merge.json")
+          echo "merge_sha=$merge_sha" >> "$GITHUB_OUTPUT"
           {
             echo "## Stephen reviewed release"
             echo ""
             echo "- PR: #$PR_NUMBER"
-            echo "- approved candidate: \`$CANDIDATE_SHA\`"
-            echo "- promotion commit: \`$PROMOTION_SHA\`"
             echo "- approval seal: \`$SEAL_SHA\`"
-            echo "- merge commit: \`$MERGE_SHA\`"
-            echo "- Release tag: \`$RELEASE_TAG\`"
+            echo "- merge commit: \`$merge_sha\`"
+            echo "- durable handoff: workflow-run artifact"
             echo "- server publication: not part of this workflow"
-          } >> "$GITHUB_STEP_SUMMARY"
+          } >> "$GITHUB_STEP_SUMMARY" || true

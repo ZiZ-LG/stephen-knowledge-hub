@@ -1,5 +1,6 @@
 import type { ReviewedKnowledgeItem } from '../domain';
 import type { Language } from '../i18n';
+import { selectRoleItems } from '../navigation';
 import InternalLink from '../components/InternalLink';
 import KnowledgeCard from '../components/KnowledgeCard';
 
@@ -10,8 +11,7 @@ export default function RolesPage({
   readonly items: readonly ReviewedKnowledgeItem[];
   readonly language: Language;
 }) {
-  const roleItems = items.filter((item) =>
-    item.seedCategory === 'ai_role_change' || item.seedCategory === 'org_adoption');
+  const roleItems = selectRoleItems(items);
 
   return (
     <>

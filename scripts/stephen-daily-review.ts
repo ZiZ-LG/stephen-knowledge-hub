@@ -1305,6 +1305,9 @@ export function validateDailyIntakeWorkflow(workflow: string) {
   if (/^\s*pull_request_target\s*:/m.test(workflow)) {
     throw new Error('pull_request_target is forbidden');
   }
+  if (/(?:repos\/\$GH_REPO\/releases|git\/refs|uploads\.github\.com)/.test(workflow)) {
+    throw new Error('daily candidate workflow must not mutate tags or Releases');
+  }
   if (!/^\s{2}workflow_dispatch\s*:/m.test(workflow)) {
     throw new Error('workflow_dispatch is required');
   }
@@ -1334,9 +1337,9 @@ export function validateDailyIntakeWorkflow(workflow: string) {
     throw new Error('workflow permissions must be minimal');
   }
   if (!/^concurrency:\s*$/m.test(workflow)
-    || !/^\s+group:\s*stephen-daily-candidate-review\s*$/m.test(workflow)
+    || !/^\s+group:\s*stephen-public-content-writer\s*$/m.test(workflow)
     || !/^\s+cancel-in-progress:\s*false\s*$/m.test(workflow)) {
-    throw new Error('workflow must serialize daily candidate runs');
+    throw new Error('workflow must serialize every public content write');
   }
   if (!/^\s+timeout-minutes:\s*(?:[1-9]|[1-5][0-9]|60)\s*$/m.test(workflow)) {
     throw new Error('workflow timeout must be between 1 and 60 minutes');

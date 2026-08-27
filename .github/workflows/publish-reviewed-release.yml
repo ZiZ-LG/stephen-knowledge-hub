@@ -1,28 +1,80 @@
 name: Stephen publish immutable reviewed Release
 
 on:
-  repository_dispatch:
+  workflow_run:
+    workflows:
+      - Stephen approve reviewed content
     types:
-      - stephen_release_approved
+      - completed
 
 permissions:
   contents: write
   checks: read
+  actions: read
 
 concurrency:
-  group: stephen-reviewed-release-publication
+  group: stephen-reviewed-release-${{ github.event.workflow_run.id }}-${{ github.event.workflow_run.run_attempt }}
   cancel-in-progress: false
 
 jobs:
   release:
+    if: >-
+      github.event.workflow_run.event == 'workflow_dispatch'
+      && github.event.workflow_run.status == 'completed'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
+      - name: Download the durable approval-run handoff
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: stephen-reviewed-release-handoff-${{ github.event.workflow_run.id }}-${{ github.event.workflow_run.run_attempt }}
+          path: handoff
+          github-token: ${{ github.token }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Validate the bounded workflow-run handoff
+        id: handoff
+        env:
+          HANDOFF_PATH: handoff/release-handoff.json
+          WORKFLOW_RUN_ID: ${{ github.event.workflow_run.id }}
+          WORKFLOW_RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          WORKFLOW_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+          jq -e \
+            --argjson runId "$WORKFLOW_RUN_ID" \
+            --argjson runAttempt "$WORKFLOW_RUN_ATTEMPT" \
+            --arg controlSha "$WORKFLOW_HEAD_SHA" \
+            '.schemaVersion == 1
+              and .task == "SAAS-608"
+              and .approvalRunId == $runId
+              and .approvalRunAttempt == $runAttempt
+              and .controlSha == $controlSha
+              and (.pr | type == "number" and . >= 1)
+              and (.candidateSha | test("^[0-9a-f]{40}$"))
+              and (.promotionSha | test("^[0-9a-f]{40}$"))
+              and (.sealSha | test("^[0-9a-f]{40}$"))
+              and (.approvalRecord | test("^editorial-releases/[0-9]{4}-[0-9]{2}-[0-9]{2}/[0-9a-f]{12}/approval\\.json$"))
+              and (.releaseTag | test("^stephen-content-[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9a-f]{12}$"))' \
+            "$HANDOFF_PATH" >/dev/null
+          {
+            echo "pr=$(jq -r .pr "$HANDOFF_PATH")"
+            echo "candidate_sha=$(jq -r .candidateSha "$HANDOFF_PATH")"
+            echo "promotion_sha=$(jq -r .promotionSha "$HANDOFF_PATH")"
+            echo "seal_sha=$(jq -r .sealSha "$HANDOFF_PATH")"
+            echo "approval_record=$(jq -r .approvalRecord "$HANDOFF_PATH")"
+            echo "release_tag=$(jq -r .releaseTag "$HANDOFF_PATH")"
+            echo "approval_run_id=$(jq -r .approvalRunId "$HANDOFF_PATH")"
+            echo "approval_run_attempt=$(jq -r .approvalRunAttempt "$HANDOFF_PATH")"
+            echo "control_sha=$(jq -r .controlSha "$HANDOFF_PATH")"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Check out trusted default-branch controls
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ github.event.repository.default_branch }}
+          ref: ${{ steps.handoff.outputs.control_sha }}
           path: trusted
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Node.js
@@ -30,34 +82,27 @@ jobs:
         with:
           node-version: 22
 
-      - name: Validate the bounded dispatch envelope
+      - name: Read the completed trusted approval workflow run
         env:
-          EVENT_ACTION: ${{ github.event.action }}
-          PR_NUMBER: ${{ github.event.client_payload.pr }}
-          CANDIDATE_SHA: ${{ github.event.client_payload.candidateSha }}
-          PROMOTION_SHA: ${{ github.event.client_payload.promotionSha }}
-          SEAL_SHA: ${{ github.event.client_payload.sealSha }}
-          MERGE_SHA: ${{ github.event.client_payload.mergeSha }}
-          APPROVAL_RECORD: ${{ github.event.client_payload.approvalRecord }}
-          RELEASE_TAG: ${{ github.event.client_payload.releaseTag }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          APPROVAL_RUN_ID: ${{ steps.handoff.outputs.approval_run_id }}
+          APPROVAL_RUN_ATTEMPT: ${{ steps.handoff.outputs.approval_run_attempt }}
         run: |
           set -euo pipefail
-          [[ "$EVENT_ACTION" == "stephen_release_approved" ]]
-          [[ "$PR_NUMBER" =~ ^[1-9][0-9]*$ ]]
-          [[ "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]]
-          [[ "$PROMOTION_SHA" =~ ^[0-9a-f]{40}$ ]]
-          [[ "$SEAL_SHA" =~ ^[0-9a-f]{40}$ ]]
-          [[ "$MERGE_SHA" =~ ^[0-9a-f]{40}$ ]]
-          [[ "$APPROVAL_RECORD" =~ ^editorial-releases/[0-9]{4}-[0-9]{2}-[0-9]{2}/[0-9a-f]{12}/approval\.json$ ]]
-          [[ "$RELEASE_TAG" =~ ^stephen-content-[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9a-f]{12}$ ]]
+          gh api --method GET \
+            "repos/$GH_REPO/actions/runs/$APPROVAL_RUN_ID/attempts/$APPROVAL_RUN_ATTEMPT" \
+            > "$RUNNER_TEMP/saas-608-approval-run.json"
+          jq -e '.status == "completed"' "$RUNNER_TEMP/saas-608-approval-run.json" >/dev/null
 
       - name: Read merged PR, exact check and repository Release facts
         env:
           GITHUB_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          PR_NUMBER: ${{ github.event.client_payload.pr }}
-          SEAL_SHA: ${{ github.event.client_payload.sealSha }}
-          RELEASE_TAG: ${{ github.event.client_payload.releaseTag }}
+          PR_NUMBER: ${{ steps.handoff.outputs.pr }}
+          SEAL_SHA: ${{ steps.handoff.outputs.seal_sha }}
+          RELEASE_TAG: ${{ steps.handoff.outputs.release_tag }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           set -euo pipefail
           gh api --method GET "repos/$GH_REPO/pulls/$PR_NUMBER" > "$RUNNER_TEMP/saas-608-release-pr.json"
@@ -84,7 +129,7 @@ jobs:
       - name: Check out the exact approval seal tree
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ github.event.client_payload.sealSha }}
+          ref: ${{ steps.handoff.outputs.seal_sha }}
           path: release
           fetch-depth: 3
           persist-credentials: false
@@ -92,7 +137,7 @@ jobs:
       - name: Build and bind the exact seal artifact
         working-directory: release
         env:
-          SEAL_SHA: ${{ github.event.client_payload.sealSha }}
+          SEAL_SHA: ${{ steps.handoff.outputs.seal_sha }}
         run: |
           set -euo pipefail
           [[ "$(git rev-parse HEAD)" == "$SEAL_SHA" ]]
@@ -106,7 +151,7 @@ jobs:
       - name: Create deterministic Release assets
         id: assets
         env:
-          SEAL_SHA: ${{ github.event.client_payload.sealSha }}
+          SEAL_SHA: ${{ steps.handoff.outputs.seal_sha }}
         run: |
           set -euo pipefail
           archive_name="stephen-site-${SEAL_SHA:0:12}.tar.gz"
@@ -140,14 +185,42 @@ jobs:
         id: policy
         env:
           GH_REPO: ${{ github.repository }}
-          EVENT_PAYLOAD: ${{ toJSON(github.event.client_payload) }}
-          CANDIDATE_SHA: ${{ github.event.client_payload.candidateSha }}
-          PROMOTION_SHA: ${{ github.event.client_payload.promotionSha }}
-          SEAL_SHA: ${{ github.event.client_payload.sealSha }}
-          APPROVAL_RECORD: ${{ github.event.client_payload.approvalRecord }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          GITHUB_TOKEN: ${{ github.token }}
+          CANDIDATE_SHA: ${{ steps.handoff.outputs.candidate_sha }}
+          PROMOTION_SHA: ${{ steps.handoff.outputs.promotion_sha }}
+          SEAL_SHA: ${{ steps.handoff.outputs.seal_sha }}
+          APPROVAL_RECORD: ${{ steps.handoff.outputs.approval_record }}
         run: |
           set -euo pipefail
-          printf '%s\n' "$EVENT_PAYLOAD" > "$RUNNER_TEMP/saas-608-event-payload.json"
+          merge_sha=$(jq -r .merge_commit_sha "$RUNNER_TEMP/saas-608-release-pr.json")
+          [[ "$merge_sha" =~ ^[0-9a-f]{40}$ ]]
+          jq --arg mergeSha "$merge_sha" '. + { mergeSha: $mergeSha }' \
+            handoff/release-handoff.json > "$RUNNER_TEMP/saas-608-event-payload.json"
+          default_branch_head=$(gh api --method GET \
+            "repos/$GH_REPO/commits/$DEFAULT_BRANCH" --jq .sha)
+          git -C trusted fetch --no-tags origin "$default_branch_head"
+          if git -C trusted merge-base --is-ancestor "$merge_sha" "$default_branch_head"; then
+            merge_reachable=true
+          else
+            merge_reachable=false
+          fi
+          gh api --paginate --slurp --method GET \
+            "repos/$GH_REPO/collaborators?affiliation=all&per_page=100" \
+            > "$RUNNER_TEMP/saas-608-collaborator-pages.json"
+          jq '[.[][] | select(.permissions.push == true) | { login }]' \
+            "$RUNNER_TEMP/saas-608-collaborator-pages.json" \
+            > "$RUNNER_TEMP/saas-608-write-collaborators.json"
+          gh api --paginate --slurp --method GET \
+            "repos/$GH_REPO/rulesets?includes_parents=true&per_page=100" \
+            > "$RUNNER_TEMP/saas-608-ruleset-pages.json"
+          jq -r '[.[][] | select(.name == "Protect Stephen immutable Release tags") | .id]
+            | if length == 1 then .[0] else error("missing or duplicate Stephen tag ruleset") end' \
+            "$RUNNER_TEMP/saas-608-ruleset-pages.json" \
+            > "$RUNNER_TEMP/saas-608-tag-ruleset-id.txt"
+          tag_ruleset_id=$(cat "$RUNNER_TEMP/saas-608-tag-ruleset-id.txt")
+          gh api --method GET "repos/$GH_REPO/rulesets/$tag_ruleset_id" \
+            > "$RUNNER_TEMP/saas-608-tag-ruleset.json"
           promotion_record="${APPROVAL_RECORD%/approval.json}/promotion.json"
           test -f "release/$APPROVAL_RECORD"
           test -f "release/$promotion_record"
@@ -157,11 +230,17 @@ jobs:
           cd ..
           jq -n \
             --arg repository "$GH_REPO" \
+            --arg defaultBranch "$DEFAULT_BRANCH" \
+            --arg defaultBranchHead "$default_branch_head" \
+            --argjson mergeReachable "$merge_reachable" \
             --arg promotionParent "$promotion_parent" \
             --arg sealParent "$seal_parent" \
             --slurpfile payload "$RUNNER_TEMP/saas-608-event-payload.json" \
             --slurpfile pr "$RUNNER_TEMP/saas-608-release-pr.json" \
             --slurpfile checks "$RUNNER_TEMP/saas-608-check-runs.json" \
+            --slurpfile approvalRun "$RUNNER_TEMP/saas-608-approval-run.json" \
+            --slurpfile writers "$RUNNER_TEMP/saas-608-write-collaborators.json" \
+            --slurpfile tagRuleset "$RUNNER_TEMP/saas-608-tag-ruleset.json" \
             --slurpfile immutable "$RUNNER_TEMP/saas-608-immutability.json" \
             --slurpfile promotion "release/$promotion_record" \
             --slurpfile seal "release/$APPROVAL_RECORD" \
@@ -170,6 +249,9 @@ jobs:
             --slurpfile existing "$RUNNER_TEMP/saas-608-existing-release.json" \
             '{
               repository: $repository,
+              defaultBranch: $defaultBranch,
+              defaultBranchHeadSha: $defaultBranchHead,
+              mergeReachableFromDefault: $mergeReachable,
               payload: $payload[0],
               pr: {
                 number: $pr[0].number,
@@ -177,14 +259,38 @@ jobs:
                 mergeCommitSha: $pr[0].merge_commit_sha,
                 headSha: $pr[0].head.sha,
                 headRepository: $pr[0].head.repo.full_name,
-                baseRepository: $pr[0].base.repo.full_name
+                baseRepository: $pr[0].base.repo.full_name,
+                baseRef: $pr[0].base.ref
               },
               checkRuns: ($checks[0].check_runs | map({
                 name,
                 headSha: .head_sha,
                 status,
-                conclusion
+                conclusion,
+                appSlug: .app.slug,
+                externalId: .external_id,
+                detailsUrl: .details_url
               })),
+              approvalRun: {
+                id: $approvalRun[0].id,
+                runAttempt: $approvalRun[0].run_attempt,
+                event: $approvalRun[0].event,
+                status: $approvalRun[0].status,
+                conclusion: $approvalRun[0].conclusion,
+                headSha: $approvalRun[0].head_sha,
+                path: $approvalRun[0].path,
+                actor: $approvalRun[0].actor.login,
+                triggeringActor: $approvalRun[0].triggering_actor.login
+              },
+              writeCollaborators: $writers[0],
+              releaseTagRuleset: {
+                name: $tagRuleset[0].name,
+                target: $tagRuleset[0].target,
+                enforcement: $tagRuleset[0].enforcement,
+                bypassActorCount: ($tagRuleset[0].bypass_actors | length),
+                includedRefs: $tagRuleset[0].conditions.ref_name.include,
+                ruleTypes: ($tagRuleset[0].rules | map(.type))
+              },
               immutableReleases: { enabled: $immutable[0].enabled },
               promotion: $promotion[0],
               seal: $seal[0],
@@ -219,8 +325,8 @@ jobs:
           GH_REPO: ${{ github.repository }}
           RELEASE_STATUS: ${{ steps.policy.outputs.status }}
           EXISTING_RELEASE_ID: ${{ steps.policy.outputs.release_id }}
-          RELEASE_TAG: ${{ github.event.client_payload.releaseTag }}
-          SEAL_SHA: ${{ github.event.client_payload.sealSha }}
+          RELEASE_TAG: ${{ steps.handoff.outputs.release_tag }}
+          SEAL_SHA: ${{ steps.handoff.outputs.seal_sha }}
         run: |
           set -euo pipefail
           if [[ "$RELEASE_STATUS" == "create_draft" ]]; then
@@ -270,8 +376,62 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           RELEASE_ID: ${{ steps.draft.outputs.release_id }}
+          RELEASE_TAG: ${{ steps.handoff.outputs.release_tag }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           set -euo pipefail
+          if gh api --method GET "repos/$GH_REPO/git/ref/tags/$RELEASE_TAG" \
+            > "$RUNNER_TEMP/saas-608-prepublish-tag.json" 2>/dev/null; then
+            echo "Release tag must not exist before GitHub atomically publishes the Draft" >&2
+            exit 1
+          fi
+          gh api --method GET "repos/$GH_REPO/releases/$RELEASE_ID" \
+            > "$RUNNER_TEMP/saas-608-prepublish-release.json"
+          merge_sha=$(jq -r .merge_commit_sha "$RUNNER_TEMP/saas-608-release-pr.json")
+          current_default_sha=$(gh api --method GET \
+            "repos/$GH_REPO/commits/$DEFAULT_BRANCH" --jq .sha)
+          git -C trusted fetch --no-tags origin "$current_default_sha"
+          git -C trusted merge-base --is-ancestor "$merge_sha" "$current_default_sha"
+          gh api --paginate --slurp --method GET \
+            "repos/$GH_REPO/collaborators?affiliation=all&per_page=100" \
+            | jq '[.[][] | select(.permissions.push == true) | { login }]' \
+            > "$RUNNER_TEMP/saas-608-prepublish-write-collaborators.json"
+          tag_ruleset_id=$(cat "$RUNNER_TEMP/saas-608-tag-ruleset-id.txt")
+          gh api --method GET "repos/$GH_REPO/rulesets/$tag_ruleset_id" \
+            > "$RUNNER_TEMP/saas-608-prepublish-tag-ruleset.json"
+          jq --arg currentDefaultSha "$current_default_sha" \
+            --slurpfile writers "$RUNNER_TEMP/saas-608-prepublish-write-collaborators.json" \
+            --slurpfile tagRuleset "$RUNNER_TEMP/saas-608-prepublish-tag-ruleset.json" \
+            --slurpfile existing "$RUNNER_TEMP/saas-608-prepublish-release.json" \
+            '.defaultBranchHeadSha = $currentDefaultSha
+            | .mergeReachableFromDefault = true
+            | .writeCollaborators = $writers[0]
+            | .releaseTagRuleset = {
+              name: $tagRuleset[0].name,
+              target: $tagRuleset[0].target,
+              enforcement: $tagRuleset[0].enforcement,
+              bypassActorCount: ($tagRuleset[0].bypass_actors | length),
+              includedRefs: $tagRuleset[0].conditions.ref_name.include,
+              ruleTypes: ($tagRuleset[0].rules | map(.type))
+            }
+            | .existingTag = null
+            | .existingRelease = {
+              id: $existing[0].id,
+              tagName: $existing[0].tag_name,
+              targetCommitish: $existing[0].target_commitish,
+              draft: $existing[0].draft,
+              immutable: $existing[0].immutable,
+              assets: ($existing[0].assets | map({ id, name, digest }))
+            }' "$RUNNER_TEMP/saas-608-release-request.json" \
+            > "$RUNNER_TEMP/saas-608-prepublish-request.json"
+          node --experimental-strip-types trusted/scripts/stephen-reviewed-release-cli.ts \
+            validate-release --request "$RUNNER_TEMP/saas-608-prepublish-request.json" \
+            > "$RUNNER_TEMP/saas-608-prepublish-policy.json"
+          jq -e --argjson releaseId "$RELEASE_ID" \
+            '.status == "reuse_draft"
+              and .releaseId == $releaseId
+              and (.missingAssets | length) == 0' \
+            "$RUNNER_TEMP/saas-608-prepublish-policy.json" >/dev/null
           gh api --method PATCH "repos/$GH_REPO/releases/$RELEASE_ID" \
             -F draft=false \
             -f make_latest=false \
@@ -281,7 +441,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          RELEASE_TAG: ${{ github.event.client_payload.releaseTag }}
+          RELEASE_TAG: ${{ steps.handoff.outputs.release_tag }}
         run: |
           set -euo pipefail
           for attempt in 1 2 3 4 5; do
@@ -322,16 +482,16 @@ jobs:
 
       - name: Summarize immutable Release completion
         env:
-          RELEASE_TAG: ${{ github.event.client_payload.releaseTag }}
-          SEAL_SHA: ${{ github.event.client_payload.sealSha }}
-          MERGE_SHA: ${{ github.event.client_payload.mergeSha }}
+          RELEASE_TAG: ${{ steps.handoff.outputs.release_tag }}
+          SEAL_SHA: ${{ steps.handoff.outputs.seal_sha }}
         run: |
+          merge_sha=$(jq -r .merge_commit_sha "$RUNNER_TEMP/saas-608-release-pr.json")
           {
             echo "## Stephen immutable Release"
             echo ""
             echo "- Release tag: \`$RELEASE_TAG\`"
             echo "- exact approval seal: \`$SEAL_SHA\`"
-            echo "- merge commit: \`$MERGE_SHA\`"
+            echo "- merge commit: \`$merge_sha\`"
             echo "- immutable API state: \`true\`"
             echo "- external publication action: absent"
           } >> "$GITHUB_STEP_SUMMARY"

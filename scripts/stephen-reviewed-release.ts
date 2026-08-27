@@ -88,6 +88,7 @@ export interface ReviewedApprovalPullRequest {
   readonly base: {
     readonly ref: string;
     readonly repository: string;
+    readonly sha: string;
   };
 }
 
@@ -116,6 +117,7 @@ export interface VerifiedReviewedApprovalRequest {
   readonly editorialDate: string;
   readonly manifestPath: string;
   readonly ledgerPath: string;
+  readonly baseSha: string;
 }
 
 function requireText(value: unknown, label: string): asserts value is string {
@@ -151,6 +153,28 @@ function requireSha256(value: string, label: string) {
 
 function requireRepository(value: string) {
   if (!SAFE_REPOSITORY.test(value)) throw new Error('repository identity is invalid');
+}
+
+function validateApprovalReadyManifest(manifest: DailyReviewManifest) {
+  if (manifest.schemaVersion !== 1
+    || manifest.task !== 'SAAS-606'
+    || manifest.reviewState !== 'pending_owner_review'
+    || manifest.publicationState !== 'not_published'
+    || manifest.controls.autoPublishingEnabled !== false
+    || manifest.controls.stopSwitchEngaged !== true) {
+    throw new Error('review manifest publication controls are unsafe');
+  }
+  if (manifest.manualReviewRecords.length !== 0) {
+    throw new Error('manualReviewRecords must be empty before approval');
+  }
+  if (manifest.candidates.length === 0) {
+    throw new Error('review manifest contains no retained candidates');
+  }
+  return manifest.candidates.map((candidate) => {
+    const draft = parseDailyPublicationDraft(candidate.publicationDraft);
+    if (!draft) throw new Error(`${candidate.candidateId} publicationDraft is required`);
+    return draft;
+  });
 }
 
 function equalStrings(left: readonly string[], right: readonly string[]) {
@@ -190,6 +214,7 @@ export function evaluateReviewedApprovalRequest(
   if (input.pr.base.ref !== input.defaultBranch) {
     throw new Error('approval PR must target the default branch');
   }
+  requireFullGitSha(input.pr.base.sha, 'PR base SHA');
   requireFullGitSha(input.pr.head.sha, 'PR head SHA');
   if (input.pr.head.sha !== input.candidateSha) {
     throw new Error('candidate SHA does not match current PR head');
@@ -199,25 +224,7 @@ export function evaluateReviewedApprovalRequest(
   if (input.pr.head.ref !== expectedHead) {
     throw new Error('approval PR head must be the matching daily candidate branch');
   }
-  if (input.manifest.schemaVersion !== 1
-    || input.manifest.task !== 'SAAS-606'
-    || input.manifest.reviewState !== 'pending_owner_review'
-    || input.manifest.publicationState !== 'not_published'
-    || input.manifest.controls.autoPublishingEnabled !== false
-    || input.manifest.controls.stopSwitchEngaged !== true) {
-    throw new Error('review manifest publication controls are unsafe');
-  }
-  if (input.manifest.manualReviewRecords.length !== 0) {
-    throw new Error('manualReviewRecords must be empty before approval');
-  }
-  if (input.manifest.candidates.length === 0) {
-    throw new Error('review manifest contains no retained candidates');
-  }
-  input.manifest.candidates.forEach((candidate) => {
-    if (!parseDailyPublicationDraft(candidate.publicationDraft)) {
-      throw new Error(`${candidate.candidateId} publicationDraft is required`);
-    }
-  });
+  validateApprovalReadyManifest(input.manifest);
 
   const manifestPath = `review-candidates/${input.manifest.editorialDate}/review-manifest.json`;
   const ledgerPath = `review-candidates/${input.manifest.editorialDate}/discovery-ledger.json`;
@@ -241,6 +248,7 @@ export function evaluateReviewedApprovalRequest(
     editorialDate: input.manifest.editorialDate,
     manifestPath,
     ledgerPath,
+    baseSha: input.pr.base.sha,
   };
 }
 
@@ -350,20 +358,7 @@ export function promoteReviewedManifest(
   requireSha256(input.manifestSha256, 'manifest digest');
   requireSha256(input.ledgerSha256, 'ledger digest');
   requireDateOnly(input.manifest.editorialDate, 'manifest editorialDate');
-  if (input.manifest.schemaVersion !== 1
-    || input.manifest.task !== 'SAAS-606'
-    || input.manifest.reviewState !== 'pending_owner_review'
-    || input.manifest.publicationState !== 'not_published'
-    || input.manifest.controls.autoPublishingEnabled !== false
-    || input.manifest.controls.stopSwitchEngaged !== true) {
-    throw new Error('review manifest publication controls are unsafe');
-  }
-  if (input.manifest.manualReviewRecords.length !== 0) {
-    throw new Error('manualReviewRecords must be empty before approval');
-  }
-  if (input.manifest.candidates.length === 0) {
-    throw new Error('review manifest contains no retained candidates');
-  }
+  const parsedDrafts = validateApprovalReadyManifest(input.manifest);
   if (input.ledger.schemaVersion !== 1
     || input.ledger.task !== 'SAAS-606'
     || input.ledger.editorialDate !== input.manifest.editorialDate) {
@@ -378,14 +373,13 @@ export function promoteReviewedManifest(
   if (new Set(candidateIds).size !== candidateIds.length) {
     throw new Error('duplicate promoted item ID');
   }
-  const parsedDrafts = input.manifest.candidates.map((candidate) => {
-    const draft = parseDailyPublicationDraft(candidate.publicationDraft);
-    if (!draft) throw new Error(`${candidate.candidateId} publicationDraft is required`);
-    return draft;
-  });
   const slugs = parsedDrafts.map((draft) => draft.slug);
   if (new Set(slugs).size !== slugs.length) {
     throw new Error('duplicate promoted slug');
+  }
+  const fingerprints = input.manifest.candidates.map((candidate) => candidate.contentFingerprint);
+  if (new Set(fingerprints).size !== fingerprints.length) {
+    throw new Error('duplicate promoted content fingerprint');
   }
 
   const existingIds = new Set(input.existingItems.map((item) => item.id));
@@ -539,7 +533,7 @@ export function verifyApprovalChain(input: VerifyApprovalChainInput): VerifiedAp
   };
 }
 
-export interface ReviewedReleaseDispatchPayload {
+export interface ReviewedReleaseHandoffPayload {
   readonly pr: number;
   readonly candidateSha: string;
   readonly promotionSha: string;
@@ -547,6 +541,9 @@ export interface ReviewedReleaseDispatchPayload {
   readonly mergeSha: string;
   readonly approvalRecord: string;
   readonly releaseTag: string;
+  readonly approvalRunId: number;
+  readonly approvalRunAttempt: number;
+  readonly controlSha: string;
 }
 
 export interface ReviewedReleasePullRequest {
@@ -556,6 +553,7 @@ export interface ReviewedReleasePullRequest {
   readonly headSha: string;
   readonly headRepository: string;
   readonly baseRepository: string;
+  readonly baseRef: string;
 }
 
 export interface ReviewedReleaseCheckRun {
@@ -563,6 +561,34 @@ export interface ReviewedReleaseCheckRun {
   readonly headSha: string;
   readonly status: string;
   readonly conclusion: string | null;
+  readonly appSlug: string;
+  readonly externalId: string | null;
+  readonly detailsUrl: string | null;
+}
+
+export interface ReviewedApprovalWorkflowRun {
+  readonly id: number;
+  readonly runAttempt: number;
+  readonly event: string;
+  readonly status: string;
+  readonly conclusion: string | null;
+  readonly headSha: string;
+  readonly path: string;
+  readonly actor: string;
+  readonly triggeringActor: string;
+}
+
+export interface ReviewedRepositoryWriteCollaborator {
+  readonly login: string;
+}
+
+export interface ReviewedReleaseTagRuleset {
+  readonly name: string;
+  readonly target: string;
+  readonly enforcement: string;
+  readonly bypassActorCount: number;
+  readonly includedRefs: readonly string[];
+  readonly ruleTypes: readonly string[];
 }
 
 export interface ReviewedReleaseAssetExpectation {
@@ -585,9 +611,15 @@ export interface ExistingReviewedRelease {
 
 export interface ReviewedReleaseRequestInput {
   readonly repository: string;
-  readonly payload: ReviewedReleaseDispatchPayload;
+  readonly defaultBranch: string;
+  readonly defaultBranchHeadSha: string;
+  readonly mergeReachableFromDefault: boolean;
+  readonly payload: ReviewedReleaseHandoffPayload;
   readonly pr: ReviewedReleasePullRequest;
   readonly checkRuns: readonly ReviewedReleaseCheckRun[];
+  readonly approvalRun: ReviewedApprovalWorkflowRun;
+  readonly writeCollaborators: readonly ReviewedRepositoryWriteCollaborator[];
+  readonly releaseTagRuleset: ReviewedReleaseTagRuleset;
   readonly immutableReleases: { readonly enabled: boolean };
   readonly promotion: ReviewedPromotionRecord;
   readonly seal: ReviewedApprovalSeal;
@@ -642,6 +674,7 @@ export function evaluateReviewedReleaseRequest(
 ): ReviewedReleasePreparation {
   requireRepository(input.repository);
   const repositoryOwner = input.repository.split('/')[0];
+  requireText(input.defaultBranch, 'default branch');
   if (input.promotion.approver !== repositoryOwner
     || input.seal.approver !== repositoryOwner) {
     throw new Error('reviewed Release approval is not owned by the repository owner');
@@ -652,23 +685,34 @@ export function evaluateReviewedReleaseRequest(
   if (!Number.isInteger(input.payload.pr) || input.payload.pr < 1) {
     throw new Error('Release payload PR number is invalid');
   }
+  if (!Number.isInteger(input.payload.approvalRunId) || input.payload.approvalRunId < 1
+    || !Number.isInteger(input.payload.approvalRunAttempt)
+    || input.payload.approvalRunAttempt < 1) {
+    throw new Error('approval workflow run identity is invalid');
+  }
   for (const [value, label] of [
     [input.payload.candidateSha, 'candidate SHA'],
     [input.payload.promotionSha, 'promotion SHA'],
     [input.payload.sealSha, 'seal SHA'],
     [input.payload.mergeSha, 'merge SHA'],
+    [input.payload.controlSha, 'approval control SHA'],
+    [input.defaultBranchHeadSha, 'default branch head SHA'],
   ] as const) requireFullGitSha(value, label);
   if (input.pr.number !== input.payload.pr
     || input.pr.merged !== true
     || input.pr.headRepository !== input.repository
-    || input.pr.baseRepository !== input.repository) {
+    || input.pr.baseRepository !== input.repository
+    || input.pr.baseRef !== input.defaultBranch) {
     throw new Error('reviewed Release requires the merged approval PR');
   }
   if (input.pr.mergeCommitSha !== input.payload.mergeSha) {
-    throw new Error('merge commit does not match the approved dispatch');
+    throw new Error('merge commit does not match the durable approval handoff');
   }
   if (input.pr.headSha !== input.payload.sealSha) {
     throw new Error('merged PR head does not match the approval seal SHA');
+  }
+  if (input.mergeReachableFromDefault !== true) {
+    throw new Error('approved merge is not reachable from the default branch');
   }
   const approvalPathPattern = new RegExp(
     `^editorial-releases/${input.seal.editorialDate}/${input.payload.candidateSha.slice(0, 12)}/approval\\.json$`,
@@ -676,13 +720,45 @@ export function evaluateReviewedReleaseRequest(
   if (!approvalPathPattern.test(input.payload.approvalRecord)) {
     throw new Error('approval record path does not match the approved candidate');
   }
+  const expectedRunUrl = `https://github.com/${input.repository}/actions/runs/${input.payload.approvalRunId}/attempts/${input.payload.approvalRunAttempt}`;
+  const expectedExternalId = `${REVIEWED_RELEASE_CHECK_NAME}:${input.payload.approvalRunId}:${input.payload.approvalRunAttempt}:${input.payload.sealSha}`;
   const successfulCheck = input.checkRuns.some((check) => (
     check.name === REVIEWED_RELEASE_CHECK_NAME
     && check.headSha === input.payload.sealSha
     && check.status === 'completed'
     && check.conclusion === 'success'
+    && check.appSlug === 'github-actions'
+    && check.externalId === expectedExternalId
+    && check.detailsUrl === expectedRunUrl
   ));
   if (!successfulCheck) throw new Error('successful exact-seal check is missing');
+  if (input.approvalRun.id !== input.payload.approvalRunId
+    || input.approvalRun.runAttempt !== input.payload.approvalRunAttempt
+    || input.approvalRun.event !== 'workflow_dispatch'
+    || input.approvalRun.status !== 'completed'
+    || typeof input.approvalRun.conclusion !== 'string'
+    || input.approvalRun.headSha !== input.payload.controlSha
+    || input.approvalRun.path !== '.github/workflows/approve-reviewed-content.yml'
+    || input.approvalRun.actor !== repositoryOwner
+    || input.approvalRun.triggeringActor !== repositoryOwner) {
+    throw new Error('approval workflow run provenance is invalid');
+  }
+  if (input.writeCollaborators.length !== 1
+    || input.writeCollaborators[0]?.login !== repositoryOwner) {
+    throw new Error('repository write boundary is not single-owner');
+  }
+  const expectedTagRules = ['deletion', 'update'];
+  if (input.releaseTagRuleset.name !== 'Protect Stephen immutable Release tags'
+    || input.releaseTagRuleset.target !== 'tag'
+    || input.releaseTagRuleset.enforcement !== 'active'
+    || input.releaseTagRuleset.bypassActorCount !== 0
+    || !equalStrings(input.releaseTagRuleset.includedRefs, ['refs/tags/stephen-content-*'])
+    || !equalStrings(
+      [...input.releaseTagRuleset.ruleTypes].sort((left, right) => left.localeCompare(right)),
+      expectedTagRules,
+    )) {
+    throw new Error('Release tag protection ruleset is invalid');
+  }
 
   verifyApprovalChain({
     promotion: input.promotion,
@@ -721,6 +797,9 @@ export function evaluateReviewedReleaseRequest(
   const expectedByName = new Map(input.expectedAssets.map((asset) => [asset.name, asset]));
 
   if (!input.existingRelease) {
+    if (input.existingTag) {
+      throw new Error('Release tag must not exist before immutable publication');
+    }
     return {
       status: 'create_draft',
       releaseTag: input.payload.releaseTag,
@@ -741,6 +820,9 @@ export function evaluateReviewedReleaseRequest(
   }
   if (release.draft && release.immutable) {
     throw new Error('Draft Release cannot already be immutable');
+  }
+  if (release.draft && input.existingTag) {
+    throw new Error('Release tag must not exist before immutable publication');
   }
   const existingNames = new Set<string>();
   for (const asset of release.assets) {

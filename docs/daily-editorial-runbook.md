@@ -1,6 +1,6 @@
 # 自我修养知识库｜每日编辑与受控发布手册 v1
 
-> 状态：`PUBLIC_REPOSITORY / BOOTSTRAP_DRAFT_PR`；`SCHEDULE_DISABLED`
+> 状态：`PUBLIC_REPOSITORY / REVIEWED_RELEASE_GATE`；`SCHEDULE_DISABLED`
 >
 > 当前边界：本公开仓库负责发现、候选审核、正式内容提交、静态构建与不可变 GitHub Release，不持有生产凭据，也不执行部署、流量切换或回滚。`STEPHEN_DAILY_SCHEDULE_ENABLED` 默认未启用；任何新内容仍须逐条人工终审，线上投放由独立的私有运维边界另行批准。
 
@@ -256,7 +256,7 @@ permissions:
   pull-requests: write
 ```
 
-只使用 GitHub 自带 `GITHUB_TOKEN`、固定到完整 commit SHA 的 `actions/checkout`、`actions/setup-node` 和 runner 中的 GitHub CLI，不使用 PAT、第三方 PR Action、`pull_request_target` 或 artifact。候选分支使用普通 push，不 force-push。复用候选分支前，工作流会在受信任 checkout 上确认该分支相对目标 base 只修改当天的 `review-manifest.json` 和 `discovery-ledger.json`，并确认两者都存在且为 `100644 blob`；删除整文件、symlink、可执行文件以及任何脚本、依赖、workflow 或其他路径变化，都会在执行候选分支代码前失败关闭。
+只使用 GitHub 自带 `GITHUB_TOKEN`、固定到完整 commit SHA 的 `actions/checkout`、`actions/setup-node` 和 runner 中的 GitHub CLI，不使用 PAT、第三方 PR Action、`pull_request_target` 或候选 artifact。候选分支使用普通 push，不 force-push。复用候选分支前，工作流会在受信任 checkout 上确认该分支相对目标 base 只修改当天的 `review-manifest.json` 和 `discovery-ledger.json`，并确认两者都存在且为 `100644 blob`；删除整文件、symlink、可执行文件以及任何脚本、依赖、workflow 或其他路径变化，都会在执行候选分支代码前失败关闭。每日候选与人工批准共用 `stephen-public-content-writer` 并发组；Release 使用按审批 run ID 与 attempt 区分的独立并发组，避免待运行交接被后续每日任务或另一审批 attempt 替换。静态审计禁止候选/批准工作流调用 tag 或 Release 接口。批准工作流使用私有 artifact 只传递经过精确检查的发布交接，不承载密钥或候选生成数据。
 
 两个 cron 会随工作流进入默认分支而被 GitHub 登记，但 `review` job 默认失败关闭：只有仓库变量 `STEPHEN_DAILY_SCHEDULE_ENABLED` 被项目所有者显式设为字符串 `1`，schedule 事件才会执行。变量缺失、为空或为其他值时，定时运行只显示为 skipped，不扫描来源、不读取 AI Secrets、不写分支或 PR；`workflow_dispatch` 不受该开关影响。定时和人工 live 运行都必须从仓库默认分支执行并以默认分支为 base，只有实际执行的 live 路径会读取 AI Secrets；fixture 模式强制以被 dispatch 的非默认功能分支为 base，不能指向 `main`，也不会注入 AI Secrets。
 
@@ -323,8 +323,8 @@ SAAS-608 不改变每日候选的“待审核、未发布”含义，而是在�
 3. 从默认分支手工运行 `approve-reviewed-content.yml`，同时输入 PR 编号、完整 SHA 和 `APPROVE <SHA>`；
 4. 受信任脚本把候选映射为 `src/content/published/*.json`，依次创建 promotion 与 approval seal 两次提交；
 5. 封印 SHA 通过完整仓库检查和静态产物校验后，工作流用同一 SHA 作为 merge API 并发保护条件完成 merge commit；
-6. 独立工作流重新验证合并、检查、父提交和 digest，按 Draft → 上传完整资产 → 发布顺序形成不可变 GitHub Release。
+6. 批准运行完成后，独立 `workflow_run` 工作流读取合并前持久化的私有交接 artifact，重新验证合并、当前 `main` 可达性、检查、父提交、单写入者、标签规则集和 digest，按 Draft → 上传完整资产 → GitHub 创建受保护 tag 并发布的顺序形成不可变 GitHub Release。
 
-Release 工作流只有 `contents: write` 和核验检查所需的 `checks: read`；批准工作流只有 `contents`、`pull-requests` 与 `checks` 三项必要权限。两者都固定使用 `ubuntu-latest` 和完整 commit SHA 的外部 Action，不包含 `pull_request_target`、自托管 runner 或生产操作入口。
+Release 工作流只有 `contents: write`、核验检查所需的 `checks: read` 和核验批准工作流来源所需的 `actions: read`；批准工作流只有 `contents`、`pull-requests` 与 `checks` 三项必要权限。两者都固定使用 `ubuntu-latest` 和完整 commit SHA 的外部 Action，不包含 `pull_request_target`、自托管 runner 或生产操作入口。
 
-完整字段、命令、失败恢复与“GitHub Release 不等于线上投放”的边界见 `docs/reviewed-release-runbook.md`。首次真实启用必须等 bootstrap 与 SAAS-608 PR 分别合入 `main`、合并后精确 SHA CI 全绿，并由项目所有者另行启用仓库 Immutable Releases；功能分支上的工作流不具备该启用条件。
+完整字段、命令、失败恢复与“GitHub Release 不等于线上投放”的边界见 `docs/reviewed-release-runbook.md`。首次真实启用必须等 bootstrap 与 SAAS-608 PR 分别合入 `main`、合并后精确 SHA CI 全绿，并由项目所有者另行启用仓库 Immutable Releases 与无 bypass 的 `stephen-content-*` tag update/deletion ruleset；功能分支上的工作流不具备该启用条件。

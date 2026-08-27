@@ -203,7 +203,7 @@ describe('public repository disclosure audit', () => {
     expect(result).toContainEqual({ category: 'reviewed-workflow-contract', path });
   });
 
-  it('accepts the native immutable Release workflow with contents write and checks read only', async () => {
+  it('accepts the immutable Release workflow with only contents write plus checks/actions read', async () => {
     const workflow = await readFile(releaseWorkflowPath, 'utf8');
     expect(findings([
       file('.github/workflows/publish-reviewed-release.yml', workflow),

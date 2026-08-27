@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { spawnSync } from 'node:child_process';
-import { chmod, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { chmod, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 
@@ -23,6 +23,7 @@ const CANDIDATE_SHA = '1111111111111111111111111111111111111111';
 const PROMOTION_SHA = '2222222222222222222222222222222222222222';
 const SEAL_SHA = '3333333333333333333333333333333333333333';
 const MERGE_SHA = '4444444444444444444444444444444444444444';
+const CONTROL_SHA = '5555555555555555555555555555555555555555';
 const MANIFEST_DIGEST = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 const LEDGER_DIGEST = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
 const APPROVED_AT = '2026-08-27T10:30:00.000Z';
@@ -232,6 +233,15 @@ describe('SAAS-608 exact-SHA promotion', () => {
       ledger: ledger(['ED-20260827-001', 'ED-20260827-002']),
     }))).toThrow('duplicate promoted slug');
 
+    const duplicateFingerprint = {
+      ...candidate('ED-20260827-002', publicationDraft({ slug: 'second-reviewed-item' })),
+      contentFingerprint: candidate().contentFingerprint,
+    };
+    expect(() => promoteReviewedManifest(promotionInput({
+      manifest: manifest([candidate(), duplicateFingerprint]),
+      ledger: ledger(['ED-20260827-001', 'ED-20260827-002']),
+    }))).toThrow('duplicate promoted content fingerprint');
+
     const first = promoteReviewedManifest(promotionInput()).items[0];
     expect(() => promoteReviewedManifest(promotionInput({ existingItems: [first] })))
       .toThrow('candidate is already published');
@@ -375,6 +385,54 @@ describe('SAAS-608 bounded filesystem CLI', () => {
       await rm(root, { recursive: true, force: true });
     }
   });
+
+  it('rejects path traversal and symlinked publication directories without consuming inputs', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'saas-608-reviewed-paths-'));
+    const outside = await mkdtemp(join(tmpdir(), 'saas-608-reviewed-outside-'));
+    const manifestPath = join(root, 'review-candidates/2026-08-27/review-manifest.json');
+    const ledgerPath = join(root, 'review-candidates/2026-08-27/discovery-ledger.json');
+    const run = (args: readonly string[]) => spawnSync(
+      process.execPath,
+      ['--experimental-strip-types', REVIEWED_RELEASE_CLI, ...args],
+      { encoding: 'utf8' },
+    );
+    const promoteArgs = (manifest = 'review-candidates/2026-08-27/review-manifest.json') => [
+      'promote',
+      '--root', root,
+      '--manifest', manifest,
+      '--ledger', 'review-candidates/2026-08-27/discovery-ledger.json',
+      '--candidate-sha', CANDIDATE_SHA,
+      '--current-head-sha', CANDIDATE_SHA,
+      '--approver', 'ZiZ-LG',
+      '--repository-owner', 'ZiZ-LG',
+      '--repository', 'ZiZ-LG/stephen-knowledge-hub',
+      '--approved-at', APPROVED_AT,
+      '--pr-number', '42',
+    ] as const;
+
+    try {
+      await mkdir(dirname(manifestPath), { recursive: true });
+      await writeFile(manifestPath, await readFile(FIXTURE_MANIFEST, 'utf8'), 'utf8');
+      await writeFile(ledgerPath, await readFile(FIXTURE_LEDGER, 'utf8'), 'utf8');
+
+      const traversal = run(promoteArgs('../review-manifest.json'));
+      expect(traversal.status).toBe(1);
+      expect(traversal.stderr).toContain('manifest and ledger must use the matching daily review directory');
+      await expect(readFile(manifestPath, 'utf8')).resolves.toContain('ED-FIXTURE-REVIEWED');
+      await expect(readFile(ledgerPath, 'utf8')).resolves.toContain('ED-FIXTURE-REVIEWED');
+
+      await mkdir(join(root, 'src/content'), { recursive: true });
+      await symlink(outside, join(root, 'src/content/published'));
+      const linkedOutput = run(promoteArgs());
+      expect(linkedOutput.status).toBe(1);
+      expect(linkedOutput.stderr).toContain('published directory must not contain symlinks');
+      await expect(readFile(manifestPath, 'utf8')).resolves.toContain('ED-FIXTURE-REVIEWED');
+      await expect(readFile(ledgerPath, 'utf8')).resolves.toContain('ED-FIXTURE-REVIEWED');
+    } finally {
+      await rm(root, { recursive: true, force: true });
+      await rm(outside, { recursive: true, force: true });
+    }
+  });
 });
 
 describe('SAAS-608 trusted approval request policy', () => {
@@ -400,6 +458,7 @@ describe('SAAS-608 trusted approval request policy', () => {
         base: {
           ref: 'main',
           repository: 'ZiZ-LG/stephen-knowledge-hub',
+          sha: CONTROL_SHA,
         },
       },
       changedFiles: [{
@@ -421,6 +480,7 @@ describe('SAAS-608 trusted approval request policy', () => {
       editorialDate: '2026-08-27',
       manifestPath: 'review-candidates/2026-08-27/review-manifest.json',
       ledgerPath: 'review-candidates/2026-08-27/discovery-ledger.json',
+      baseSha: CONTROL_SHA,
     });
   });
 
@@ -486,6 +546,9 @@ describe('SAAS-608 immutable Release request policy', () => {
     const releaseTag = reviewedReleaseTag('2026-08-27', SEAL_SHA);
     return {
       repository: 'ZiZ-LG/stephen-knowledge-hub',
+      defaultBranch: 'main',
+      defaultBranchHeadSha: MERGE_SHA,
+      mergeReachableFromDefault: true,
       payload: {
         pr: 42,
         candidateSha: CANDIDATE_SHA,
@@ -494,6 +557,9 @@ describe('SAAS-608 immutable Release request policy', () => {
         mergeSha: MERGE_SHA,
         approvalRecord: `editorial-releases/2026-08-27/${CANDIDATE_SHA.slice(0, 12)}/approval.json`,
         releaseTag,
+        approvalRunId: 9876,
+        approvalRunAttempt: 1,
+        controlSha: CONTROL_SHA,
       },
       pr: {
         number: 42,
@@ -502,13 +568,37 @@ describe('SAAS-608 immutable Release request policy', () => {
         headSha: SEAL_SHA,
         headRepository: 'ZiZ-LG/stephen-knowledge-hub',
         baseRepository: 'ZiZ-LG/stephen-knowledge-hub',
+        baseRef: 'main',
       },
       checkRuns: [{
         name: 'stephen-reviewed-release',
         headSha: SEAL_SHA,
         status: 'completed',
         conclusion: 'success',
+        appSlug: 'github-actions',
+        externalId: `stephen-reviewed-release:9876:1:${SEAL_SHA}`,
+        detailsUrl: 'https://github.com/ZiZ-LG/stephen-knowledge-hub/actions/runs/9876/attempts/1',
       }],
+      approvalRun: {
+        id: 9876,
+        runAttempt: 1,
+        event: 'workflow_dispatch',
+        status: 'completed',
+        conclusion: 'success',
+        headSha: CONTROL_SHA,
+        path: '.github/workflows/approve-reviewed-content.yml',
+        actor: 'ZiZ-LG',
+        triggeringActor: 'ZiZ-LG',
+      },
+      writeCollaborators: [{ login: 'ZiZ-LG' }],
+      releaseTagRuleset: {
+        name: 'Protect Stephen immutable Release tags',
+        target: 'tag',
+        enforcement: 'active',
+        bypassActorCount: 0,
+        includedRefs: ['refs/tags/stephen-content-*'],
+        ruleTypes: ['update', 'deletion'],
+      },
       immutableReleases: { enabled: true },
       promotion,
       seal,
@@ -545,13 +635,53 @@ describe('SAAS-608 immutable Release request policy', () => {
     expect(() => evaluateReviewedReleaseRequest({
       ...input,
       pr: { ...input.pr, mergeCommitSha: CANDIDATE_SHA },
-    })).toThrow('merge commit does not match the approved dispatch');
+    })).toThrow('merge commit does not match the durable approval handoff');
     expect(() => evaluateReviewedReleaseRequest({
       ...input,
       pr: { ...input.pr, headSha: PROMOTION_SHA },
     })).toThrow('merged PR head does not match the approval seal SHA');
     expect(() => evaluateReviewedReleaseRequest({ ...input, checkRuns: [] }))
       .toThrow('successful exact-seal check is missing');
+  });
+
+  it('rejects forged check provenance or an untrusted approval workflow run', () => {
+    const input = releaseInput();
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      checkRuns: input.checkRuns.map((check) => ({ ...check, appSlug: 'other-app' })),
+    })).toThrow('successful exact-seal check is missing');
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      checkRuns: input.checkRuns.map((check) => ({ ...check, externalId: 'forged' })),
+    })).toThrow('successful exact-seal check is missing');
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      approvalRun: { ...input.approvalRun, actor: 'other-user' },
+    })).toThrow('approval workflow run provenance is invalid');
+  });
+
+  it('allows durable recovery from a post-merge approval-run failure', () => {
+    const input = releaseInput();
+    expect(evaluateReviewedReleaseRequest({
+      ...input,
+      approvalRun: { ...input.approvalRun, conclusion: 'failure' },
+    })).toMatchObject({ status: 'create_draft' });
+  });
+
+  it('requires the reviewed merge to remain reachable from the current default branch', () => {
+    const input = releaseInput();
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      pr: { ...input.pr, baseRef: 'release' },
+    })).toThrow('reviewed Release requires the merged approval PR');
+    expect(evaluateReviewedReleaseRequest({
+      ...input,
+      defaultBranchHeadSha: CONTROL_SHA,
+    })).toMatchObject({ status: 'create_draft' });
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      mergeReachableFromDefault: false,
+    })).toThrow('approved merge is not reachable from the default branch');
   });
 
   it('rejects a broken commit chain or disabled immutable Release setting', () => {
@@ -564,6 +694,26 @@ describe('SAAS-608 immutable Release request policy', () => {
       ...input,
       immutableReleases: { enabled: false },
     })).toThrow('repository immutable Releases must be enabled');
+  });
+
+  it('requires a single repository writer and active no-bypass tag protection', () => {
+    const input = releaseInput();
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      writeCollaborators: [{ login: 'ZiZ-LG' }, { login: 'other-writer' }],
+    })).toThrow('repository write boundary is not single-owner');
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      releaseTagRuleset: { ...input.releaseTagRuleset, enforcement: 'disabled' },
+    })).toThrow('Release tag protection ruleset is invalid');
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      releaseTagRuleset: { ...input.releaseTagRuleset, bypassActorCount: 1 },
+    })).toThrow('Release tag protection ruleset is invalid');
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      releaseTagRuleset: { ...input.releaseTagRuleset, ruleTypes: ['deletion'] },
+    })).toThrow('Release tag protection ruleset is invalid');
   });
 
   it('rejects tag drift, a mutable published Release or changed asset digest', () => {
@@ -600,6 +750,22 @@ describe('SAAS-608 immutable Release request policy', () => {
         assets: [{ ...matchingAssets[0], digest: `sha256:${'e'.repeat(64)}` }],
       },
     })).toThrow('existing Release asset digest does not match');
+  });
+
+  it('requires GitHub to create the protected tag atomically when publishing the Draft', () => {
+    const input = releaseInput();
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      existingTag: { objectType: 'commit', sha: SEAL_SHA },
+      existingRelease: {
+        id: 7,
+        tagName: input.payload.releaseTag,
+        targetCommitish: SEAL_SHA,
+        draft: true,
+        immutable: false,
+        assets: [],
+      },
+    })).toThrow('Release tag must not exist before immutable publication');
   });
 
   it('treats a matching immutable Release as an idempotent success and rejects server fields', () => {

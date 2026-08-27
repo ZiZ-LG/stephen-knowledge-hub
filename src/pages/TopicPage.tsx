@@ -1,5 +1,6 @@
 import type { KnowledgeTool, KnowledgeTopic, ReviewedKnowledgeItem } from '../domain';
 import { domainLabels, localize, type Language } from '../i18n';
+import { selectTopicItems } from '../navigation';
 import InternalLink from '../components/InternalLink';
 import KnowledgeCard from '../components/KnowledgeCard';
 
@@ -14,9 +15,7 @@ export default function TopicPage({
   readonly tools: readonly KnowledgeTool[];
   readonly language: Language;
 }) {
-  const topicItems = topic.itemIds
-    .map((id) => items.find((item) => item.id === id))
-    .filter((item): item is ReviewedKnowledgeItem => item !== undefined);
+  const topicItems = selectTopicItems(items, topic);
   const topicTools = topic.toolIds
     .map((id) => tools.find((tool) => tool.id === id))
     .filter((tool): tool is KnowledgeTool => tool !== undefined);

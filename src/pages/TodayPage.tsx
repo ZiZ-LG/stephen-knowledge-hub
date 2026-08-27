@@ -87,7 +87,7 @@ export default function TodayPage({
           </div>
           <InternalLink href='/topics/'>{language === 'zh' ? '查看全部专题' : 'All topics'}</InternalLink>
         </div>
-        <TopicGrid topics={topics.slice(0, 3)} language={language} />
+        <TopicGrid topics={topics.slice(0, 3)} items={items} language={language} />
       </section>
 
       <section className='section-block split-block' aria-labelledby='action-title'>

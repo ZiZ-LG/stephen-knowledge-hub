@@ -122,7 +122,7 @@ export default function RadarPage({
           </div>
           <InternalLink href='/roles/'>{language === 'zh' ? '查看岗位与组织' : 'Roles & organization'}</InternalLink>
         </div>
-        <TopicGrid topics={topics} language={language} />
+        <TopicGrid topics={topics} items={items} language={language} />
       </section>
     </>
   );

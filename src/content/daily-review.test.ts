@@ -686,7 +686,7 @@ permissions:
   contents: write
   pull-requests: write
 concurrency:
-  group: stephen-daily-candidate-review
+  group: stephen-public-content-writer
   cancel-in-progress: false
 jobs:
   review:
@@ -771,6 +771,11 @@ describe('SAAS-606 GitHub workflow safety contract', () => {
       label: 'paid runner',
       workflow: validWorkflowContract.replace('ubuntu-latest', 'macos-latest'),
       error: 'workflow runner must be ubuntu-latest',
+    },
+    {
+      label: 'Release mutation added to the daily writer',
+      workflow: `${validWorkflowContract}\n      - run: gh api repos/$GH_REPO/releases\n`,
+      error: 'daily candidate workflow must not mutate tags or Releases',
     },
     {
       label: 'wrong Beijing schedule',
