@@ -2,11 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-> **Current status (2026-08-27):** Bootstrap PR #1 is merged. SAAS-608 PR #2 now targets `main`; its original task checklist is retained below as implementation history and has been reconciled to the final security architecture. Final landing pins trusted controls to exact SHAs, requires the candidate to contain current `main`, uses a durable approval-run artifact plus `workflow_run` handoff, revalidates current default-branch ancestry and workflow/check provenance, and requires single-owner writes plus a no-bypass update/deletion ruleset before GitHub atomically creates the Release tag.
+> **Current status (2026-08-27):** Bootstrap PR #1 and SAAS-608 PR #2 are merged into `main`. The first owner-approved journey completed its merge, and the post-merge immutable Release now requires the separately planned recovery repair; the original task checklist is retained below as implementation history and has been reconciled to the final security architecture. The recovery landing pins trusted controls to exact SHAs, requires the candidate to contain current `main`, uses a durable approval-run artifact plus `workflow_run` handoff, revalidates current default-branch ancestry, artifact digest, trusted approval-step order and exact-seal rebuild, and requires single-owner writes plus an empty-exclude/no-bypass update/deletion ruleset before GitHub atomically creates the Release tag.
 
 **Goal:** Build a fail-closed Stephen content release loop that binds owner approval to an exact candidate SHA, promotes only the retained candidates into the public collection, merges the reviewed PR after exact-head CI, and publishes an immutable GitHub Release without any production deployment.
 
-**Architecture:** A trusted `workflow_dispatch` running from the default branch verifies the owner, PR identity, exact head SHA, current-base ancestry, and candidate-only diff. It writes a promotion commit whose parent is the approved candidate SHA, then an approval-seal commit whose parent and record bind the promotion SHA; the same runner checks out the seal SHA, runs the complete repository gate, records a check run, persists a private immutable handoff artifact, and merges with the GitHub merge API using the seal SHA as a compare-and-swap guard. A separate trusted `workflow_run` workflow verifies the completed approval run, merged PR, current default-branch ancestry, two-commit chain, single-owner write boundary, protected-tag ruleset, and immutable-release setting; it builds the seal SHA, creates a Draft Release without a pre-existing tag, uploads bounded assets, and lets GitHub atomically create the protected tag when publishing.
+**Architecture:** A trusted `workflow_dispatch` running from the default branch verifies the owner, PR identity, exact head SHA, current-base ancestry, and candidate-only diff. It writes a promotion commit whose parent is the approved candidate SHA, then an approval-seal commit whose parent and record bind the promotion SHA; the same runner checks out the seal SHA, runs the complete repository gate, persists a private immutable handoff artifact, and merges with the GitHub merge API using the seal SHA as a compare-and-swap guard. A separate trusted `workflow_run` or owner-only recovery dispatch verifies the original completed approval run, exact handoff artifact, trusted approval-step order, merged PR, current default-branch ancestry, two-commit chain, exact-seal rebuild, single-owner write boundary, protected-tag ruleset, and immutable-release setting; it builds the seal SHA, creates a Draft Release without a pre-existing tag, uploads bounded assets, and lets GitHub atomically create the protected tag when publishing. The former custom check run is retired and is not part of the evidence chain.
 
 **Tech Stack:** TypeScript, Vitest, Vite, Node.js 22.12+, GitHub Actions on `ubuntu-latest`, GitHub REST API, Git merge commits, native immutable GitHub Releases.
 
@@ -23,7 +23,7 @@
 - Merge uses `merge` and the exact seal SHA compare-and-swap parameter; head drift fails.
 - Release tag format is `stephen-content-YYYY-MM-DD-<seal-sha-12>` and targets the seal SHA. Because a commit cannot contain a value derived from its own SHA, the approval seal records the fixed tag rule; the exact tag is derived and verified only after the seal commit exists.
 - Release creation follows Draft -> upload all assets -> publish; post-publication API state must report `immutable: true`.
-- Daily candidate and approval workflows share one source-content writer group and are statically forbidden from mutating tags or Releases. Each durable Release handoff uses a stable approval-run-and-attempt-keyed concurrency group so later runs cannot cancel a pending consumer. The repository must have only the owner as a push collaborator and an active no-bypass update/deletion ruleset for `refs/tags/stephen-content-*`.
+- Daily candidate and approval workflows share one source-content writer group and are statically forbidden from mutating tags or Releases. Each durable Release handoff uses a stable approval-run-and-attempt-keyed concurrency group so later runs cannot cancel a pending consumer. The repository must have only the owner as a push collaborator and an active empty-exclude/no-bypass update/deletion ruleset for `refs/tags/stephen-content-*`.
 - No deployment event, GitHub Environment, production secret, SSH, Nginx, DNS, traffic switch, or server operation is added.
 - Bootstrap and SAAS-608 remain separately attributable merge commits. Scheduled live candidate execution and every production deployment surface remain disabled and separately authorized.
 
@@ -226,9 +226,9 @@ git commit -m "feat(saas-608): add reviewed promotion CLI"
 
 **Interfaces:**
 - Consumes workflow inputs: `pr_number`, `candidate_sha`, `confirmation`.
-- Produces two commits on the same daily branch and a `stephen-reviewed-release` check run on the seal SHA.
+- Produces two commits on the same daily branch, runs the complete gate on the seal SHA, and persists a run/attempt-bound handoff artifact before merge; it does not create a custom check run.
 - Produces an exact-SHA merge via `PUT /repos/{repo}/pulls/{number}/merge` with `sha=<sealSha>` and `merge_method=merge`.
-- Produces a private immutable handoff artifact before merge; the completed approval run is the durable trigger for Release verification, including recovery from a post-merge run failure.
+- Produces a private handoff artifact before merge; the successful approval run is the durable trigger for Release verification, and a later owner-only recovery dispatch can bind the original run ID/attempt after a Release-workflow failure.
 
 - [ ] **Step 1: Write failing request-policy tests**
 
@@ -245,16 +245,15 @@ Implement the pure request evaluator and rerun until PASS.
 The workflow must:
 
 1. run only by `workflow_dispatch` on the default branch;
-2. use `contents: write`, `pull-requests: write`, `checks: write`, and no other write permission;
+2. use `contents: write`, `pull-requests: write`, and no other write permission;
 3. pin every external Action to a full commit SHA;
 4. validate both actors and confirmation phrase `APPROVE <candidate_sha>`;
 5. fetch PR data and changed-file metadata before checkout;
 6. check out trusted default-branch scripts separately from the daily branch;
 7. create promotion and seal commits with explicit parents;
 8. check out the seal tree, run `npm ci`, `npm run check`, and exact-SHA artifact verification;
-9. create the successful check run on the seal SHA only after all commands pass;
-10. persist a bounded handoff artifact that binds the run, control, candidate, promotion and seal SHAs; and
-11. merge with the exact seal SHA after rechecking current base and ancestry. The Release workflow starts from the completed approval `workflow_run`, not a best-effort post-merge dispatch.
+9. persist a bounded handoff artifact that binds the run, control, candidate, promotion and seal SHAs; and
+10. merge with the exact seal SHA after rechecking current base and ancestry. The Release workflow normally starts from the successful approval `workflow_run`; recovery uses an owner-only default-branch dispatch bound to the original approval run ID/attempt.
 
 - [ ] **Step 4: Extend the public audit**
 
@@ -288,7 +287,7 @@ git commit -m "feat(saas-608): approve and merge exact reviewed SHA"
 
 - [ ] **Step 1: Write failing release-policy tests**
 
-Assert release preparation rejects an unmerged PR, unreachable or mismatched merge/seal SHA, missing successful reviewed-release check, broken commit chain, disabled release immutability, multiple push collaborators, missing/bypassed tag protection, any pre-publish tag, mutable existing release, changed asset digest, or any production/deployment field. A completed approval run that failed only after merge remains recoverable when every durable gate proves the exact seal.
+Assert release preparation rejects an unmerged PR, unreachable or mismatched merge/seal SHA, invalid or expired handoff artifact, unsuccessful or reordered trusted approval steps, missing exact-seal rebuild, broken commit chain, disabled release immutability, multiple push collaborators, missing/bypassed tag protection, any pre-publish tag, mutable existing release, changed asset digest, or any production/deployment field. A completed approval run that failed only after merge remains recoverable when every durable gate proves the exact seal.
 
 - [ ] **Step 2: Verify RED and implement release policy**
 
@@ -298,7 +297,7 @@ Implement pure validation and deterministic tag/asset naming, then rerun to PASS
 
 - [ ] **Step 3: Add the Release workflow**
 
-Use only `contents: write`, `checks: read`, and `actions: read` (required to retrieve the originating run artifact and independently verify the exact-seal check). Check out trusted verification code at the handoff-bound control SHA; validate current `main`, approval-run provenance, the sole push collaborator, active no-bypass update/deletion tag rules, and `immutable-releases.enabled == true`, then fetch and verify the exact seal chain. Build the seal tree, generate `.stephen-release.json`, create a deterministic tarball, create/reuse only a matching Draft Release, upload all assets, require the tag to remain absent, revalidate current main/ruleset/writer/digests immediately before publishing, and require the final REST response to report `immutable: true` and the newly created protected tag to target the seal SHA.
+Use `contents: write`, `actions: read`, and `pull-requests: read` on `GITHUB_TOKEN`. Use `STEPHEN_RELEASE_GOVERNANCE_TOKEN` only in the two read-only governance steps; it must be limited to `ZiZ-LG/stephen-knowledge-hub` with only `Administration: read`. Normalize automatic `workflow_run` and owner-only recovery dispatch inputs to one exact approval run ID/attempt, bind the original private handoff artifact and trusted successful approval-step sequence to that run, and execute repaired Release policy from the current trusted workflow SHA rather than the historical approval control SHA. Validate current `main`, approval-run provenance, the sole push collaborator, active empty-exclude/no-bypass update/deletion tag rules, and `immutable-releases.enabled == true`, then rebuild and verify the exact seal. Generate `.stephen-release.json`, create a deterministic tarball, create/reuse only a matching Draft Release, upload all assets, require the tag to remain absent, revalidate current main/immutable setting/ruleset/writer/digests immediately before publishing, and require the final REST response to report `immutable: true` and the newly created protected tag to target the seal SHA. The transient custom check is neither created nor consumed.
 
 - [ ] **Step 4: Verify no deployment surface**
 
