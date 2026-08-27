@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-> **Current status (2026-08-27):** Bootstrap PR #1 is merged. SAAS-608 PR #2 now targets `main`; its original task checklist is retained below as implementation history and has been reconciled to the final security architecture. Final landing pins trusted controls to exact SHAs, requires the candidate to contain current `main`, uses a durable approval-run artifact plus `workflow_run` handoff, revalidates current default-branch ancestry and workflow/check provenance, and requires single-owner writes plus a no-bypass update/deletion ruleset before GitHub atomically creates the Release tag.
+> **Current status (2026-08-27):** Bootstrap PR #1 is merged. SAAS-608 PR #2 now targets `main`; its original task checklist is retained below as implementation history and has been reconciled to the final security architecture. Final landing pins trusted controls to exact SHAs, requires the candidate to contain current `main`, uses a durable approval-run artifact plus `workflow_run` handoff, revalidates current default-branch ancestry, artifact digest, trusted approval-step order and exact-seal rebuild, and requires single-owner writes plus a no-bypass update/deletion ruleset before GitHub atomically creates the Release tag.
 
 **Goal:** Build a fail-closed Stephen content release loop that binds owner approval to an exact candidate SHA, promotes only the retained candidates into the public collection, merges the reviewed PR after exact-head CI, and publishes an immutable GitHub Release without any production deployment.
 
@@ -228,7 +228,7 @@ git commit -m "feat(saas-608): add reviewed promotion CLI"
 - Consumes workflow inputs: `pr_number`, `candidate_sha`, `confirmation`.
 - Produces two commits on the same daily branch and a `stephen-reviewed-release` check run on the seal SHA.
 - Produces an exact-SHA merge via `PUT /repos/{repo}/pulls/{number}/merge` with `sha=<sealSha>` and `merge_method=merge`.
-- Produces a private immutable handoff artifact before merge; the completed approval run is the durable trigger for Release verification, including recovery from a post-merge run failure.
+- Produces a private handoff artifact before merge; the successful approval run is the durable trigger for Release verification, and a later owner-only recovery dispatch can bind the original run ID/attempt after a Release-workflow failure.
 
 - [ ] **Step 1: Write failing request-policy tests**
 
@@ -245,16 +245,15 @@ Implement the pure request evaluator and rerun until PASS.
 The workflow must:
 
 1. run only by `workflow_dispatch` on the default branch;
-2. use `contents: write`, `pull-requests: write`, `checks: write`, and no other write permission;
+2. use `contents: write`, `pull-requests: write`, and no other write permission;
 3. pin every external Action to a full commit SHA;
 4. validate both actors and confirmation phrase `APPROVE <candidate_sha>`;
 5. fetch PR data and changed-file metadata before checkout;
 6. check out trusted default-branch scripts separately from the daily branch;
 7. create promotion and seal commits with explicit parents;
 8. check out the seal tree, run `npm ci`, `npm run check`, and exact-SHA artifact verification;
-9. create the successful check run on the seal SHA only after all commands pass;
-10. persist a bounded handoff artifact that binds the run, control, candidate, promotion and seal SHAs; and
-11. merge with the exact seal SHA after rechecking current base and ancestry. The Release workflow starts from the completed approval `workflow_run`, not a best-effort post-merge dispatch.
+9. persist a bounded handoff artifact that binds the run, control, candidate, promotion and seal SHAs; and
+10. merge with the exact seal SHA after rechecking current base and ancestry. The Release workflow normally starts from the successful approval `workflow_run`; recovery uses an owner-only default-branch dispatch bound to the original approval run ID/attempt.
 
 - [ ] **Step 4: Extend the public audit**
 
@@ -298,7 +297,7 @@ Implement pure validation and deterministic tag/asset naming, then rerun to PASS
 
 - [ ] **Step 3: Add the Release workflow**
 
-Use only `contents: write`, `checks: read`, and `actions: read` (required to retrieve the originating run artifact and independently verify the exact-seal check). Check out trusted verification code at the handoff-bound control SHA; validate current `main`, approval-run provenance, the sole push collaborator, active no-bypass update/deletion tag rules, and `immutable-releases.enabled == true`, then fetch and verify the exact seal chain. Build the seal tree, generate `.stephen-release.json`, create a deterministic tarball, create/reuse only a matching Draft Release, upload all assets, require the tag to remain absent, revalidate current main/ruleset/writer/digests immediately before publishing, and require the final REST response to report `immutable: true` and the newly created protected tag to target the seal SHA.
+Use `contents: write`, `actions: read`, and `pull-requests: read` on `GITHUB_TOKEN`. Use `STEPHEN_RELEASE_GOVERNANCE_TOKEN` only in the two read-only governance steps; it must be limited to `ZiZ-LG/stephen-knowledge-hub` with only `Administration: read`. Normalize automatic `workflow_run` and owner-only recovery dispatch inputs to one exact approval run ID/attempt, bind the original private handoff artifact and trusted successful approval-step sequence to that run, and execute repaired Release policy from the current trusted workflow SHA rather than the historical approval control SHA. Validate current `main`, approval-run provenance, the sole push collaborator, active no-bypass update/deletion tag rules, and `immutable-releases.enabled == true`, then rebuild and verify the exact seal. Generate `.stephen-release.json`, create a deterministic tarball, create/reuse only a matching Draft Release, upload all assets, require the tag to remain absent, revalidate current main/immutable setting/ruleset/writer/digests immediately before publishing, and require the final REST response to report `immutable: true` and the newly created protected tag to target the seal SHA. The transient custom check is neither created nor consumed.
 
 - [ ] **Step 4: Verify no deployment surface**
 

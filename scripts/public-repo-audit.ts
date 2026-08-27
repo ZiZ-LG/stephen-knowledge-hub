@@ -109,6 +109,20 @@ function reviewedWorkflowHasUnsafeSurface(path: string, text: string) {
     /\$\{\{\s*secrets\.STEPHEN_RELEASE_GOVERNANCE_TOKEN\s*\}\}/g,
   ) ?? [];
   if (path === releaseWorkflowPath && governanceSecretMatches.length !== 2) return true;
+  if (path === releaseWorkflowPath) {
+    const allowedSecretSteps = [
+      'Read fail-closed repository governance facts',
+      'Refresh governance facts before immutable publication',
+    ];
+    const actualSecretSteps = text
+      .split(/(?=^ {6}- name: )/m)
+      .filter((block) => block.includes(releaseGovernanceSecret))
+      .map((block) => /^ {6}- name: (.+)$/m.exec(block)?.[1] ?? '');
+    if (actualSecretSteps.length !== allowedSecretSteps.length
+      || !allowedSecretSteps.every((name) => actualSecretSteps.includes(name))) {
+      return true;
+    }
+  }
   const secretSanitizedText = path === releaseWorkflowPath
     ? text.split(releaseGovernanceSecret).join('')
     : text;

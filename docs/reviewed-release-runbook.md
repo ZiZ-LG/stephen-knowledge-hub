@@ -11,7 +11,7 @@
 2. 项目所有者输入的完整 40 位候选 SHA 和确认句；
 3. 以候选 SHA 为父提交的“候选转正式内容”提交；
 4. 以转正式提交为父提交的“人工批准封印”提交；
-5. 封印 SHA 上完整通过的 `stephen-reviewed-release` 检查和使用该 SHA 作为并发保护条件的 merge commit；
+5. 原批准运行的私有 handoff artifact、受信任步骤成功顺序，以及使用封印 SHA 作为并发保护条件的 merge commit；
 6. 指向封印 SHA、包含校验元数据与静态站点压缩包的不可变 GitHub Release。
 
 AI 和每日候选工作流只能生成 `pending_owner_review / not_published` 候选，不能生成上述第 2–6 项结果。
@@ -26,10 +26,17 @@ AI 和每日候选工作流只能生成 `pending_owner_review / not_published` �
 - 仓库原生 Immutable Releases 设置已由项目所有者单独启用，并经 API 复核为 `enabled: true`；
 - 仓库存在启用中的 `Protect Stephen immutable Release tags` tag ruleset，仅匹配 `refs/tags/stephen-content-*`，无 bypass actor，并禁止 update 与 deletion；
 - 仓库只有 `ZiZ-LG` 一个具备 push 权限的 collaborator；每日候选与人工批准共用 `stephen-public-content-writer` 并发组，Release 使用按审批 run ID 与 attempt 区分的独立并发组，避免待运行交接被后续每日任务或另一审批 attempt 替换；静态审计禁止候选/批准工作流调用 tag 或 Release 接口；
+- 仓库 Secret `STEPHEN_RELEASE_GOVERNANCE_TOKEN` 已存在。其值必须是 fine-grained token，resource owner 为 `ZiZ-LG`，repository access 仅选择 `ZiZ-LG/stephen-knowledge-hub`，Repository permissions 仅授予 `Administration: read`；不得增加 contents、actions、pull requests 或任何 write 权限；
 - 当日候选由默认分支上的 live 工作流形成，分支名为 `codex/stephen-daily-YYYY-MM-DD`；
 - 候选 PR 仍为 open Draft，且相对 `main` 只增加或修改当日 `review-manifest.json` 与 `discovery-ledger.json`。
 
 缺少任一项时停止，不用功能分支、fixture PR 或手工 Release 绕过。
+
+治理 token 只在 Release 工作流的两项只读治理步骤中注入，用于读取 Immutable Releases、collaborator 与 ruleset 事实；exact-seal 构建、artifact 下载、PR 读取、Draft/asset/tag/Release 操作均看不到该 token。创建 token 后通过 GitHub 仓库 Settings → Secrets and variables → Actions 保存为上述名称；命令行只核对 Secret 名称，不读取或输出其值：
+
+```bash
+gh secret list --repo ZiZ-LG/stephen-knowledge-hub
+```
 
 ## 3. 项目所有者如何终审候选
 
@@ -136,7 +143,7 @@ approval seal commit：
 - 不记录凭据、主机或外部发布目标；
 - 完整 Release 标签只能在封印提交 SHA 产生后计算，格式为 `stephen-content-YYYY-MM-DD-<seal-sha-12>`。
 
-工作流以普通 fast-forward push 写回当日分支；若分支已漂移，push 失败，不 force-push。随后在封印树上执行 `npm ci`、`npm run check` 和精确 SHA 静态产物校验。全部成功后才创建 `stephen-reviewed-release` 成功检查，把 PR 转为 ready，并调用 GitHub merge API：
+工作流以普通 fast-forward push 写回当日分支；若分支已漂移，push 失败，不 force-push。随后在封印树上执行 `npm ci`、`npm run check` 和精确 SHA 静态产物校验，再验证封印链、构建并持久化私有 handoff artifact。全部成功后才把 PR 转为 ready，并调用 GitHub merge API：
 
 - merge 方法固定为 merge commit；
 - API `sha` 参数固定为封印 SHA；
@@ -145,12 +152,14 @@ approval seal commit：
 
 ## 6. 不可变 GitHub Release
 
-批准工作流在合并前写入 GitHub Actions 私有、不可修改的交接 artifact。审批运行完成时，独立 Release 工作流由 `workflow_run` 自动唤起；即使审批运行在合并后的非关键收尾处失败，交接 artifact、已合并 PR 和精确检查仍形成可恢复的持久证据。Release 工作流重新验证：
+批准工作流在合并前写入 GitHub Actions 私有 handoff artifact。审批运行成功完成时，独立 Release 工作流由 `workflow_run` 自动唤起；若 Release 工作流自身失败，仓库所有者可以从修复后的默认分支用原 approval run ID 与 attempt 进入同一恢复路径。Release 工作流重新验证：
 
 - PR 已合并，merge SHA 与事件一致；
 - PR head 是封印 SHA；
-- 封印 SHA 上存在成功的 `stephen-reviewed-release` 检查，且 GitHub App、external ID、运行链接与发起批准的 workflow run 完全一致；
-- 发起批准的 workflow run 由仓库所有者从受信任控制 SHA 触发且已经完成；是否成功由持久的精确检查、封印链和已合并 PR 共同决定，不依赖合并后的脆弱通知步骤；
+- 发起批准的 workflow run ID/attempt、仓库、workflow 路径、默认分支、actor、triggering actor、control SHA、完成状态和成功结论完全一致；
+- 原 run 中只有一个未过期的精确命名 handoff artifact，artifact digest 与 workflow run identity 有效；
+- 原 `approve` job 中“完整 exact-seal CI → 封印链验证 → 构建 handoff → 持久化 handoff → exact-seal merge”五个步骤均成功且顺序严格递增；旧的自建 `stephen-reviewed-release` check 不再作为证据，也不再创建；
+- Release 工作流从本次 workflow 所在的受信任默认分支 SHA 执行修复后的策略代码，并在无治理 token 的构建步骤中重新运行 `npm ci`、`npm run check` 与静态产物 exact-SHA 校验；原 approval `controlSha` 只用于绑定原 handoff；
 - merge SHA 仍可从当前远端默认分支 head 到达；默认分支可以在之后正常向前演进；
 - 两个父提交、批准记录、仓库身份和标签全部一致；
 - Immutable Releases 设置仍为开启；
@@ -159,12 +168,13 @@ approval seal commit：
 
 Release 严格按以下顺序形成：
 
-1. 从封印 SHA 重新构建并生成 `.stephen-release.json`；
-2. 生成确定性 `stephen-site-<seal-sha-12>.tar.gz`；
-3. 创建或复用目标为封印 SHA、但尚不创建 tag 的 Draft Release；
-4. 上传缺少的、digest 匹配的两个资产；
-5. 紧邻发布动作要求 tag 仍不存在，并重新读取当前远端 `main`、单写入者、标签规则集、Draft Release 和全部资产；完整复核后由 GitHub 在发布 Draft 时创建 tag；
-6. 重新读取 API，要求 `immutable: true`、受保护 tag 指向封印 SHA、资产集合和 SHA-256 全部一致。
+1. 用治理 token 只读确认 Immutable Releases、单写入者与无 bypass 标签规则；
+2. 从封印 SHA 重新构建并生成 `.stephen-release.json`，记录本次 exact-seal rebuild 成功事实；
+3. 生成确定性 `stephen-site-<seal-sha-12>.tar.gz`；
+4. 用原 approval run、artifact、job steps、合并链、治理事实和 rebuild 事实执行首次完整策略校验；
+5. 创建或复用目标为封印 SHA、但尚不创建 tag 的 Draft Release，并只补上传 digest 匹配的缺少资产；
+6. 紧邻发布动作再次用治理 token 只读刷新 Immutable Releases、单写入者和标签规则，再用普通 `GITHUB_TOKEN` 复核 tag 不存在、当前远端 `main` 可达、Draft Release 和全部资产；
+7. 治理 token 离开作用域后，仅用 `GITHUB_TOKEN` 发布 Draft，由 GitHub 创建 tag；重新读取 API，要求 `immutable: true`、受保护 tag 指向封印 SHA、资产集合和 SHA-256 全部一致。
 
 匹配的不可变 Release 再次收到同一审批运行完成事件时按成功处理，不覆盖任何资产。
 
@@ -178,10 +188,25 @@ Release 严格按以下顺序形成：
 | 分支在 push 前漂移 | push 失败 | 审核新 head 的全部变化并使用新 SHA 批准 |
 | 封印 CI 失败 | 两提交可能已在 Draft PR 分支，未合并 | 前进合并修复后的 `main`，恢复仅含两份审核文件的候选净差异，形成新候选 head 后重新完整批准；不 force-push、不手改 seal |
 | merge compare-and-swap 失败 | 未合并 | 重新读取 PR head，不重用旧批准 |
-| 合并后审批运行收尾失败 | 已合并，交接 artifact 已持久化 | `workflow_run` 仍按持久证据尝试发布；若 Release 工作流失败，调查后重跑该 Release 工作流，不重新合并 |
+| Release 工作流失败 | 已合并，原成功 approval run 与 handoff artifact 已持久化 | 修复 Release 控制代码并合入 `main`，待精确 `main` SHA CI 全绿后，从 `main` 用原 run ID/attempt 执行恢复 dispatch；不重跑批准、不重新合并 |
+| 治理 token 缺失或权限不符 | 在 Release mutation 前失败关闭 | 创建/轮换仅限本仓库且只有 `Administration: read` 的 fine-grained token，保存为指定 Secret 后重跑恢复 dispatch；不得改用宽权限 token |
 | Draft Release 已有部分资产 | Draft 保留 | 同一事件只补上传 digest 匹配的缺少资产 |
 | 已有 tag、Release 或资产不匹配 | 失败关闭 | 人工调查，不删除或覆盖证据 |
 | 不可变 API 状态未出现 | Release 不宣告成功 | 保留运行证据并调查仓库设置/API 状态 |
+
+### 7.1 Owner-only 恢复 dispatch
+
+恢复只能由 `ZiZ-LG` 从默认分支运行 `publish-reviewed-release.yml`，并填写原成功批准运行的精确 ID 与 attempt：
+
+```bash
+gh workflow run publish-reviewed-release.yml \
+  --repo ZiZ-LG/stephen-knowledge-hub \
+  --ref main \
+  -f approval_run_id="<original-approval-run-id>" \
+  -f approval_run_attempt="<original-approval-run-attempt>"
+```
+
+工作流会重新从 API 读取原 run、artifact 和 job steps；输入不能改变 PR、candidate、promotion、seal、approval record 或 Release tag。本次 SAAS-608 恢复绑定 `approval_run_id=33095856066`、`approval_run_attempt=1`，目标 tag 固定为 `stephen-content-2026-08-27-d24d2128bc5b`。任何 actor、默认分支、run attempt、artifact digest 或 handoff 字段不匹配都会在 Release mutation 前失败关闭。
 
 ## 8. 更正、撤回与外部发布边界
 

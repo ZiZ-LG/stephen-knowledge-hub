@@ -218,6 +218,71 @@ describe('public repository disclosure audit', () => {
     expect(workflow).not.toContain('commits/$SEAL_SHA/check-runs');
   });
 
+  it('rejects any unapproved governance secret name or placement', async () => {
+    const path = '.github/workflows/publish-reviewed-release.yml';
+    const workflow = await readFile(releaseWorkflowPath, 'utf8');
+    const wrongName = workflow
+      .split('secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN')
+      .join('secrets.OTHER_TOKEN');
+    const movedIntoBuild = workflow
+      .replace(
+        'GH_TOKEN: ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}',
+        'GH_TOKEN: disabled',
+      )
+      .replace(
+        'working-directory: release\n        env:\n          SEAL_SHA: ${{ steps.handoff.outputs.seal_sha }}',
+        [
+          'working-directory: release',
+          '        env:',
+          '          SEAL_SHA: ${{ steps.handoff.outputs.seal_sha }}',
+          '          LEAKED_GOVERNANCE_TOKEN: ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}',
+        ].join('\n'),
+      );
+
+    expect(findings([file(path, wrongName)]))
+      .toContainEqual({ category: 'reviewed-workflow-boundary', path });
+    expect(findings([file(path, movedIntoBuild)]))
+      .toContainEqual({ category: 'reviewed-workflow-boundary', path });
+  });
+
+  it('rejects the governance token from the approval workflow', async () => {
+    const path = '.github/workflows/approve-reviewed-content.yml';
+    const workflow = await readFile(approvalWorkflowPath, 'utf8');
+    const unsafe = workflow.replace(
+      'permissions:',
+      'env:\n  GH_TOKEN: ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}\n\npermissions:',
+    );
+
+    expect(findings([file(path, unsafe)]))
+      .toContainEqual({ category: 'reviewed-workflow-boundary', path });
+  });
+
+  it('rejects recovery without owner/default-branch guards or with a restored check dependency', async () => {
+    const path = '.github/workflows/publish-reviewed-release.yml';
+    const workflow = await readFile(releaseWorkflowPath, 'utf8');
+    const missingGuard = workflow.replace(
+      '[[ "$CURRENT_REF" == "$DEFAULT_BRANCH" ]]',
+      'true',
+    );
+    const restoredCheck = workflow
+      .replace('  actions: read', '  actions: read\n  checks: read')
+      .replace(
+        'gh api --method GET "repos/$GH_REPO/pulls/$PR_NUMBER"',
+        [
+          'gh api --method GET "repos/$GH_REPO/commits/$SEAL_SHA/check-runs"',
+          '          gh api --method GET "repos/$GH_REPO/pulls/$PR_NUMBER"',
+        ].join('\n'),
+      );
+
+    expect(findings([file(path, missingGuard)]))
+      .toContainEqual({ category: 'reviewed-workflow-contract', path });
+    expect(findings([file(path, restoredCheck)]))
+      .toEqual(expect.arrayContaining([
+        { category: 'reviewed-workflow-permissions', path },
+        { category: 'reviewed-workflow-contract', path },
+      ]));
+  });
+
   it('rejects a Release workflow that has extra permissions or omits immutable final-state proof', () => {
     const path = '.github/workflows/publish-reviewed-release.yml';
     const unsafe = [
