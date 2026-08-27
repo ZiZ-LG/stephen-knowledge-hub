@@ -77,6 +77,19 @@
         "manualReview": 59,
         "proposed": 59
       }
+    },
+    {
+      "fetchedAt": "2026-08-27T14:49:49.782Z",
+      "summary": {
+        "sourcesConfigured": 2,
+        "sourcesScanned": 2,
+        "sourcesFailed": 0,
+        "newDiscoveries": 0,
+        "duplicates": 1,
+        "rejected": 0,
+        "manualReview": 59,
+        "proposed": 59
+      }
     }
   ]
 }
