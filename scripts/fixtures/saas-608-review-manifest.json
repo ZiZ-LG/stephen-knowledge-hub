@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "task": "SAAS-606",
+  "editorialDate": "2026-08-27",
+  "generatedAt": "2026-08-27T09:00:00.000Z",
+  "reviewState": "pending_owner_review",
+  "publicationState": "not_published",
+  "controls": {
+    "autoPublishingEnabled": false,
+    "stopSwitchEngaged": true
+  },
+  "candidates": [
+    {
+      "candidateId": "ED-FIXTURE-REVIEWED",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News RSS",
+      "originalTitle": "Previewing a faster inference service tier",
+      "canonicalUrl": "https://openai.com/index/fixture-reviewed-release",
+      "publishedAt": "2026-08-27T08:00:00.000Z",
+      "fetchedAt": "2026-08-27T09:00:00.000Z",
+      "sourceSummary": "The vendor introduced a faster inference service tier.",
+      "evidenceExcerpt": "A bounded factual excerpt retained for owner review.",
+      "eventKey": "event-fixture-reviewed-release",
+      "contentFingerprint": "fingerprint-fixture-reviewed-release",
+      "riskLevel": "medium",
+      "riskReasons": [
+        "cross-organization conclusion requires owner review"
+      ],
+      "editorialDraft": {
+        "mode": "ai",
+        "titleZh": "推理速度正在成为独立服务层",
+        "summaryZh": "两家厂商的独立动作表明，时延正从附属指标变为可采购服务等级。",
+        "whyItMattersZh": "时延会在多步业务流程中累积，并直接影响完成率。",
+        "salesImplicationZh": "销售应把首 Token、持续吞吐、并发和溢价写入同一验收表。",
+        "roleOrgImplicationZh": "产品、销售和财务需要共同判断哪些关键路径值得加速。",
+        "nextActionZh": "选择一个实时场景，对标准层和快速层做单位任务价值测算。"
+      },
+      "publicationDraft": {
+        "slug": "fixture-reviewed-inference-tier",
+        "kind": "update",
+        "domains": [
+          "ai_technology",
+          "enterprise_sales"
+        ],
+        "topicSlugs": [
+          "agent-business-model"
+        ],
+        "tags": [
+          "推理速度",
+          "服务等级"
+        ],
+        "toolIds": [
+          "poc-success-canvas"
+        ],
+        "audience": [
+          "transitioning_seller",
+          "ai_ae"
+        ],
+        "freshness": "current",
+        "conclusionScope": "cross_organization",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [
+          {
+            "sourceId": "anthropic-news",
+            "title": "Independent vendor service update",
+            "publisher": "Anthropic",
+            "url": "https://www.anthropic.com/news/example-service-update",
+            "publishedAt": "2026-08-26T09:00:00.000Z",
+            "level": "official",
+            "language": "en",
+            "dateBasis": "published"
+          }
+        ],
+        "supportingFacts": [
+          {
+            "statement": "OpenAI 将推理速度作为独立服务层提供。",
+            "evidenceIndexes": [1]
+          },
+          {
+            "statement": "另一家模型厂商也为时延敏感型工作负载提供差异化服务。",
+            "evidenceIndexes": [2]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "多步 Agent 会串联每一步等待时间，关键路径延迟因此累积。",
+          "businessValue": "更低等待时间可以提高会话完成率和单位时间内完成的工作循环。",
+          "boundary": "离线批处理或人工审核占主导的流程未必值得支付加速溢价。"
+        },
+        "changeWindow": "within_30_days",
+        "factType": "editorial_inference",
+        "verificationNotes": "所有事实均由仓库所有者在候选 SHA 上逐项核验。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    }
+  ],
+  "manualReviewRecords": []
+}

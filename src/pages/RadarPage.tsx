@@ -4,7 +4,7 @@ import {
   KNOWLEDGE_DOMAINS,
   type KnowledgeDomain,
   type KnowledgeTopic,
-  type SeedCandidate,
+  type ReviewedKnowledgeItem,
 } from '../domain';
 import { domainLabels, localize, type Language } from '../i18n';
 import { filterKnowledgeItems } from '../navigation';
@@ -20,7 +20,7 @@ export default function RadarPage({
   language,
   query,
 }: {
-  readonly items: readonly SeedCandidate[];
+  readonly items: readonly ReviewedKnowledgeItem[];
   readonly topics: readonly KnowledgeTopic[];
   readonly language: Language;
   readonly query: string;
@@ -122,7 +122,7 @@ export default function RadarPage({
           </div>
           <InternalLink href='/roles/'>{language === 'zh' ? '查看岗位与组织' : 'Roles & organization'}</InternalLink>
         </div>
-        <TopicGrid topics={topics} language={language} />
+        <TopicGrid topics={topics} items={items} language={language} />
       </section>
     </>
   );

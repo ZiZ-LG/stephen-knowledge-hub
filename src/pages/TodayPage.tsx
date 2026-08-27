@@ -1,4 +1,4 @@
-import type { KnowledgeTool, KnowledgeTopic, SeedCandidate } from '../domain';
+import type { KnowledgeTool, KnowledgeTopic, ReviewedKnowledgeItem } from '../domain';
 import { localize, type Language } from '../i18n';
 import { selectTodayItems } from '../navigation';
 import InternalLink from '../components/InternalLink';
@@ -11,7 +11,7 @@ export default function TodayPage({
   tools,
   language,
 }: {
-  readonly items: readonly SeedCandidate[];
+  readonly items: readonly ReviewedKnowledgeItem[];
   readonly topics: readonly KnowledgeTopic[];
   readonly tools: readonly KnowledgeTool[];
   readonly language: Language;
@@ -87,7 +87,7 @@ export default function TodayPage({
           </div>
           <InternalLink href='/topics/'>{language === 'zh' ? '查看全部专题' : 'All topics'}</InternalLink>
         </div>
-        <TopicGrid topics={topics.slice(0, 3)} language={language} />
+        <TopicGrid topics={topics.slice(0, 3)} items={items} language={language} />
       </section>
 
       <section className='section-block split-block' aria-labelledby='action-title'>

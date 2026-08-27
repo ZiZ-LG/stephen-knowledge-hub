@@ -1,13 +1,15 @@
-import type { KnowledgeTopic } from '../domain';
+import type { KnowledgeTopic, ReviewedKnowledgeItem } from '../domain';
 import type { Language } from '../i18n';
 import InternalLink from '../components/InternalLink';
 import TopicGrid from '../components/TopicGrid';
 
 export default function TopicsPage({
   topics,
+  items,
   language,
 }: {
   readonly topics: readonly KnowledgeTopic[];
+  readonly items: readonly ReviewedKnowledgeItem[];
   readonly language: Language;
 }) {
   return (
@@ -25,7 +27,7 @@ export default function TopicsPage({
         </InternalLink>
       </section>
       <section className='section-block'>
-        <TopicGrid topics={topics} language={language} />
+        <TopicGrid topics={topics} items={items} language={language} />
       </section>
     </>
   );

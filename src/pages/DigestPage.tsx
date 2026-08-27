@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import type { KnowledgeTool, SeedCandidate } from '../domain';
+import type { KnowledgeTool, ReviewedKnowledgeItem } from '../domain';
 import { createDailyDigest, createWeeklyDigest, type DigestEntry } from '../content/digests';
 import { localize, type Language } from '../i18n';
 import InternalLink from '../components/InternalLink';
@@ -44,7 +44,7 @@ function EntryLinks({
   language,
   emptyText,
 }: {
-  readonly entries: readonly DigestEntry<SeedCandidate>[];
+  readonly entries: readonly DigestEntry<ReviewedKnowledgeItem>[];
   readonly language: Language;
   readonly emptyText: string;
 }) {
@@ -66,7 +66,7 @@ export default function DigestPage({
   tools,
   language,
 }: {
-  readonly items: readonly SeedCandidate[];
+  readonly items: readonly ReviewedKnowledgeItem[];
   readonly tools: readonly KnowledgeTool[];
   readonly language: Language;
 }) {

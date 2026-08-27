@@ -1,4 +1,5 @@
 declare const process: {
+  readonly execPath: string;
   readonly env: Record<string, string | undefined>;
   readonly argv: readonly string[];
   cwd(): string;
@@ -21,6 +22,7 @@ declare module 'node:fs/promises' {
   ): Promise<string | undefined>;
   export function mkdtemp(prefix: string): Promise<string>;
   export function lstat(path: string): Promise<{
+    readonly mode: number;
     readonly size: number;
     isDirectory(): boolean;
     isFile(): boolean;
@@ -37,9 +39,15 @@ declare module 'node:fs/promises' {
     path: string,
     options: { readonly recursive: true; readonly force: true },
   ): Promise<void>;
+  export function rm(path: string): Promise<void>;
   export function symlink(target: string, path: string): Promise<void>;
   export function stat(path: string): Promise<{ readonly mode: number }>;
   export function writeFile(path: string, data: string, encoding: 'utf8'): Promise<void>;
+  export function writeFile(
+    path: string,
+    data: string,
+    options: { readonly encoding: 'utf8'; readonly flag: 'wx' },
+  ): Promise<void>;
   export function writeFile(path: string, data: Uint8Array): Promise<void>;
 }
 

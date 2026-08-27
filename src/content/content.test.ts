@@ -1,11 +1,32 @@
 import { describe, expect, it } from 'vitest';
 
+import type { ReviewedKnowledgeItem } from '../domain';
 import { approvedSeedItems } from './items';
+import { approvedDailyItems } from './publishedItems';
 import { approvedKnowledgeItems } from './publicItems';
 import { sourceRegistry, validateSourceRegistry } from './sources';
 import { knowledgeTools } from './tools';
 import { knowledgeTopics } from './topics';
-import { validateApprovedSeedItems, validateKnowledgeItems } from './validate';
+import {
+  validateApprovedReviewedItems,
+  validateApprovedSeedItems,
+  validateKnowledgeItems,
+} from './validate';
+
+function buildApprovedDailyItem(): ReviewedKnowledgeItem {
+  const { seedCategory: _seedCategory, ...seed } = approvedSeedItems[0];
+  return {
+    ...seed,
+    id: 'ED-20260827-001',
+    slug: 'reviewed-daily-item',
+    seedContent: false,
+    audit: {
+      ...seed.audit,
+      ruleVersion: 'saas-608-owner-approved-v1',
+      releaseVersion: '2026-08-27',
+    },
+  };
+}
 
 describe('Stephen source governance', () => {
   it('keeps the first release within ten active, independently identified public sources', () => {
@@ -254,6 +275,40 @@ describe('SAAS-602 seed review collection', () => {
       expect(tool.exampleMarkdown).toContain('# ');
       expect(tool.completionCriteria.length).toBeGreaterThanOrEqual(3);
       expect(tool.outputFormat).toBe('markdown');
+    }
+  });
+});
+
+describe('SAAS-608 approved daily collection', () => {
+  it('admits only complete owner-approved non-seed items through the manual publication gate', () => {
+    const valid = buildApprovedDailyItem();
+
+    expect(approvedDailyItems.every((item) => item.seedContent === false)).toBe(true);
+    expect(() => validateApprovedReviewedItems(approvedDailyItems)).not.toThrow();
+    expect(() => validateApprovedReviewedItems([valid])).not.toThrow();
+
+    const invalidCases: Array<[string, ReviewedKnowledgeItem]> = [
+      ['public collection contains non-approved item', { ...valid, editorialStatus: 'candidate' }],
+      ['approved item is missing owner approval', {
+        ...valid,
+        review: { ...valid.review, status: 'pending_owner_review' },
+      }],
+      ['approved reviewed content requires manual publication', {
+        ...valid,
+        publicationMode: 'allowlisted_low_risk_auto',
+      }],
+      [`${valid.id} requires at least two supporting facts`, {
+        ...valid,
+        supportingFacts: valid.supportingFacts.slice(0, 1),
+      }],
+      [`${valid.id} mechanism is required`, {
+        ...valid,
+        deeperAnalysis: { ...valid.deeperAnalysis, mechanism: ' ' },
+      }],
+    ];
+
+    for (const [message, item] of invalidCases) {
+      expect(() => validateApprovedReviewedItems([item])).toThrow(message);
     }
   });
 });

@@ -1,3 +1,13 @@
+import {
+  EVIDENCE_LEVELS,
+  KNOWLEDGE_DOMAINS,
+  type ContentKind,
+  type EvidenceLevel,
+  type EvidenceRef,
+  type KnowledgeDomain,
+  type ReviewedKnowledgeItem,
+} from '../src/domain.ts';
+
 export type DailyReviewMode = 'fixture' | 'live';
 
 export interface DailyReviewContextInput {
@@ -27,6 +37,43 @@ export interface DailyEditorialDraft {
   readonly nextActionZh: string;
 }
 
+export interface DailyPublicationEvidenceDraft {
+  readonly sourceId: string;
+  readonly title: string;
+  readonly publisher: string;
+  readonly url: string;
+  readonly publishedAt: string;
+  readonly level: EvidenceLevel;
+  readonly language: EvidenceRef['language'];
+  readonly dateBasis: NonNullable<EvidenceRef['dateBasis']>;
+}
+
+export interface DailyPublicationSupportingFactDraft {
+  readonly statement: string;
+  readonly evidenceIndexes: readonly number[];
+}
+
+export interface DailyPublicationDraft {
+  readonly slug: string;
+  readonly kind: ContentKind;
+  readonly domains: readonly KnowledgeDomain[];
+  readonly topicSlugs: readonly string[];
+  readonly tags: readonly string[];
+  readonly toolIds: readonly string[];
+  readonly audience: ReviewedKnowledgeItem['audience'];
+  readonly freshness: ReviewedKnowledgeItem['freshness'];
+  readonly conclusionScope: ReviewedKnowledgeItem['conclusionScope'];
+  readonly primaryEvidenceLevel: EvidenceLevel;
+  readonly primaryEvidenceLanguage: EvidenceRef['language'];
+  readonly primaryEvidenceDateBasis: NonNullable<EvidenceRef['dateBasis']>;
+  readonly additionalEvidence: readonly DailyPublicationEvidenceDraft[];
+  readonly supportingFacts: readonly DailyPublicationSupportingFactDraft[];
+  readonly deeperAnalysis: ReviewedKnowledgeItem['deeperAnalysis'];
+  readonly changeWindow: ReviewedKnowledgeItem['review']['changeWindow'];
+  readonly factType: ReviewedKnowledgeItem['review']['factType'];
+  readonly verificationNotes: string;
+}
+
 export interface DailyReviewCandidate {
   readonly candidateId: string;
   readonly sourceId: string;
@@ -42,6 +89,7 @@ export interface DailyReviewCandidate {
   readonly riskLevel: DailyReviewRiskLevel;
   readonly riskReasons: readonly string[];
   readonly editorialDraft: DailyEditorialDraft;
+  readonly publicationDraft?: DailyPublicationDraft;
   readonly reviewState: 'pending_owner_review';
   readonly publicationState: 'not_published';
 }
@@ -427,6 +475,194 @@ function parseEditorialDraft(value: unknown): DailyEditorialDraft | undefined {
   };
 }
 
+function requireStringChoice<T extends string>(
+  value: unknown,
+  allowed: readonly T[],
+  label: string,
+): T {
+  if (typeof value !== 'string' || !allowed.includes(value as T)) {
+    throw new Error(`${label} is invalid`);
+  }
+  return value as T;
+}
+
+function requireUniqueStringArray(value: unknown, label: string) {
+  const values = requireStringArray(value, label);
+  if (new Set(values).size !== values.length) {
+    throw new Error(`${label} must be unique`);
+  }
+  return values;
+}
+
+function parsePublicationEvidence(
+  value: unknown,
+  index: number,
+): DailyPublicationEvidenceDraft {
+  const label = `publicationDraft.additionalEvidence[${index}]`;
+  const evidence = requireRecord(value, label);
+  return {
+    sourceId: requireString(evidence.sourceId, `${label}.sourceId`),
+    title: requireString(evidence.title, `${label}.title`),
+    publisher: requireString(evidence.publisher, `${label}.publisher`),
+    url: requireSafeHttpsUrl(evidence.url, `${label}.url`),
+    publishedAt: requireIsoTimestamp(evidence.publishedAt, `${label}.publishedAt`),
+    level: requireStringChoice(
+      evidence.level,
+      EVIDENCE_LEVELS,
+      `${label}.level`,
+    ),
+    language: requireStringChoice(
+      evidence.language,
+      ['zh', 'en'] as const,
+      `${label}.language`,
+    ),
+    dateBasis: requireStringChoice(
+      evidence.dateBasis,
+      ['published', 'last_updated', 'observed'] as const,
+      `${label}.dateBasis`,
+    ),
+  };
+}
+
+export function parseDailyPublicationDraft(value: unknown): DailyPublicationDraft | undefined {
+  if (value === undefined) return undefined;
+  const draft = requireRecord(value, 'publicationDraft');
+  const slug = requireString(draft.slug, 'publicationDraft.slug');
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+    throw new Error('publicationDraft.slug is invalid');
+  }
+  const domains = requireUniqueStringArray(draft.domains, 'publicationDraft.domains');
+    if (domains.length === 0
+      || domains.some((domain) => !(KNOWLEDGE_DOMAINS as readonly string[]).includes(domain))) {
+      throw new Error('publicationDraft.domains is invalid');
+    }
+  const tags = requireUniqueStringArray(draft.tags, 'publicationDraft.tags');
+  if (tags.length === 0) throw new Error('publicationDraft.tags must not be empty');
+  const audience = requireUniqueStringArray(draft.audience, 'publicationDraft.audience');
+  const allowedAudience = [
+    'transitioning_seller',
+    'ai_ae',
+    'sales_leader',
+    'solution',
+    'customer_success',
+  ] as const;
+  if (audience.length === 0
+    || audience.some((entry) => !(allowedAudience as readonly string[]).includes(entry))) {
+    throw new Error('publicationDraft.audience is invalid');
+  }
+  const supportingFacts = requireArray(
+    draft.supportingFacts,
+    'publicationDraft.supportingFacts',
+  ).map((value, index) => {
+    const fact = requireRecord(value, `publicationDraft.supportingFacts[${index}]`);
+    const evidenceIndexes = requireArray(
+      fact.evidenceIndexes,
+      `publicationDraft.supportingFacts[${index}].evidenceIndexes`,
+    ).map((entry) => {
+      if (!Number.isInteger(entry) || (entry as number) < 1) {
+        throw new Error(
+          `publicationDraft.supportingFacts[${index}].evidenceIndexes must use positive integers`,
+        );
+      }
+      return entry as number;
+    });
+    if (evidenceIndexes.length === 0 || new Set(evidenceIndexes).size !== evidenceIndexes.length) {
+      throw new Error(
+        `publicationDraft.supportingFacts[${index}].evidenceIndexes must be unique and non-empty`,
+      );
+    }
+    return {
+      statement: requireString(
+        fact.statement,
+        `publicationDraft.supportingFacts[${index}].statement`,
+      ),
+      evidenceIndexes,
+    };
+  });
+  if (supportingFacts.length < 2) {
+    throw new Error('publicationDraft requires at least two supporting facts');
+  }
+  const deeperAnalysis = requireRecord(
+    draft.deeperAnalysis,
+    'publicationDraft.deeperAnalysis',
+  );
+
+  return {
+    slug,
+    kind: requireStringChoice(
+      draft.kind,
+      ['update', 'event', 'explainer', 'case', 'method', 'tool', 'role', 'learning_path'],
+      'publicationDraft.kind',
+    ),
+    domains: domains as readonly KnowledgeDomain[],
+    topicSlugs: requireUniqueStringArray(
+      draft.topicSlugs,
+      'publicationDraft.topicSlugs',
+    ),
+    tags,
+    toolIds: requireUniqueStringArray(draft.toolIds, 'publicationDraft.toolIds'),
+    audience: audience as DailyPublicationDraft['audience'],
+    freshness: requireStringChoice(
+      draft.freshness,
+      ['breaking', 'current', 'evergreen'] as const,
+      'publicationDraft.freshness',
+    ),
+    conclusionScope: requireStringChoice(
+      draft.conclusionScope,
+      ['single_authority', 'cross_organization', 'editorial_synthesis'] as const,
+      'publicationDraft.conclusionScope',
+    ),
+    primaryEvidenceLevel: requireStringChoice(
+      draft.primaryEvidenceLevel,
+      EVIDENCE_LEVELS,
+      'publicationDraft.primaryEvidenceLevel',
+    ),
+    primaryEvidenceLanguage: requireStringChoice(
+      draft.primaryEvidenceLanguage,
+      ['zh', 'en'] as const,
+      'publicationDraft.primaryEvidenceLanguage',
+    ),
+    primaryEvidenceDateBasis: requireStringChoice(
+      draft.primaryEvidenceDateBasis,
+      ['published', 'last_updated', 'observed'] as const,
+      'publicationDraft.primaryEvidenceDateBasis',
+    ),
+    additionalEvidence: requireArray(
+      draft.additionalEvidence,
+      'publicationDraft.additionalEvidence',
+    ).map(parsePublicationEvidence),
+    supportingFacts,
+    deeperAnalysis: {
+      mechanism: requireString(
+        deeperAnalysis.mechanism,
+        'publicationDraft.deeperAnalysis.mechanism',
+      ),
+      businessValue: requireString(
+        deeperAnalysis.businessValue,
+        'publicationDraft.deeperAnalysis.businessValue',
+      ),
+      boundary: requireString(
+        deeperAnalysis.boundary,
+        'publicationDraft.deeperAnalysis.boundary',
+      ),
+    },
+    changeWindow: requireStringChoice(
+      draft.changeWindow,
+      ['within_30_days', 'within_90_days', 'evergreen'] as const,
+      'publicationDraft.changeWindow',
+    ),
+    factType: requireStringChoice(
+      draft.factType,
+      ['official_fact', 'company_claim', 'research_finding', 'editorial_inference'] as const,
+      'publicationDraft.factType',
+    ),
+    verificationNotes: requireString(
+      draft.verificationNotes,
+      'publicationDraft.verificationNotes',
+    ),
+  };
+}
+
 function parseIntakeRecord(value: unknown, sourceName: string): ParsedIntakeRecord {
   const record = requireRecord(value, 'intake record');
   if (record.disposition !== 'candidate'
@@ -579,6 +815,7 @@ function parseReviewCandidate(value: unknown): DailyReviewCandidate {
   );
   const editorialDraft = parseEditorialDraft(candidate.editorialDraft);
   if (!editorialDraft) throw new Error('existing review candidate editorialDraft is required');
+  const publicationDraft = parseDailyPublicationDraft(candidate.publicationDraft);
   return {
     candidateId: requireString(
       candidate.candidateId,
@@ -621,6 +858,7 @@ function parseReviewCandidate(value: unknown): DailyReviewCandidate {
       'existing review candidate riskReasons',
     ),
     editorialDraft,
+    ...(publicationDraft ? { publicationDraft } : {}),
     reviewState: 'pending_owner_review',
     publicationState: 'not_published',
   };
@@ -827,6 +1065,30 @@ function parseExistingLedger(
   };
 }
 
+export function parseDailyReviewManifestForApproval(
+  value: unknown,
+  editorialDate: string,
+) {
+  const parsed = parseExistingManifest(
+    value,
+    dailyReviewContext({ editorialDate, mode: 'live' }),
+  );
+  if (!parsed) throw new Error('review manifest is required');
+  return parsed;
+}
+
+export function parseDailyReviewLedgerForApproval(
+  value: unknown,
+  editorialDate: string,
+) {
+  const parsed = parseExistingLedger(
+    value,
+    dailyReviewContext({ editorialDate, mode: 'live' }),
+  );
+  if (!parsed) throw new Error('discovery ledger is required');
+  return parsed;
+}
+
 function uniqueIds(values: readonly string[]) {
   return [...new Set(values)].sort((left, right) => left.localeCompare(right));
 }
@@ -930,8 +1192,9 @@ function renderPrBody(
     '',
     `1. 打开 \`${context.manifestPath}\`，逐条核对原文、候选摘要和风险提示。`,
     '2. 不合格拟发布候选请删除 `candidates` 中对应的完整对象；已处理的采集异常请删除 `manualReviewRecords` 中对应的完整对象。',
-    '3. 发现 ledger 会保留被删除对象的 ID，后续同日运行不会把它重新加回。',
-    '4. 保留条目仍是 `pending_owner_review / not_published`。本 Draft PR 不能代表批准或发布。',
+    '3. 为每个保留候选人工补齐并复核 `publicationDraft`；字段说明见 `docs/reviewed-release-runbook.md`。AI 生成的字段不能替代这一步。',
+    '4. 发现 ledger 会保留被删除对象的 ID，后续同日运行不会把它重新加回。',
+    '5. 保留条目仍是 `pending_owner_review / not_published`。只有项目所有者对当前完整 SHA 发起独立批准，才会进入正式集合。',
     '',
     '## 拟发布条目',
     '',
@@ -950,6 +1213,7 @@ function renderPrBody(
         `  - 风险：\`${candidate.riskLevel}\` · ${reasons}`,
         `  - 候选摘要：${markdownText(candidate.editorialDraft.summaryZh, 240)}`,
         `  - 文案模式：\`${candidate.editorialDraft.mode}\`；审核状态：\`pending_owner_review\`；发布状态：\`not_published\``,
+        `  - 正式内容字段：\`${candidate.publicationDraft ? 'complete-for-owner-review' : 'publicationDraft-required'}\``,
         '',
       );
     });
@@ -1041,6 +1305,9 @@ export function validateDailyIntakeWorkflow(workflow: string) {
   if (/^\s*pull_request_target\s*:/m.test(workflow)) {
     throw new Error('pull_request_target is forbidden');
   }
+  if (/(?:repos\/\$GH_REPO\/releases|git\/refs|uploads\.github\.com)/.test(workflow)) {
+    throw new Error('daily candidate workflow must not mutate tags or Releases');
+  }
   if (!/^\s{2}workflow_dispatch\s*:/m.test(workflow)) {
     throw new Error('workflow_dispatch is required');
   }
@@ -1070,9 +1337,9 @@ export function validateDailyIntakeWorkflow(workflow: string) {
     throw new Error('workflow permissions must be minimal');
   }
   if (!/^concurrency:\s*$/m.test(workflow)
-    || !/^\s+group:\s*stephen-daily-candidate-review\s*$/m.test(workflow)
+    || !/^\s+group:\s*stephen-public-content-writer\s*$/m.test(workflow)
     || !/^\s+cancel-in-progress:\s*false\s*$/m.test(workflow)) {
-    throw new Error('workflow must serialize daily candidate runs');
+    throw new Error('workflow must serialize every public content write');
   }
   if (!/^\s+timeout-minutes:\s*(?:[1-9]|[1-5][0-9]|60)\s*$/m.test(workflow)) {
     throw new Error('workflow timeout must be between 1 and 60 minutes');

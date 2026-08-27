@@ -504,6 +504,9 @@ describe('SAAS-606 same-day Draft PR review state', () => {
     expect(artifacts.prBody).toContain('fixture 验收');
     expect(artifacts.prBody).toContain('删除 `candidates` 中对应的完整对象');
     expect(artifacts.prBody).toContain('删除 `manualReviewRecords` 中对应的完整对象');
+    expect(artifacts.prBody).toContain('`publicationDraft`');
+    expect(artifacts.prBody).toContain('`publicationDraft-required`');
+    expect(artifacts.prBody).toContain('当前完整 SHA');
     expect(artifacts.prBody).toContain('不会修改正式公开集合');
     expect(artifacts.prBody).toContain('本仓库是 public 仓库');
     expect(artifacts.prBody).toContain('会随本 Draft PR 对公众可见');
@@ -683,7 +686,7 @@ permissions:
   contents: write
   pull-requests: write
 concurrency:
-  group: stephen-daily-candidate-review
+  group: stephen-public-content-writer
   cancel-in-progress: false
 jobs:
   review:
@@ -768,6 +771,11 @@ describe('SAAS-606 GitHub workflow safety contract', () => {
       label: 'paid runner',
       workflow: validWorkflowContract.replace('ubuntu-latest', 'macos-latest'),
       error: 'workflow runner must be ubuntu-latest',
+    },
+    {
+      label: 'Release mutation added to the daily writer',
+      workflow: `${validWorkflowContract}\n      - run: gh api repos/$GH_REPO/releases\n`,
+      error: 'daily candidate workflow must not mutate tags or Releases',
     },
     {
       label: 'wrong Beijing schedule',

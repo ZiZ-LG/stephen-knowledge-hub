@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { approvedSeedItems } from './content/items';
 import { knowledgeTopics } from './content/topics';
-import type { SeedCandidate } from './domain';
+import type { ReviewedKnowledgeItem, SeedCandidate } from './domain';
 import {
   decodeHashTarget,
   desktopNavigation,
@@ -11,7 +11,9 @@ import {
   getKnowledgeTopicBySlug,
   mobileNavigation,
   parseRoute,
+  selectRoleItems,
   selectTodayItems,
+  selectTopicItems,
   toKnowledgeCardModel,
 } from './navigation';
 
@@ -105,6 +107,24 @@ describe('SAAS-602 Stephen navigation and selection', () => {
     expect(getKnowledgeTopicBySlug(knowledgeTopics, 'ai-poc-scale')?.slug)
       .toBe('ai-poc-scale');
     expect(getKnowledgeTopicBySlug(knowledgeTopics, 'missing-topic')).toBeNull();
+  });
+
+  it('discovers approved daily content through topic and role taxonomies', () => {
+    const { seedCategory: _seedCategory, ...base } = approvedSeedItems[0];
+    const dailyItem: ReviewedKnowledgeItem = {
+      ...base,
+      id: 'ED-20260827-NAV',
+      slug: 'daily-role-topic-item',
+      seedContent: false,
+      domains: ['role_org'],
+      topicSlugs: ['ai-poc-scale'],
+    };
+    const topic = getKnowledgeTopicBySlug(knowledgeTopics, 'ai-poc-scale');
+    expect(topic).not.toBeNull();
+    expect(selectTopicItems([dailyItem], topic!).map((item) => item.id))
+      .toEqual(['ED-20260827-NAV']);
+    expect(selectRoleItems([dailyItem]).map((item) => item.id))
+      .toEqual(['ED-20260827-NAV']);
   });
 
   it('builds card data with why-it-matters, action and traceable evidence', () => {

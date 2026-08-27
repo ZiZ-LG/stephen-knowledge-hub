@@ -31,6 +31,8 @@ export interface PublicAuditResult {
 
 const MAX_TEXT_BYTES = 2 * 1024 * 1024;
 const workflowPathPattern = /^\.github\/workflows\/[^/]+\.ya?ml$/;
+const approvalWorkflowPath = '.github/workflows/approve-reviewed-content.yml';
+const releaseWorkflowPath = '.github/workflows/publish-reviewed-release.yml';
 const textPathPattern = /\.(?:css|html|js|json|md|svg|ts|tsx|txt|xml|ya?ml)$/;
 const dailyBranchPattern = /^codex\/stephen-daily(-test)?-(\d{4}-\d{2}-\d{2})$/;
 
@@ -76,6 +78,106 @@ function sensitivePath(path: string) {
 
 function candidateDate(branchName: string) {
   return dailyBranchPattern.exec(branchName)?.[2];
+}
+
+function topLevelWorkflowPermissions(text: string) {
+  const permissions = new Map<string, string>();
+  const lines = text.split('\n');
+  const start = lines.findIndex((line) => /^permissions:\s*$/.test(line));
+  if (start < 0) return permissions;
+  for (const line of lines.slice(start + 1)) {
+    const parsed = /^ {2}([a-z-]+):\s*(read|write|none)\s*$/.exec(line);
+    if (!parsed) break;
+    permissions.set(parsed[1], parsed[2]);
+  }
+  return permissions;
+}
+
+function exactPermissions(
+  actual: ReadonlyMap<string, string>,
+  expected: Readonly<Record<string, string>>,
+) {
+  const entries = Object.entries(expected);
+  return actual.size === entries.length
+    && entries.every(([name, access]) => actual.get(name) === access);
+}
+
+function reviewedWorkflowHasUnsafeSurface(text: string) {
+  return [
+    /^\s*environment\s*:/m,
+    /\$\{\{\s*secrets\./,
+    /\bpull_request_target\b/i,
+    /\bself-hosted\b/i,
+    /\bssh\b/i,
+    /\bnginx\b/i,
+    /\bdns\b/i,
+    /\bdeployment\b/i,
+    /\bproduction\b/i,
+    /git\s+push[^\n]*(?:--force|-f\b)/,
+    /git\s+reset\s+--hard/,
+  ].some((pattern) => pattern.test(text));
+}
+
+function approvalWorkflowContract(text: string) {
+  return [
+    /^on:\s*\n\s{2}workflow_dispatch:/m,
+    /group:\s*stephen-public-content-writer/,
+    /github\.event\.repository\.default_branch/,
+    /github\.triggering_actor/,
+    /ref:\s*\$\{\{ github\.sha \}\}/,
+    /validate-request --request/,
+    /stephen-reviewed-release-cli\.ts promote/,
+    /stephen-reviewed-release-cli\.ts seal/,
+    /stephen-reviewed-release-cli\.ts verify-chain/,
+    /npm run check/,
+    /stephen-release-cli\.ts verify/,
+    /repos\/\$GH_REPO\/check-runs/,
+    /name=stephen-reviewed-release/,
+    /external_id="stephen-reviewed-release:/,
+    /\.base\.sha == \$baseSha/,
+    /merge-base --is-ancestor "\$BASE_SHA" "\$CANDIDATE_SHA"/,
+    /merge-base --is-ancestor "\$BASE_SHA" "\$SEAL_SHA"/,
+    /commits\/\$DEFAULT_BRANCH/,
+    /pulls\/\$PR_NUMBER\/merge/,
+    /-f sha="\$SEAL_SHA"/,
+    /-f merge_method=merge/,
+    /actions\/upload-artifact@[0-9a-f]{40}/,
+    /stephen-reviewed-release-handoff-\$\{\{ github\.run_id \}\}-\$\{\{ github\.run_attempt \}\}/,
+  ].every((pattern) => pattern.test(text))
+    && !/repos\/\$GH_REPO\/dispatches/.test(text)
+    && !/(?:repos\/\$GH_REPO\/releases|git\/refs|uploads\.github\.com)/.test(text);
+}
+
+function releaseWorkflowContract(text: string) {
+  return [
+    /^on:\s*\n\s{2}workflow_run:/m,
+    /Stephen approve reviewed content/,
+    /group:\s*stephen-reviewed-release-\$\{\{ github\.event\.workflow_run\.id \}\}-\$\{\{ github\.event\.workflow_run\.run_attempt \}\}/,
+    /actions\/download-artifact@[0-9a-f]{40}/,
+    /stephen-reviewed-release-handoff-/,
+    /repos\/\$GH_REPO\/immutable-releases/,
+    /commits\/\$SEAL_SHA\/check-runs/,
+    /ref:\s*\$\{\{ steps\.handoff\.outputs\.control_sha \}\}/,
+    /commits\/\$DEFAULT_BRANCH/,
+    /merge-base --is-ancestor "\$merge_sha" "\$current_default_sha"/,
+    /collaborators\?affiliation=all/,
+    /Protect Stephen immutable Release tags/,
+    /rulesets\/\$tag_ruleset_id/,
+    /validate-release --request/,
+    /npm run check/,
+    /stephen-release-cli\.ts verify/,
+    /tar --sort=name --mtime='@0'/,
+    /gzip -n -9/,
+    /-F draft=true/,
+    /uploads\.github\.com/,
+    /Release tag must not exist before GitHub atomically publishes the Draft/,
+    /-F draft=false/,
+    /saas-608-prepublish-policy\.json/,
+    /\.immutable == true/,
+    /\.status == "already_immutable"/,
+  ].every((pattern) => pattern.test(text))
+    && !/git\/refs/.test(text)
+    && !/repository_dispatch/.test(text);
 }
 
 function pushFinding(
@@ -194,6 +296,35 @@ export function auditPublicEntries(
           || /^\s{2}[a-z-]+:\s*write\s*$/m.test(text)
           || /\$\{\{\s*secrets\./.test(text))) {
         pushFinding(findings, findingKeys, 'ci-write-boundary', entry.path);
+      }
+      if (entry.path === approvalWorkflowPath || entry.path === releaseWorkflowPath) {
+        if (reviewedWorkflowHasUnsafeSurface(text)) {
+          pushFinding(findings, findingKeys, 'reviewed-workflow-boundary', entry.path);
+        }
+      }
+      if (entry.path === approvalWorkflowPath) {
+        if (!exactPermissions(topLevelWorkflowPermissions(text), {
+          contents: 'write',
+          'pull-requests': 'write',
+          checks: 'write',
+        })) {
+          pushFinding(findings, findingKeys, 'reviewed-workflow-permissions', entry.path);
+        }
+        if (!approvalWorkflowContract(text)) {
+          pushFinding(findings, findingKeys, 'reviewed-workflow-contract', entry.path);
+        }
+      }
+      if (entry.path === releaseWorkflowPath) {
+        if (!exactPermissions(topLevelWorkflowPermissions(text), {
+          contents: 'write',
+          checks: 'read',
+          actions: 'read',
+        })) {
+          pushFinding(findings, findingKeys, 'reviewed-workflow-permissions', entry.path);
+        }
+        if (!releaseWorkflowContract(text)) {
+          pushFinding(findings, findingKeys, 'reviewed-workflow-contract', entry.path);
+        }
       }
     }
   }

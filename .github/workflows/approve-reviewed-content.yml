@@ -1,0 +1,400 @@
+name: Stephen approve reviewed content
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Open daily Draft PR number
+        required: true
+        type: string
+      candidate_sha:
+        description: Full 40-character current candidate head SHA
+        required: true
+        type: string
+      confirmation:
+        description: Type APPROVE followed by one space and the full candidate SHA
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: write
+
+concurrency:
+  group: stephen-public-content-writer
+  cancel-in-progress: false
+
+jobs:
+  approve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Reject an untrusted dispatch identity
+        env:
+          ACTOR: ${{ github.actor }}
+          TRIGGERING_ACTOR: ${{ github.triggering_actor }}
+          REPOSITORY_OWNER: ${{ github.repository_owner }}
+          CURRENT_REF: ${{ github.ref_name }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          CONTROL_SHA: ${{ github.sha }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+        run: |
+          set -euo pipefail
+          [[ "$ACTOR" == "$REPOSITORY_OWNER" ]]
+          [[ "$TRIGGERING_ACTOR" == "$REPOSITORY_OWNER" ]]
+          [[ "$CURRENT_REF" == "$DEFAULT_BRANCH" ]]
+          [[ "$CONTROL_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$PR_NUMBER" =~ ^[1-9][0-9]*$ ]]
+          [[ "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$CONFIRMATION" == "APPROVE $CANDIDATE_SHA" ]]
+
+      - name: Check out trusted default-branch controls
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          path: trusted
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+
+      - name: Read the current PR and changed-file facts
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+        run: |
+          set -euo pipefail
+          gh api --method GET "repos/$GH_REPO/pulls/$PR_NUMBER" > "$RUNNER_TEMP/saas-608-pr.json"
+          changed_count=$(jq -r .changed_files "$RUNNER_TEMP/saas-608-pr.json")
+          if [[ ! "$changed_count" =~ ^[0-9]+$ || "$changed_count" -gt 2 ]]; then
+            echo "approval PR changed-file count is outside the candidate-only boundary" >&2
+            exit 1
+          fi
+          gh api --method GET "repos/$GH_REPO/pulls/$PR_NUMBER/files" -F per_page=100 \
+            > "$RUNNER_TEMP/saas-608-files.json"
+          jq -e --argjson expected "$changed_count" 'length == $expected' \
+            "$RUNNER_TEMP/saas-608-files.json" >/dev/null
+
+      - name: Check out the exact candidate tree
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          path: candidate
+          fetch-depth: 0
+
+      - name: Validate the exact owner-review request
+        id: request
+        env:
+          ACTOR: ${{ github.actor }}
+          TRIGGERING_ACTOR: ${{ github.triggering_actor }}
+          REPOSITORY_OWNER: ${{ github.repository_owner }}
+          GH_REPO: ${{ github.repository }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+        run: |
+          set -euo pipefail
+          editorial_date=$(jq -r '.head.ref | capture("^codex/stephen-daily-(?<date>[0-9]{4}-[0-9]{2}-[0-9]{2})$").date' \
+            "$RUNNER_TEMP/saas-608-pr.json")
+          manifest_path="candidate/review-candidates/$editorial_date/review-manifest.json"
+          test -f "$manifest_path"
+          jq -n \
+            --arg actor "$ACTOR" \
+            --arg triggeringActor "$TRIGGERING_ACTOR" \
+            --arg repositoryOwner "$REPOSITORY_OWNER" \
+            --arg repository "$GH_REPO" \
+            --arg defaultBranch "$DEFAULT_BRANCH" \
+            --arg candidateSha "$CANDIDATE_SHA" \
+            --arg confirmation "$CONFIRMATION" \
+            --slurpfile pr "$RUNNER_TEMP/saas-608-pr.json" \
+            --slurpfile files "$RUNNER_TEMP/saas-608-files.json" \
+            --slurpfile manifest "$manifest_path" \
+            '{
+              actor: $actor,
+              triggeringActor: $triggeringActor,
+              repositoryOwner: $repositoryOwner,
+              repository: $repository,
+              defaultBranch: $defaultBranch,
+              candidateSha: $candidateSha,
+              confirmation: $confirmation,
+              pr: {
+                number: $pr[0].number,
+                state: $pr[0].state,
+                draft: $pr[0].draft,
+                changedFiles: $pr[0].changed_files,
+                head: {
+                  sha: $pr[0].head.sha,
+                  ref: $pr[0].head.ref,
+                  repository: $pr[0].head.repo.full_name
+                },
+                base: {
+                  ref: $pr[0].base.ref,
+                  repository: $pr[0].base.repo.full_name,
+                  sha: $pr[0].base.sha
+                }
+              },
+              changedFiles: ($files[0] | map({ filename, status })),
+              manifest: $manifest[0]
+            }' > "$RUNNER_TEMP/saas-608-request.json"
+          node --experimental-strip-types trusted/scripts/stephen-reviewed-release-cli.ts \
+            validate-request --request "$RUNNER_TEMP/saas-608-request.json" \
+            > "$RUNNER_TEMP/saas-608-verified-request.json"
+          {
+            echo "head_ref=$(jq -r .headRef "$RUNNER_TEMP/saas-608-verified-request.json")"
+            echo "editorial_date=$(jq -r .editorialDate "$RUNNER_TEMP/saas-608-verified-request.json")"
+            echo "manifest_path=$(jq -r .manifestPath "$RUNNER_TEMP/saas-608-verified-request.json")"
+            echo "ledger_path=$(jq -r .ledgerPath "$RUNNER_TEMP/saas-608-verified-request.json")"
+            echo "base_sha=$(jq -r .baseSha "$RUNNER_TEMP/saas-608-verified-request.json")"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Require the candidate to contain the current trusted base
+        env:
+          CONTROL_SHA: ${{ github.sha }}
+          BASE_SHA: ${{ steps.request.outputs.base_sha }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+        run: |
+          set -euo pipefail
+          [[ "$CONTROL_SHA" == "$BASE_SHA" ]]
+          git -C candidate fetch --no-tags origin "$BASE_SHA"
+          git -C candidate merge-base --is-ancestor "$BASE_SHA" "$CANDIDATE_SHA"
+
+      - name: Promote only the retained reviewed candidates
+        id: promote
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          APPROVER: ${{ github.actor }}
+          REPOSITORY_OWNER: ${{ github.repository_owner }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+          MANIFEST_PATH: ${{ steps.request.outputs.manifest_path }}
+          LEDGER_PATH: ${{ steps.request.outputs.ledger_path }}
+        run: |
+          set -euo pipefail
+          approved_at=$(date -u +%Y-%m-%dT%H:%M:%S.000Z)
+          node --experimental-strip-types trusted/scripts/stephen-reviewed-release-cli.ts promote \
+            --root "$GITHUB_WORKSPACE/candidate" \
+            --manifest "$MANIFEST_PATH" \
+            --ledger "$LEDGER_PATH" \
+            --candidate-sha "$CANDIDATE_SHA" \
+            --current-head-sha "$CANDIDATE_SHA" \
+            --approver "$APPROVER" \
+            --repository-owner "$REPOSITORY_OWNER" \
+            --repository "$GH_REPO" \
+            --approved-at "$approved_at" \
+            --pr-number "$PR_NUMBER" \
+            > "$RUNNER_TEMP/saas-608-promotion-result.json"
+          cd candidate
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- "$MANIFEST_PATH" "$LEDGER_PATH" \
+            src/content/published editorial-releases
+          git commit -m "content(stephen): promote reviewed ${{ steps.request.outputs.editorial_date }} candidates"
+          promotion_sha=$(git rev-parse HEAD)
+          [[ "$(git rev-parse HEAD^)" == "$CANDIDATE_SHA" ]]
+          {
+            echo "promotion_sha=$promotion_sha"
+            echo "promotion_record=$(jq -r .promotionRecord "$RUNNER_TEMP/saas-608-promotion-result.json")"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Seal the exact approval chain
+        id: seal
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          PROMOTION_SHA: ${{ steps.promote.outputs.promotion_sha }}
+          PROMOTION_RECORD: ${{ steps.promote.outputs.promotion_record }}
+          EDITORIAL_DATE: ${{ steps.request.outputs.editorial_date }}
+        run: |
+          set -euo pipefail
+          node --experimental-strip-types trusted/scripts/stephen-reviewed-release-cli.ts seal \
+            --root "$GITHUB_WORKSPACE/candidate" \
+            --promotion-record "$PROMOTION_RECORD" \
+            --promotion-sha "$PROMOTION_SHA" \
+            > "$RUNNER_TEMP/saas-608-seal-result.json"
+          cd candidate
+          approval_record=$(jq -r .approvalRecord "$RUNNER_TEMP/saas-608-seal-result.json")
+          git add -- "$approval_record"
+          git commit -m "content(stephen): seal reviewed $EDITORIAL_DATE approval"
+          seal_sha=$(git rev-parse HEAD)
+          [[ "$(git rev-parse HEAD^)" == "$PROMOTION_SHA" ]]
+          [[ "$(git rev-parse "$PROMOTION_SHA^")" == "$CANDIDATE_SHA" ]]
+          release_tag="stephen-content-$EDITORIAL_DATE-${seal_sha:0:12}"
+          {
+            echo "approval_record=$approval_record"
+            echo "seal_sha=$seal_sha"
+            echo "release_tag=$release_tag"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Push the two-commit chain without overwriting head drift
+        env:
+          HEAD_REF: ${{ steps.request.outputs.head_ref }}
+          SEAL_SHA: ${{ steps.seal.outputs.seal_sha }}
+        run: |
+          set -euo pipefail
+          cd candidate
+          git push origin "$SEAL_SHA:refs/heads/$HEAD_REF"
+
+      - name: Install exact-seal dependencies
+        working-directory: candidate
+        run: npm ci
+
+      - name: Run the complete exact-seal CI gate
+        working-directory: candidate
+        env:
+          SEAL_SHA: ${{ steps.seal.outputs.seal_sha }}
+        run: |
+          set -euo pipefail
+          [[ "$(git rev-parse HEAD)" == "$SEAL_SHA" ]]
+          npm run check
+          node --experimental-strip-types scripts/stephen-release-cli.ts verify \
+            --artifact "$GITHUB_WORKSPACE/candidate/dist" \
+            --source-sha "$SEAL_SHA" \
+            --metadata-file "$GITHUB_WORKSPACE/candidate/dist/.stephen-release.json"
+
+      - name: Verify the seal chain before merge
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          PROMOTION_SHA: ${{ steps.promote.outputs.promotion_sha }}
+          SEAL_SHA: ${{ steps.seal.outputs.seal_sha }}
+          APPROVAL_RECORD: ${{ steps.seal.outputs.approval_record }}
+          RELEASE_TAG: ${{ steps.seal.outputs.release_tag }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          cd candidate
+          node --experimental-strip-types ../trusted/scripts/stephen-reviewed-release-cli.ts verify-chain \
+            --root "$GITHUB_WORKSPACE/candidate" \
+            --approval-record "$APPROVAL_RECORD" \
+            --candidate-sha "$CANDIDATE_SHA" \
+            --promotion-sha "$PROMOTION_SHA" \
+            --seal-sha "$SEAL_SHA" \
+            --promotion-parent-sha "$(git rev-parse "$PROMOTION_SHA^")" \
+            --seal-parent-sha "$(git rev-parse "$SEAL_SHA^")" \
+            --pr-head-sha "$(git rev-parse HEAD)" \
+            --repository "$GH_REPO" \
+            --release-tag "$RELEASE_TAG"
+
+      - name: Record the successful exact-seal check
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          SEAL_SHA: ${{ steps.seal.outputs.seal_sha }}
+          APPROVAL_RUN_ID: ${{ github.run_id }}
+          APPROVAL_RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          gh api --method POST "repos/$GH_REPO/check-runs" \
+            -f name=stephen-reviewed-release \
+            -f head_sha="$SEAL_SHA" \
+            -f external_id="stephen-reviewed-release:$APPROVAL_RUN_ID:$APPROVAL_RUN_ATTEMPT:$SEAL_SHA" \
+            -f details_url="https://github.com/$GH_REPO/actions/runs/$APPROVAL_RUN_ID/attempts/$APPROVAL_RUN_ATTEMPT" \
+            -f status=completed \
+            -f conclusion=success \
+            -f 'output[title]=Stephen reviewed release gate passed' \
+            -f 'output[summary]=The exact approval seal passed the complete repository gate.' \
+            > "$RUNNER_TEMP/saas-608-check.json"
+
+      - name: Build the durable reviewed-release handoff
+        env:
+          PR_NUMBER: ${{ inputs.pr_number }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          PROMOTION_SHA: ${{ steps.promote.outputs.promotion_sha }}
+          SEAL_SHA: ${{ steps.seal.outputs.seal_sha }}
+          APPROVAL_RECORD: ${{ steps.seal.outputs.approval_record }}
+          RELEASE_TAG: ${{ steps.seal.outputs.release_tag }}
+          APPROVAL_RUN_ID: ${{ github.run_id }}
+          APPROVAL_RUN_ATTEMPT: ${{ github.run_attempt }}
+          CONTROL_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/saas-608-handoff"
+          jq -n \
+            --argjson schemaVersion 1 \
+            --arg task "SAAS-608" \
+            --argjson pr "$PR_NUMBER" \
+            --arg candidateSha "$CANDIDATE_SHA" \
+            --arg promotionSha "$PROMOTION_SHA" \
+            --arg sealSha "$SEAL_SHA" \
+            --arg approvalRecord "$APPROVAL_RECORD" \
+            --arg releaseTag "$RELEASE_TAG" \
+            --argjson approvalRunId "$APPROVAL_RUN_ID" \
+            --argjson approvalRunAttempt "$APPROVAL_RUN_ATTEMPT" \
+            --arg controlSha "$CONTROL_SHA" \
+            '{
+              schemaVersion: $schemaVersion,
+              task: $task,
+              pr: $pr,
+              candidateSha: $candidateSha,
+              promotionSha: $promotionSha,
+              sealSha: $sealSha,
+              approvalRecord: $approvalRecord,
+              releaseTag: $releaseTag,
+              approvalRunId: $approvalRunId,
+              approvalRunAttempt: $approvalRunAttempt,
+              controlSha: $controlSha
+            }' > "$RUNNER_TEMP/saas-608-handoff/release-handoff.json"
+
+      - name: Persist the immutable reviewed-release handoff
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: stephen-reviewed-release-handoff-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/saas-608-handoff/release-handoff.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Make the reviewed PR ready and merge its exact seal SHA
+        id: merge
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+          SEAL_SHA: ${{ steps.seal.outputs.seal_sha }}
+          HEAD_REF: ${{ steps.request.outputs.head_ref }}
+          BASE_SHA: ${{ steps.request.outputs.base_sha }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          set -euo pipefail
+          gh api --method GET "repos/$GH_REPO/pulls/$PR_NUMBER" \
+            > "$RUNNER_TEMP/saas-608-final-pr.json"
+          jq -e \
+            --arg repository "$GH_REPO" \
+            --arg defaultBranch "$DEFAULT_BRANCH" \
+            --arg headRef "$HEAD_REF" \
+            --arg headSha "$SEAL_SHA" \
+            --arg baseSha "$BASE_SHA" \
+            '.state == "open"
+              and .draft == true
+              and .head.repo.full_name == $repository
+              and .base.repo.full_name == $repository
+              and .head.ref == $headRef
+              and .head.sha == $headSha
+              and .base.ref == $defaultBranch
+              and .base.sha == $baseSha' \
+            "$RUNNER_TEMP/saas-608-final-pr.json" >/dev/null
+          current_default_sha=$(gh api --method GET \
+            "repos/$GH_REPO/commits/$DEFAULT_BRANCH" --jq .sha)
+          [[ "$current_default_sha" == "$BASE_SHA" ]]
+          git -C candidate merge-base --is-ancestor "$BASE_SHA" "$SEAL_SHA"
+          gh pr ready "$PR_NUMBER" --repo "$GH_REPO"
+          gh api --method PUT "repos/$GH_REPO/pulls/$PR_NUMBER/merge" \
+            -f sha="$SEAL_SHA" \
+            -f merge_method=merge \
+            > "$RUNNER_TEMP/saas-608-merge.json"
+          jq -e '.merged == true and (.sha | test("^[0-9a-f]{40}$"))' \
+            "$RUNNER_TEMP/saas-608-merge.json" >/dev/null
+          merge_sha=$(jq -r .sha "$RUNNER_TEMP/saas-608-merge.json")
+          echo "merge_sha=$merge_sha" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Stephen reviewed release"
+            echo ""
+            echo "- PR: #$PR_NUMBER"
+            echo "- approval seal: \`$SEAL_SHA\`"
+            echo "- merge commit: \`$merge_sha\`"
+            echo "- durable handoff: workflow-run artifact"
+            echo "- server publication: not part of this workflow"
+          } >> "$GITHUB_STEP_SUMMARY" || true

@@ -3,6 +3,7 @@ import type {
   KnowledgeItem,
   KnowledgeTopic,
   LocalizedText,
+  ReviewedKnowledgeItem,
 } from './domain';
 
 export type AppRoute =
@@ -86,6 +87,17 @@ export function getKnowledgeTopicBySlug<T extends KnowledgeTopic>(
   slug: string,
 ): T | null {
   return topics.find((topic) => topic.slug === slug) ?? null;
+}
+
+export function selectTopicItems<T extends KnowledgeItem>(
+  items: readonly T[],
+  topic: KnowledgeTopic,
+): T[] {
+  return items.filter((item) => item.topicSlugs.includes(topic.slug));
+}
+
+export function selectRoleItems<T extends ReviewedKnowledgeItem>(items: readonly T[]): T[] {
+  return items.filter((item) => item.domains.includes('role_org'));
 }
 
 const freshnessPriority: Readonly<Record<KnowledgeItem['freshness'], number>> = {

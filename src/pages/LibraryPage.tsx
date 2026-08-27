@@ -1,4 +1,4 @@
-import type { KnowledgeTool, SeedCandidate } from '../domain';
+import type { KnowledgeTool, ReviewedKnowledgeItem } from '../domain';
 import { localize, type Language } from '../i18n';
 import { useLibrary } from '../state/LibraryContext';
 import InternalLink from '../components/InternalLink';
@@ -8,25 +8,25 @@ export default function LibraryPage({
   tools,
   language,
 }: {
-  readonly items: readonly SeedCandidate[];
+  readonly items: readonly ReviewedKnowledgeItem[];
   readonly tools: readonly KnowledgeTool[];
   readonly language: Language;
 }) {
   const { state, saveStatus, clearAll } = useLibrary();
   const bookmarkedItems = state.bookmarkedIds
     .map((id) => items.find((item) => item.id === id))
-    .filter((item): item is SeedCandidate => item !== undefined);
+    .filter((item): item is ReviewedKnowledgeItem => item !== undefined);
   const unreadBookmarks = bookmarkedItems.filter((item) => !state.readIds.includes(item.id));
   const readItems = state.readIds
     .map((id) => items.find((item) => item.id === id))
-    .filter((item): item is SeedCandidate => item !== undefined);
+    .filter((item): item is ReviewedKnowledgeItem => item !== undefined);
   const activeMaterials = state.toolMaterials.filter((material) => material.status !== 'completed');
   const completedMaterials = state.toolMaterials.filter((material) => material.status === 'completed');
   const hasLocalData = state.bookmarkedIds.length > 0
     || state.readIds.length > 0
     || state.toolMaterials.length > 0;
 
-  const itemLinks = (entries: readonly SeedCandidate[]) => (
+  const itemLinks = (entries: readonly ReviewedKnowledgeItem[]) => (
     <div className='library-links'>
       {entries.map((item) => (
         <InternalLink href={`/items/${item.slug}/`} key={item.id}>

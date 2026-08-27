@@ -1,12 +1,15 @@
-import type { KnowledgeTopic } from '../domain';
+import type { KnowledgeItem, KnowledgeTopic } from '../domain';
 import { domainLabels, localize, type Language } from '../i18n';
+import { selectTopicItems } from '../navigation';
 import InternalLink from './InternalLink';
 
 export default function TopicGrid({
   topics,
+  items,
   language,
 }: {
   readonly topics: readonly KnowledgeTopic[];
+  readonly items: readonly KnowledgeItem[];
   readonly language: Language;
 }) {
   return (
@@ -26,8 +29,8 @@ export default function TopicGrid({
           <p>{localize(topic.summary, language)}</p>
           <small>
             {language === 'zh'
-              ? `${topic.itemIds.length} 条关联内容 · ${topic.toolIds.length} 个工具`
-              : `${topic.itemIds.length} related items · ${topic.toolIds.length} tools`}
+              ? `${selectTopicItems(items, topic).length} 条关联内容 · ${topic.toolIds.length} 个工具`
+              : `${selectTopicItems(items, topic).length} related items · ${topic.toolIds.length} tools`}
           </small>
         </article>
       ))}
