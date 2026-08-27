@@ -6,7 +6,7 @@ import {
   type EvidenceRef,
   type KnowledgeDomain,
   type ReviewedKnowledgeItem,
-} from '../src/domain';
+} from '../src/domain.ts';
 
 export type DailyReviewMode = 'fixture' | 'live';
 
@@ -1063,6 +1063,30 @@ function parseExistingLedger(
     seenCandidateIds,
     runs,
   };
+}
+
+export function parseDailyReviewManifestForApproval(
+  value: unknown,
+  editorialDate: string,
+) {
+  const parsed = parseExistingManifest(
+    value,
+    dailyReviewContext({ editorialDate, mode: 'live' }),
+  );
+  if (!parsed) throw new Error('review manifest is required');
+  return parsed;
+}
+
+export function parseDailyReviewLedgerForApproval(
+  value: unknown,
+  editorialDate: string,
+) {
+  const parsed = parseExistingLedger(
+    value,
+    dailyReviewContext({ editorialDate, mode: 'live' }),
+  );
+  if (!parsed) throw new Error('discovery ledger is required');
+  return parsed;
 }
 
 function uniqueIds(values: readonly string[]) {

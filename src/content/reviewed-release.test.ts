@@ -1,4 +1,8 @@
 import { describe, expect, it } from 'vitest';
+import { spawnSync } from 'node:child_process';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
 
 import type {
   DailyPublicationDraft,
@@ -19,6 +23,15 @@ const SEAL_SHA = '3333333333333333333333333333333333333333';
 const MANIFEST_DIGEST = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 const LEDGER_DIGEST = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
 const APPROVED_AT = '2026-08-27T10:30:00.000Z';
+const REVIEWED_RELEASE_CLI = decodeURIComponent(
+  new URL('../../scripts/stephen-reviewed-release-cli.ts', import.meta.url).pathname,
+);
+const FIXTURE_MANIFEST = decodeURIComponent(
+  new URL('../../scripts/fixtures/saas-608-review-manifest.json', import.meta.url).pathname,
+);
+const FIXTURE_LEDGER = decodeURIComponent(
+  new URL('../../scripts/fixtures/saas-608-discovery-ledger.json', import.meta.url).pathname,
+);
 
 function publicationDraft(overrides: Partial<DailyPublicationDraft> = {}): DailyPublicationDraft {
   return {
@@ -271,5 +284,87 @@ describe('SAAS-608 approval seal chain', () => {
       ...chain,
       seal: { ...chain.seal, manifestSha256: LEDGER_DIGEST },
     })).toThrow('approval seal input digests do not match promotion');
+  });
+});
+
+describe('SAAS-608 bounded filesystem CLI', () => {
+  it('promotes fixture files, removes only reviewed inputs, seals once and refuses overwrite', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'saas-608-reviewed-release-'));
+    const manifestPath = join(root, 'review-candidates/2026-08-27/review-manifest.json');
+    const ledgerPath = join(root, 'review-candidates/2026-08-27/discovery-ledger.json');
+    const promotionPath = join(
+      root,
+      `editorial-releases/2026-08-27/${CANDIDATE_SHA.slice(0, 12)}/promotion.json`,
+    );
+    const approvalPath = join(dirname(promotionPath), 'approval.json');
+    const publishedPath = join(root, 'src/content/published/ED-FIXTURE-REVIEWED.json');
+    const manifestBytes = await readFile(FIXTURE_MANIFEST, 'utf8');
+    const ledgerBytes = await readFile(FIXTURE_LEDGER, 'utf8');
+
+    const installInputs = async () => {
+      await mkdir(dirname(manifestPath), { recursive: true });
+      await mkdir(dirname(publishedPath), { recursive: true });
+      await writeFile(manifestPath, manifestBytes, 'utf8');
+      await writeFile(ledgerPath, ledgerBytes, 'utf8');
+    };
+    const run = (args: readonly string[]) => spawnSync(
+      process.execPath,
+      ['--experimental-strip-types', REVIEWED_RELEASE_CLI, ...args],
+      { encoding: 'utf8' },
+    );
+
+    try {
+      await installInputs();
+      const promoteArgs = [
+        'promote',
+        '--root', root,
+        '--manifest', 'review-candidates/2026-08-27/review-manifest.json',
+        '--ledger', 'review-candidates/2026-08-27/discovery-ledger.json',
+        '--candidate-sha', CANDIDATE_SHA,
+        '--current-head-sha', CANDIDATE_SHA,
+        '--approver', 'ZiZ-LG',
+        '--repository-owner', 'ZiZ-LG',
+        '--repository', 'ZiZ-LG/stephen-knowledge-hub',
+        '--approved-at', APPROVED_AT,
+        '--pr-number', '42',
+      ] as const;
+      const promoted = run(promoteArgs);
+      expect(promoted.status, promoted.stderr).toBe(0);
+      expect(JSON.parse(promoted.stdout)).toMatchObject({
+        task: 'SAAS-608',
+        command: 'promote',
+        candidateSha: CANDIDATE_SHA,
+        promotedItemIds: ['ED-FIXTURE-REVIEWED'],
+      });
+      expect(JSON.parse(await readFile(publishedPath, 'utf8'))).toMatchObject({
+        id: 'ED-FIXTURE-REVIEWED',
+        editorialStatus: 'approved',
+        seedContent: false,
+      });
+      expect(JSON.parse(await readFile(promotionPath, 'utf8'))).toMatchObject({
+        candidateSha: CANDIDATE_SHA,
+      });
+      await expect(readFile(manifestPath, 'utf8')).rejects.toMatchObject({ code: 'ENOENT' });
+      await expect(readFile(ledgerPath, 'utf8')).rejects.toMatchObject({ code: 'ENOENT' });
+
+      const sealed = run([
+        'seal',
+        '--root', root,
+        '--promotion-record', `editorial-releases/2026-08-27/${CANDIDATE_SHA.slice(0, 12)}/promotion.json`,
+        '--promotion-sha', PROMOTION_SHA,
+      ]);
+      expect(sealed.status, sealed.stderr).toBe(0);
+      expect(JSON.parse(await readFile(approvalPath, 'utf8'))).toMatchObject({
+        candidateSha: CANDIDATE_SHA,
+        promotionSha: PROMOTION_SHA,
+      });
+
+      await installInputs();
+      const duplicate = run(promoteArgs);
+      expect(duplicate.status).toBe(1);
+      expect(duplicate.stderr).toContain('candidate is already published');
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
   });
 });

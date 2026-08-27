@@ -6,8 +6,8 @@ import {
   type LocalizedText,
   type ReviewedKnowledgeItem,
   type SeedCandidate,
-} from '../domain';
-import { sourceRegistry, type SourceRegistryEntry } from './sources';
+} from '../domain.ts';
+import { sourceRegistry, type SourceRegistryEntry } from './sources.ts';
 
 function requireText(value: unknown, message: string): asserts value is string {
   if (typeof value !== 'string' || value.trim() === '') {

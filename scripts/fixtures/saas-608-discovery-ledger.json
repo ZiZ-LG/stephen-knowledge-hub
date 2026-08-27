@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "task": "SAAS-606",
+  "editorialDate": "2026-08-27",
+  "seenCandidateIds": [
+    "ED-FIXTURE-REVIEWED"
+  ],
+  "runs": [
+    {
+      "fetchedAt": "2026-08-27T09:00:00.000Z",
+      "summary": {
+        "sourcesConfigured": 2,
+        "sourcesScanned": 2,
+        "sourcesFailed": 0,
+        "newDiscoveries": 1,
+        "duplicates": 0,
+        "rejected": 0,
+        "manualReview": 1,
+        "proposed": 1
+      }
+    }
+  ]
+}

@@ -1,10 +1,10 @@
-import type { ReviewedKnowledgeItem } from '../src/domain';
-import { validateApprovedReviewedItems } from '../src/content/validate';
+import type { ReviewedKnowledgeItem } from '../src/domain.ts';
+import { validateApprovedReviewedItems } from '../src/content/validate.ts';
 import {
   parseDailyPublicationDraft,
   type DailyReviewLedger,
   type DailyReviewManifest,
-} from './stephen-daily-review';
+} from './stephen-daily-review.ts';
 
 const FULL_GIT_SHA = /^[0-9a-f]{40}$/;
 const SHA256 = /^[0-9a-f]{64}$/;
