@@ -2,7 +2,7 @@
 
 > 状态：`PUBLIC_REPOSITORY / BOOTSTRAP_DRAFT_PR`；`SCHEDULE_DISABLED`
 >
-> 当前边界：本公开仓库负责发现、候选审核与静态构建，不持有生产凭据，也不执行部署、流量切换或回滚。`STEPHEN_DAILY_SCHEDULE_ENABLED` 默认未启用；任何新内容仍须逐条人工终审，生产发布由独立的私有运维边界另行批准。
+> 当前边界：本公开仓库负责发现、候选审核、正式内容提交、静态构建与不可变 GitHub Release，不持有生产凭据，也不执行部署、流量切换或回滚。`STEPHEN_DAILY_SCHEDULE_ENABLED` 默认未启用；任何新内容仍须逐条人工终审，线上投放由独立的私有运维边界另行批准。
 
 ## 1. 目标与边界
 
@@ -37,9 +37,13 @@
 - 每日审核契约：`scripts/stephen-daily-review.ts`
 - 每日审核 CLI：`scripts/stephen-daily-review-cli.ts`
 - 每日 Draft PR 工作流：`.github/workflows/daily-candidate-review.yml`
+- 精确 SHA 批准、正式内容与封印：`scripts/stephen-reviewed-release.ts`、`scripts/stephen-reviewed-release-cli.ts`
+- 项目所有者批准与自动合并：`.github/workflows/approve-reviewed-content.yml`
+- 不可变 GitHub Release：`.github/workflows/publish-reviewed-release.yml`
 - 静态构建与公开前审计：`.github/workflows/checks.yml`
 - 生产发布、服务器配置与回滚：由独立的私有运维仓库负责，不进入本公开仓库
 - 公开集合：`src/content/publicItems.ts`
+- 每日正式内容：`src/content/published/*.json`
 
 默认控制值：
 
@@ -265,7 +269,7 @@ permissions:
 - 发现 ledger：`review-candidates/YYYY-MM-DD/discovery-ledger.json`；
 - 同一个 open Draft PR。
 
-`review-manifest.json` 只包含拟发布候选，状态固定为 `pending_owner_review / not_published`，不会被 `publicItems.ts` 导入。`discovery-ledger.json` 记录当天已经出现过的候选 ID 和每次扫描统计。项目所有者可在 PR 分支中删除 manifest 内不合格条目的完整 JSON 对象；由于该 ID 仍在 ledger 中，当天下一次运行不会把它重新加回。
+`review-manifest.json` 只包含拟发布候选，状态固定为 `pending_owner_review / not_published`，不会被 `publicItems.ts` 导入。`discovery-ledger.json` 记录当天已经出现过的候选 ID 和每次扫描统计。项目所有者可在 PR 分支中删除 manifest 内不合格条目的完整 JSON 对象；由于该 ID 仍在 ledger 中，当天下一次运行不会把它重新加回。保留候选还必须由项目所有者补齐 `publicationDraft` 的分类、证据映射、两项事实、深层分析与核验说明；机器生成的 `editorialDraft` 不能替代该结构。
 
 如果同 head/base 已有 open Draft PR，工作流只更新该 PR；如果 PR 已转为非 Draft，工作流失败关闭；如果同一 head/base 出现多个 PR，工作流因状态歧义失败；如果同日 PR 已关闭或合并，工作流不重新创建。没有拟发布条目且不存在既有 Draft PR 时，运行正常成功但不创建空 PR。
 
@@ -309,3 +313,18 @@ gh workflow run daily-candidate-review.yml \
 ```
 
 验收 PR 的 head 为 `codex/stephen-daily-test-2026-08-24`，因此即使误合并也只进入功能分支，不直接影响 `main`、正式公开集合或生产站点。该 Draft PR 在 public 仓库中公开可见。验收完成后停在项目所有者审核门；工作流本身不部署，也不能触发私有生产运维。
+
+## 13. SAAS-608 精确 SHA 批准、合并与不可变 Release
+
+SAAS-608 不改变每日候选的“待审核、未发布”含义，而是在其后增加一个独立的人工作业门：
+
+1. 项目所有者删除不采用候选，清空已处理的 `manualReviewRecords`，并为保留候选补齐 `publicationDraft`；
+2. 等待 Draft PR CI 全绿，复制当前完整 40 位 head SHA；
+3. 从默认分支手工运行 `approve-reviewed-content.yml`，同时输入 PR 编号、完整 SHA 和 `APPROVE <SHA>`；
+4. 受信任脚本把候选映射为 `src/content/published/*.json`，依次创建 promotion 与 approval seal 两次提交；
+5. 封印 SHA 通过完整仓库检查和静态产物校验后，工作流用同一 SHA 作为 merge API 并发保护条件完成 merge commit；
+6. 独立工作流重新验证合并、检查、父提交和 digest，按 Draft → 上传完整资产 → 发布顺序形成不可变 GitHub Release。
+
+Release 工作流只有 `contents: write` 和核验检查所需的 `checks: read`；批准工作流只有 `contents`、`pull-requests` 与 `checks` 三项必要权限。两者都固定使用 `ubuntu-latest` 和完整 commit SHA 的外部 Action，不包含 `pull_request_target`、自托管 runner 或生产操作入口。
+
+完整字段、命令、失败恢复与“GitHub Release 不等于线上投放”的边界见 `docs/reviewed-release-runbook.md`。首次真实启用必须等 bootstrap 与 SAAS-608 PR 分别合入 `main`、合并后精确 SHA CI 全绿，并由项目所有者另行启用仓库 Immutable Releases；功能分支上的工作流不具备该启用条件。

@@ -1,6 +1,7 @@
 node_modules/
 dist/
 coverage/
+.worktrees/
 .saas-606/
 .env
 .env.*
