@@ -20,6 +20,8 @@ npm run dev
 npm run build
 ```
 
+构建产物可以由只读校验器生成 `.stephen-release.json`，其中固定记录本 public 仓库身份、精确源码 SHA、逐文件哈希、整体 checksum 和有限的浏览器冒烟路径。生产运维方必须同时核对 `sourceRepository + sourceSha + contentChecksum`，不能只凭分支名或单一 SHA 发布。
+
 ## 内容审核边界
 
 - AI 只能生成候选稿，不能批准内容，也不能设置发布状态。
