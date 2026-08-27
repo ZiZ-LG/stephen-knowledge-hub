@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "task": "SAAS-608",
+  "repository": "ZiZ-LG/stephen-knowledge-hub",
+  "prNumber": 3,
+  "editorialDate": "2026-08-27",
+  "approver": "ZiZ-LG",
+  "approvedAt": "2026-08-27T16:57:03.000Z",
+  "candidateSha": "ba7189495ed23a1507871786512f91ede5f699a9",
+  "manifestSha256": "c8d1c1f2b842d39de91ae9eb1736983f2e890d284a6f73bbccd7c7e71ae734c6",
+  "ledgerSha256": "52b2901291fe675cd3efb019d5d540d359b56ea48312f9d4a9c70097939329f7",
+  "promotedItemIds": [
+    "ED-CFCE96211971CB56"
+  ],
+  "publishedPaths": [
+    "src/content/published/ED-CFCE96211971CB56.json"
+  ],
+  "promotedCandidates": [
+    {
+      "itemId": "ED-CFCE96211971CB56",
+      "sourceId": "openai-news-rss",
+      "canonicalUrl": "https://openai.com/index/how-enterprises-put-ai-to-work",
+      "contentFingerprint": "5ec1769f940d2713",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ]
+    }
+  ]
+}
