@@ -538,3 +538,240 @@ export function verifyApprovalChain(input: VerifyApprovalChainInput): VerifiedAp
     promotedItemIds: input.promotion.promotedItemIds,
   };
 }
+
+export interface ReviewedReleaseDispatchPayload {
+  readonly pr: number;
+  readonly candidateSha: string;
+  readonly promotionSha: string;
+  readonly sealSha: string;
+  readonly mergeSha: string;
+  readonly approvalRecord: string;
+  readonly releaseTag: string;
+}
+
+export interface ReviewedReleasePullRequest {
+  readonly number: number;
+  readonly merged: boolean;
+  readonly mergeCommitSha: string;
+  readonly headSha: string;
+  readonly headRepository: string;
+  readonly baseRepository: string;
+}
+
+export interface ReviewedReleaseCheckRun {
+  readonly name: string;
+  readonly headSha: string;
+  readonly status: string;
+  readonly conclusion: string | null;
+}
+
+export interface ReviewedReleaseAssetExpectation {
+  readonly name: string;
+  readonly sha256: string;
+}
+
+export interface ExistingReviewedRelease {
+  readonly id: number;
+  readonly tagName: string;
+  readonly targetCommitish: string;
+  readonly draft: boolean;
+  readonly immutable: boolean;
+  readonly assets: readonly {
+    readonly id: number;
+    readonly name: string;
+    readonly digest: string | null;
+  }[];
+}
+
+export interface ReviewedReleaseRequestInput {
+  readonly repository: string;
+  readonly payload: ReviewedReleaseDispatchPayload;
+  readonly pr: ReviewedReleasePullRequest;
+  readonly checkRuns: readonly ReviewedReleaseCheckRun[];
+  readonly immutableReleases: { readonly enabled: boolean };
+  readonly promotion: ReviewedPromotionRecord;
+  readonly seal: ReviewedApprovalSeal;
+  readonly promotionParentSha: string;
+  readonly sealParentSha: string;
+  readonly expectedAssets: readonly ReviewedReleaseAssetExpectation[];
+  readonly existingTag: null | {
+    readonly objectType: string;
+    readonly sha: string;
+  };
+  readonly existingRelease: ExistingReviewedRelease | null;
+}
+
+export interface ReviewedReleasePreparation {
+  readonly status: 'create_draft' | 'reuse_draft' | 'already_immutable';
+  readonly releaseTag: string;
+  readonly targetCommitish: string;
+  readonly releaseId: number | null;
+  readonly missingAssets: readonly string[];
+}
+
+function containsForbiddenServerField(value: unknown): boolean {
+  if (Array.isArray(value)) return value.some(containsForbiddenServerField);
+  if (typeof value !== 'object' || value === null) return false;
+  const forbidden = [
+    'deployment',
+    'environment',
+    'server',
+    'host',
+    'ssh',
+    'nginx',
+    'dns',
+    'traffic',
+    'production',
+  ];
+  return Object.entries(value).some(([key, entry]) => {
+    const normalized = key.replace(/[^a-z]/gi, '').toLocaleLowerCase();
+    return forbidden.some((word) => normalized.includes(word))
+      || containsForbiddenServerField(entry);
+  });
+}
+
+function expectedReleaseAssetNames(sealSha: string) {
+  return [
+    '.stephen-release.json',
+    `stephen-site-${sealSha.slice(0, 12)}.tar.gz`,
+  ].sort((left, right) => left.localeCompare(right));
+}
+
+export function evaluateReviewedReleaseRequest(
+  input: ReviewedReleaseRequestInput,
+): ReviewedReleasePreparation {
+  requireRepository(input.repository);
+  const repositoryOwner = input.repository.split('/')[0];
+  if (input.promotion.approver !== repositoryOwner
+    || input.seal.approver !== repositoryOwner) {
+    throw new Error('reviewed Release approval is not owned by the repository owner');
+  }
+  if (containsForbiddenServerField(input.payload)) {
+    throw new Error('Release payload contains a forbidden server-operation field');
+  }
+  if (!Number.isInteger(input.payload.pr) || input.payload.pr < 1) {
+    throw new Error('Release payload PR number is invalid');
+  }
+  for (const [value, label] of [
+    [input.payload.candidateSha, 'candidate SHA'],
+    [input.payload.promotionSha, 'promotion SHA'],
+    [input.payload.sealSha, 'seal SHA'],
+    [input.payload.mergeSha, 'merge SHA'],
+  ] as const) requireFullGitSha(value, label);
+  if (input.pr.number !== input.payload.pr
+    || input.pr.merged !== true
+    || input.pr.headRepository !== input.repository
+    || input.pr.baseRepository !== input.repository) {
+    throw new Error('reviewed Release requires the merged approval PR');
+  }
+  if (input.pr.mergeCommitSha !== input.payload.mergeSha) {
+    throw new Error('merge commit does not match the approved dispatch');
+  }
+  if (input.pr.headSha !== input.payload.sealSha) {
+    throw new Error('merged PR head does not match the approval seal SHA');
+  }
+  const approvalPathPattern = new RegExp(
+    `^editorial-releases/${input.seal.editorialDate}/${input.payload.candidateSha.slice(0, 12)}/approval\\.json$`,
+  );
+  if (!approvalPathPattern.test(input.payload.approvalRecord)) {
+    throw new Error('approval record path does not match the approved candidate');
+  }
+  const successfulCheck = input.checkRuns.some((check) => (
+    check.name === REVIEWED_RELEASE_CHECK_NAME
+    && check.headSha === input.payload.sealSha
+    && check.status === 'completed'
+    && check.conclusion === 'success'
+  ));
+  if (!successfulCheck) throw new Error('successful exact-seal check is missing');
+
+  verifyApprovalChain({
+    promotion: input.promotion,
+    seal: input.seal,
+    candidateSha: input.payload.candidateSha,
+    promotionSha: input.payload.promotionSha,
+    sealSha: input.payload.sealSha,
+    promotionParentSha: input.promotionParentSha,
+    sealParentSha: input.sealParentSha,
+    prHeadSha: input.pr.headSha,
+    repository: input.repository,
+    releaseTag: input.payload.releaseTag,
+  });
+  if (!input.immutableReleases.enabled) {
+    throw new Error('repository immutable Releases must be enabled');
+  }
+  if (input.existingTag) {
+    requireFullGitSha(input.existingTag.sha, 'existing Release tag SHA');
+    if (input.existingTag.objectType !== 'commit'
+      || input.existingTag.sha !== input.payload.sealSha) {
+      throw new Error('existing Release tag points to another commit');
+    }
+  }
+
+  const assetNames = input.expectedAssets.map((asset) => asset.name);
+  const requiredAssetNames = expectedReleaseAssetNames(input.payload.sealSha);
+  if (!equalStrings(
+    [...assetNames].sort((left, right) => left.localeCompare(right)),
+    requiredAssetNames,
+  )) {
+    throw new Error('Release asset set is invalid');
+  }
+  for (const asset of input.expectedAssets) {
+    requireSha256(asset.sha256, `${asset.name} digest`);
+  }
+  const expectedByName = new Map(input.expectedAssets.map((asset) => [asset.name, asset]));
+
+  if (!input.existingRelease) {
+    return {
+      status: 'create_draft',
+      releaseTag: input.payload.releaseTag,
+      targetCommitish: input.payload.sealSha,
+      releaseId: null,
+      missingAssets: requiredAssetNames,
+    };
+  }
+
+  const release = input.existingRelease;
+  if (!Number.isInteger(release.id) || release.id < 1
+    || release.tagName !== input.payload.releaseTag
+    || release.targetCommitish !== input.payload.sealSha) {
+    throw new Error('existing Release identity does not match the approval seal');
+  }
+  if (!release.draft && !release.immutable) {
+    throw new Error('existing published Release is mutable');
+  }
+  if (release.draft && release.immutable) {
+    throw new Error('Draft Release cannot already be immutable');
+  }
+  const existingNames = new Set<string>();
+  for (const asset of release.assets) {
+    if (existingNames.has(asset.name) || !expectedByName.has(asset.name)) {
+      throw new Error('existing Release contains an unexpected asset');
+    }
+    existingNames.add(asset.name);
+    const expected = expectedByName.get(asset.name)!;
+    if (asset.digest !== `sha256:${expected.sha256}`) {
+      throw new Error('existing Release asset digest does not match');
+    }
+  }
+  const missingAssets = requiredAssetNames.filter((name) => !existingNames.has(name));
+  if (release.immutable) {
+    if (release.draft || missingAssets.length !== 0 || !input.existingTag) {
+      throw new Error('immutable Release is incomplete');
+    }
+    return {
+      status: 'already_immutable',
+      releaseTag: input.payload.releaseTag,
+      targetCommitish: input.payload.sealSha,
+      releaseId: release.id,
+      missingAssets: [],
+    };
+  }
+  if (!release.draft) throw new Error('existing published Release is mutable');
+  return {
+    status: 'reuse_draft',
+    releaseTag: input.payload.releaseTag,
+    targetCommitish: input.payload.sealSha,
+    releaseId: release.id,
+    missingAssets,
+  };
+}

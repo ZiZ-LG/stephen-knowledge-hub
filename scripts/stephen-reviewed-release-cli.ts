@@ -24,10 +24,12 @@ import {
 import {
   buildApprovalSeal,
   evaluateReviewedApprovalRequest,
+  evaluateReviewedReleaseRequest,
   promoteReviewedManifest,
   verifyApprovalChain,
   type ReviewedApprovalSeal,
   type ReviewedApprovalRequestInput,
+  type ReviewedReleaseRequestInput,
   type ReviewedPromotionRecord,
 } from './stephen-reviewed-release.ts';
 
@@ -35,6 +37,7 @@ type CliCommand =
   | { readonly command: 'promote'; readonly options: ReadonlyMap<string, string> }
   | { readonly command: 'seal'; readonly options: ReadonlyMap<string, string> }
   | { readonly command: 'validate-request'; readonly options: ReadonlyMap<string, string> }
+  | { readonly command: 'validate-release'; readonly options: ReadonlyMap<string, string> }
   | { readonly command: 'verify-chain'; readonly options: ReadonlyMap<string, string> };
 
 function invalidArguments(): never {
@@ -85,6 +88,10 @@ export function parseReviewedReleaseCliArgs(argv: readonly string[]): CliCommand
     return { command, options };
   }
   if (command === 'validate-request') {
+    requireExactOptions(options, ['--request']);
+    return { command, options };
+  }
+  if (command === 'validate-release') {
     requireExactOptions(options, ['--request']);
     return { command, options };
   }
@@ -359,6 +366,29 @@ async function validateRequest(options: ReadonlyMap<string, string>) {
   } as const;
 }
 
+async function readAbsoluteRegularJson(path: string, label: string) {
+  if (!isAbsolute(path) || resolve(path) !== path) {
+    throw new Error(`${label} path must be absolute and normalized`);
+  }
+  const info = await lstat(path);
+  if (!info.isFile() || info.isSymbolicLink()) {
+    throw new Error(`${label} must be a regular JSON file`);
+  }
+  return parseJson(await readFile(path, 'utf8'), label);
+}
+
+async function validateRelease(options: ReadonlyMap<string, string>) {
+  const request = await readAbsoluteRegularJson(
+    option(options, '--request'),
+    'Release request',
+  ) as ReviewedReleaseRequestInput;
+  return {
+    task: 'SAAS-608',
+    command: 'validate-release',
+    ...evaluateReviewedReleaseRequest(request),
+  } as const;
+}
+
 function approvalRecordLocation(value: string) {
   if (basename(value) !== 'approval.json') throw new Error('approval record path is invalid');
   const promotionPath = `${dirname(value)}/promotion.json`;
@@ -392,6 +422,7 @@ export async function runReviewedReleaseCli(argv: readonly string[]) {
   if (parsed.command === 'promote') return promote(parsed.options);
   if (parsed.command === 'seal') return seal(parsed.options);
   if (parsed.command === 'validate-request') return validateRequest(parsed.options);
+  if (parsed.command === 'validate-release') return validateRelease(parsed.options);
   return verifyChain(parsed.options);
 }
 

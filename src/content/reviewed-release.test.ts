@@ -13,6 +13,7 @@ import type {
 import {
   buildApprovalSeal,
   evaluateReviewedApprovalRequest,
+  evaluateReviewedReleaseRequest,
   promoteReviewedManifest,
   reviewedReleaseTag,
   verifyApprovalChain,
@@ -21,6 +22,7 @@ import {
 const CANDIDATE_SHA = '1111111111111111111111111111111111111111';
 const PROMOTION_SHA = '2222222222222222222222222222222222222222';
 const SEAL_SHA = '3333333333333333333333333333333333333333';
+const MERGE_SHA = '4444444444444444444444444444444444444444';
 const MANIFEST_DIGEST = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 const LEDGER_DIGEST = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
 const APPROVED_AT = '2026-08-27T10:30:00.000Z';
@@ -469,5 +471,155 @@ describe('SAAS-608 trusted approval request policy', () => {
         manualReviewRecords: [{ candidateId: 'ED-MANUAL' }],
       } as unknown as DailyReviewManifest,
     })).toThrow('manualReviewRecords must be empty before approval');
+  });
+});
+
+describe('SAAS-608 immutable Release request policy', () => {
+  function releaseInput() {
+    const promotion = promoteReviewedManifest(promotionInput()).record;
+    const seal = buildApprovalSeal({ promotion, promotionSha: PROMOTION_SHA });
+    const releaseTag = reviewedReleaseTag('2026-08-27', SEAL_SHA);
+    return {
+      repository: 'ZiZ-LG/stephen-knowledge-hub',
+      payload: {
+        pr: 42,
+        candidateSha: CANDIDATE_SHA,
+        promotionSha: PROMOTION_SHA,
+        sealSha: SEAL_SHA,
+        mergeSha: MERGE_SHA,
+        approvalRecord: `editorial-releases/2026-08-27/${CANDIDATE_SHA.slice(0, 12)}/approval.json`,
+        releaseTag,
+      },
+      pr: {
+        number: 42,
+        merged: true,
+        mergeCommitSha: MERGE_SHA,
+        headSha: SEAL_SHA,
+        headRepository: 'ZiZ-LG/stephen-knowledge-hub',
+        baseRepository: 'ZiZ-LG/stephen-knowledge-hub',
+      },
+      checkRuns: [{
+        name: 'stephen-reviewed-release',
+        headSha: SEAL_SHA,
+        status: 'completed',
+        conclusion: 'success',
+      }],
+      immutableReleases: { enabled: true },
+      promotion,
+      seal,
+      promotionParentSha: CANDIDATE_SHA,
+      sealParentSha: PROMOTION_SHA,
+      expectedAssets: [{
+        name: 'stephen-site-333333333333.tar.gz',
+        sha256: 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',
+      }, {
+        name: '.stephen-release.json',
+        sha256: 'dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd',
+      }],
+      existingTag: null,
+      existingRelease: null,
+    } as const;
+  }
+
+  it('prepares only the exact merged and checked seal for a Draft Release', () => {
+    expect(evaluateReviewedReleaseRequest(releaseInput())).toEqual({
+      status: 'create_draft',
+      releaseTag: 'stephen-content-2026-08-27-333333333333',
+      targetCommitish: SEAL_SHA,
+      releaseId: null,
+      missingAssets: ['.stephen-release.json', 'stephen-site-333333333333.tar.gz'],
+    });
+  });
+
+  it('rejects an unmerged PR, mismatched merge or seal, and a missing successful check', () => {
+    const input = releaseInput();
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      pr: { ...input.pr, merged: false },
+    })).toThrow('reviewed Release requires the merged approval PR');
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      pr: { ...input.pr, mergeCommitSha: CANDIDATE_SHA },
+    })).toThrow('merge commit does not match the approved dispatch');
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      pr: { ...input.pr, headSha: PROMOTION_SHA },
+    })).toThrow('merged PR head does not match the approval seal SHA');
+    expect(() => evaluateReviewedReleaseRequest({ ...input, checkRuns: [] }))
+      .toThrow('successful exact-seal check is missing');
+  });
+
+  it('rejects a broken commit chain or disabled immutable Release setting', () => {
+    const input = releaseInput();
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      promotionParentSha: SEAL_SHA,
+    })).toThrow('promotion parent does not match approved candidate SHA');
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      immutableReleases: { enabled: false },
+    })).toThrow('repository immutable Releases must be enabled');
+  });
+
+  it('rejects tag drift, a mutable published Release or changed asset digest', () => {
+    const input = releaseInput();
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      existingTag: { objectType: 'commit', sha: PROMOTION_SHA },
+    })).toThrow('existing Release tag points to another commit');
+
+    const matchingAssets = input.expectedAssets.map((asset, index) => ({
+      id: index + 1,
+      name: asset.name,
+      digest: `sha256:${asset.sha256}`,
+    }));
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      existingRelease: {
+        id: 7,
+        tagName: input.payload.releaseTag,
+        targetCommitish: SEAL_SHA,
+        draft: false,
+        immutable: false,
+        assets: matchingAssets,
+      },
+    })).toThrow('existing published Release is mutable');
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      existingRelease: {
+        id: 7,
+        tagName: input.payload.releaseTag,
+        targetCommitish: SEAL_SHA,
+        draft: true,
+        immutable: false,
+        assets: [{ ...matchingAssets[0], digest: `sha256:${'e'.repeat(64)}` }],
+      },
+    })).toThrow('existing Release asset digest does not match');
+  });
+
+  it('treats a matching immutable Release as an idempotent success and rejects server fields', () => {
+    const input = releaseInput();
+    const assets = input.expectedAssets.map((asset, index) => ({
+      id: index + 1,
+      name: asset.name,
+      digest: `sha256:${asset.sha256}`,
+    }));
+    expect(evaluateReviewedReleaseRequest({
+      ...input,
+      existingTag: { objectType: 'commit', sha: SEAL_SHA },
+      existingRelease: {
+        id: 7,
+        tagName: input.payload.releaseTag,
+        targetCommitish: SEAL_SHA,
+        draft: false,
+        immutable: true,
+        assets,
+      },
+    })).toMatchObject({ status: 'already_immutable', releaseId: 7, missingAssets: [] });
+
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      payload: { ...input.payload, productionHost: 'example.invalid' } as typeof input.payload,
+    })).toThrow('Release payload contains a forbidden server-operation field');
   });
 });

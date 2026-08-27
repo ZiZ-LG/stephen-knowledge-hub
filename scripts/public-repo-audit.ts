@@ -138,6 +138,26 @@ function approvalWorkflowContract(text: string) {
   ].every((pattern) => pattern.test(text));
 }
 
+function releaseWorkflowContract(text: string) {
+  return [
+    /^on:\s*\n\s{2}repository_dispatch:/m,
+    /stephen_release_approved/,
+    /repos\/\$GH_REPO\/immutable-releases/,
+    /commits\/\$SEAL_SHA\/check-runs/,
+    /ref:\s*\$\{\{ github\.event\.client_payload\.sealSha \}\}/,
+    /validate-release --request/,
+    /npm run check/,
+    /stephen-release-cli\.ts verify/,
+    /tar --sort=name --mtime='@0'/,
+    /gzip -n -9/,
+    /-F draft=true/,
+    /uploads\.github\.com/,
+    /-F draft=false/,
+    /\.immutable == true/,
+    /\.status == "already_immutable"/,
+  ].every((pattern) => pattern.test(text));
+}
+
 function pushFinding(
   findings: PublicAuditFinding[],
   seen: Set<string>,
@@ -269,6 +289,17 @@ export function auditPublicEntries(
           pushFinding(findings, findingKeys, 'reviewed-workflow-permissions', entry.path);
         }
         if (!approvalWorkflowContract(text)) {
+          pushFinding(findings, findingKeys, 'reviewed-workflow-contract', entry.path);
+        }
+      }
+      if (entry.path === releaseWorkflowPath) {
+        if (!exactPermissions(topLevelWorkflowPermissions(text), {
+          contents: 'write',
+          checks: 'read',
+        })) {
+          pushFinding(findings, findingKeys, 'reviewed-workflow-permissions', entry.path);
+        }
+        if (!releaseWorkflowContract(text)) {
           pushFinding(findings, findingKeys, 'reviewed-workflow-contract', entry.path);
         }
       }
