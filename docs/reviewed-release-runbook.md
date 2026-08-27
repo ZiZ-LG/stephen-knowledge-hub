@@ -127,6 +127,7 @@ promotion commit：
 
 - 删除已审核 manifest 与 ledger；
 - 为每个保留候选写入一个 `src/content/published/<ITEM-ID>.json`；
+- 将每个获批条目的安全 slug 写入 `public/sitemap.xml`，该 sitemap 变更与正式内容一起进入 promotion commit；
 - 写入包含候选 SHA、输入文件 SHA-256、批准人、时间、PR 和来源风险溯源的 `promotion.json`。
 
 approval seal commit：
@@ -175,7 +176,7 @@ Release 严格按以下顺序形成：
 | `publicationDraft`、证据或分析不完整 | 无写入 | 在 Draft PR 中补齐并重新等待 CI |
 | promotion 或 seal 创建失败 | PR 未合并 | 检查已有输出；不得覆盖记录，使用新的候选提交重试 |
 | 分支在 push 前漂移 | push 失败 | 审核新 head 的全部变化并使用新 SHA 批准 |
-| 封印 CI 失败 | 两提交可能已在 Draft PR 分支，未合并 | 修复形成新候选 head，重新完整批准；不手改 seal |
+| 封印 CI 失败 | 两提交可能已在 Draft PR 分支，未合并 | 前进合并修复后的 `main`，恢复仅含两份审核文件的候选净差异，形成新候选 head 后重新完整批准；不 force-push、不手改 seal |
 | merge compare-and-swap 失败 | 未合并 | 重新读取 PR head，不重用旧批准 |
 | 合并后审批运行收尾失败 | 已合并，交接 artifact 已持久化 | `workflow_run` 仍按持久证据尝试发布；若 Release 工作流失败，调查后重跑该 Release 工作流，不重新合并 |
 | Draft Release 已有部分资产 | Draft 保留 | 同一事件只补上传 digest 匹配的缺少资产 |

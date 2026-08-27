@@ -126,12 +126,16 @@ describe('Stephen source governance', () => {
 });
 
 describe('SAAS-602 seed review collection', () => {
-  it('publishes exactly 30 owner-approved seeds manually while pure AI technology stays below 20%', () => {
+  it('keeps the 30-seed governance separate from the growing approved daily collection', () => {
     expect(approvedSeedItems).toHaveLength(30);
     expect(() => validateApprovedSeedItems(approvedSeedItems)).not.toThrow();
-    expect(approvedKnowledgeItems).toHaveLength(30);
+    expect(approvedKnowledgeItems)
+      .toHaveLength(approvedSeedItems.length + approvedDailyItems.length);
     expect(approvedKnowledgeItems.map((item) => item.id))
-      .toEqual(approvedSeedItems.map((item) => item.id));
+      .toEqual([
+        ...approvedSeedItems.map((item) => item.id),
+        ...approvedDailyItems.map((item) => item.id),
+      ]);
     expect(() => validateKnowledgeItems(approvedKnowledgeItems)).not.toThrow();
 
     const pureAiTechnologyCount = approvedSeedItems
@@ -141,7 +145,6 @@ describe('SAAS-602 seed review collection', () => {
     for (const item of approvedKnowledgeItems) {
       expect(item.editorialStatus).toBe('approved');
       expect(item.publicationMode).toBe('manual');
-      expect(item.seedContent).toBe(true);
       expect(item.review.status).toBe('approved');
       expect(item.title.zh.trim().length).toBeGreaterThan(0);
       expect(item.summary.zh.trim().length).toBeGreaterThan(0);
@@ -153,6 +156,8 @@ describe('SAAS-602 seed review collection', () => {
       expect(item.evidence.every((evidence) =>
         sourceRegistry.some((source) => source.id === evidence.sourceId))).toBe(true);
     }
+    expect(approvedSeedItems.every((item) => item.seedContent)).toBe(true);
+    expect(approvedDailyItems.every((item) => item.seedContent === false)).toBe(true);
   });
 
   it('grounds every conclusion in two traceable facts and cross-organization evidence', () => {
