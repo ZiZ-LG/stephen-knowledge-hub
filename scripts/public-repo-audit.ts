@@ -31,6 +31,8 @@ export interface PublicAuditResult {
 
 const MAX_TEXT_BYTES = 2 * 1024 * 1024;
 const workflowPathPattern = /^\.github\/workflows\/[^/]+\.ya?ml$/;
+const approvalWorkflowPath = '.github/workflows/approve-reviewed-content.yml';
+const releaseWorkflowPath = '.github/workflows/publish-reviewed-release.yml';
 const textPathPattern = /\.(?:css|html|js|json|md|svg|ts|tsx|txt|xml|ya?ml)$/;
 const dailyBranchPattern = /^codex\/stephen-daily(-test)?-(\d{4}-\d{2}-\d{2})$/;
 
@@ -76,6 +78,64 @@ function sensitivePath(path: string) {
 
 function candidateDate(branchName: string) {
   return dailyBranchPattern.exec(branchName)?.[2];
+}
+
+function topLevelWorkflowPermissions(text: string) {
+  const permissions = new Map<string, string>();
+  const lines = text.split('\n');
+  const start = lines.findIndex((line) => /^permissions:\s*$/.test(line));
+  if (start < 0) return permissions;
+  for (const line of lines.slice(start + 1)) {
+    const parsed = /^ {2}([a-z-]+):\s*(read|write|none)\s*$/.exec(line);
+    if (!parsed) break;
+    permissions.set(parsed[1], parsed[2]);
+  }
+  return permissions;
+}
+
+function exactPermissions(
+  actual: ReadonlyMap<string, string>,
+  expected: Readonly<Record<string, string>>,
+) {
+  const entries = Object.entries(expected);
+  return actual.size === entries.length
+    && entries.every(([name, access]) => actual.get(name) === access);
+}
+
+function reviewedWorkflowHasUnsafeSurface(text: string) {
+  return [
+    /^\s*environment\s*:/m,
+    /\$\{\{\s*secrets\./,
+    /\bpull_request_target\b/i,
+    /\bself-hosted\b/i,
+    /\bssh\b/i,
+    /\bnginx\b/i,
+    /\bdns\b/i,
+    /\bdeployment\b/i,
+    /\bproduction\b/i,
+    /git\s+push[^\n]*(?:--force|-f\b)/,
+    /git\s+reset\s+--hard/,
+  ].some((pattern) => pattern.test(text));
+}
+
+function approvalWorkflowContract(text: string) {
+  return [
+    /^on:\s*\n\s{2}workflow_dispatch:/m,
+    /github\.event\.repository\.default_branch/,
+    /github\.triggering_actor/,
+    /validate-request --request/,
+    /stephen-reviewed-release-cli\.ts promote/,
+    /stephen-reviewed-release-cli\.ts seal/,
+    /stephen-reviewed-release-cli\.ts verify-chain/,
+    /npm run check/,
+    /stephen-release-cli\.ts verify/,
+    /repos\/\$GH_REPO\/check-runs/,
+    /name=stephen-reviewed-release/,
+    /pulls\/\$PR_NUMBER\/merge/,
+    /-f sha="\$SEAL_SHA"/,
+    /-f merge_method=merge/,
+    /stephen_release_approved/,
+  ].every((pattern) => pattern.test(text));
 }
 
 function pushFinding(
@@ -194,6 +254,23 @@ export function auditPublicEntries(
           || /^\s{2}[a-z-]+:\s*write\s*$/m.test(text)
           || /\$\{\{\s*secrets\./.test(text))) {
         pushFinding(findings, findingKeys, 'ci-write-boundary', entry.path);
+      }
+      if (entry.path === approvalWorkflowPath || entry.path === releaseWorkflowPath) {
+        if (reviewedWorkflowHasUnsafeSurface(text)) {
+          pushFinding(findings, findingKeys, 'reviewed-workflow-boundary', entry.path);
+        }
+      }
+      if (entry.path === approvalWorkflowPath) {
+        if (!exactPermissions(topLevelWorkflowPermissions(text), {
+          contents: 'write',
+          'pull-requests': 'write',
+          checks: 'write',
+        })) {
+          pushFinding(findings, findingKeys, 'reviewed-workflow-permissions', entry.path);
+        }
+        if (!approvalWorkflowContract(text)) {
+          pushFinding(findings, findingKeys, 'reviewed-workflow-contract', entry.path);
+        }
       }
     }
   }

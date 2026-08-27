@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { readFile } from 'node:fs/promises';
 
 import {
   auditPublicEntries,
@@ -6,6 +7,9 @@ import {
 } from '../../scripts/public-repo-audit.ts';
 
 const encoder = new TextEncoder();
+const approvalWorkflowPath = decodeURIComponent(
+  new URL('../../.github/workflows/approve-reviewed-content.yml', import.meta.url).pathname,
+);
 
 function file(path: string, text = 'safe public text'): PublicAuditEntry {
   return { path, type: 'file', bytes: encoder.encode(text) };
@@ -166,5 +170,33 @@ describe('public repository disclosure audit', () => {
     ]);
 
     expect(result).toEqual([]);
+  });
+
+  it('accepts the trusted exact-SHA approval workflow with its bounded write permissions', async () => {
+    const workflow = await readFile(approvalWorkflowPath, 'utf8');
+    expect(findings([
+      file('.github/workflows/approve-reviewed-content.yml', workflow),
+    ])).toEqual([]);
+  });
+
+  it('rejects unsafe reviewed-release permissions, runner surfaces and mutable operations', () => {
+    const path = '.github/workflows/approve-reviewed-content.yml';
+    const unsafe = [
+      'on: workflow_dispatch',
+      'permissions:',
+      '  contents: write',
+      '  deployments: write',
+      'jobs:',
+      '  approve:',
+      '    runs-on: self-hosted',
+      '    environment: production',
+      '    steps:',
+      '      - run: ssh example.invalid',
+    ].join('\n');
+    const result = findings([file(path, unsafe)]);
+
+    expect(result).toContainEqual({ category: 'reviewed-workflow-permissions', path });
+    expect(result).toContainEqual({ category: 'reviewed-workflow-boundary', path });
+    expect(result).toContainEqual({ category: 'reviewed-workflow-contract', path });
   });
 });

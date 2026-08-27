@@ -12,6 +12,7 @@ import type {
 } from '../../scripts/stephen-daily-review';
 import {
   buildApprovalSeal,
+  evaluateReviewedApprovalRequest,
   promoteReviewedManifest,
   reviewedReleaseTag,
   verifyApprovalChain,
@@ -366,5 +367,107 @@ describe('SAAS-608 bounded filesystem CLI', () => {
     } finally {
       await rm(root, { recursive: true, force: true });
     }
+  });
+});
+
+describe('SAAS-608 trusted approval request policy', () => {
+  function policyInput() {
+    return {
+      actor: 'ZiZ-LG',
+      triggeringActor: 'ZiZ-LG',
+      repositoryOwner: 'ZiZ-LG',
+      repository: 'ZiZ-LG/stephen-knowledge-hub',
+      defaultBranch: 'main',
+      candidateSha: CANDIDATE_SHA,
+      confirmation: `APPROVE ${CANDIDATE_SHA}`,
+      pr: {
+        number: 42,
+        state: 'open',
+        draft: true,
+        changedFiles: 2,
+        head: {
+          sha: CANDIDATE_SHA,
+          ref: 'codex/stephen-daily-2026-08-27',
+          repository: 'ZiZ-LG/stephen-knowledge-hub',
+        },
+        base: {
+          ref: 'main',
+          repository: 'ZiZ-LG/stephen-knowledge-hub',
+        },
+      },
+      changedFiles: [{
+        filename: 'review-candidates/2026-08-27/review-manifest.json',
+        status: 'added',
+      }, {
+        filename: 'review-candidates/2026-08-27/discovery-ledger.json',
+        status: 'added',
+      }],
+      manifest: manifest(),
+    } as const;
+  }
+
+  it('accepts only the owner-approved exact daily Draft PR head', () => {
+    expect(evaluateReviewedApprovalRequest(policyInput())).toEqual({
+      prNumber: 42,
+      candidateSha: CANDIDATE_SHA,
+      headRef: 'codex/stephen-daily-2026-08-27',
+      editorialDate: '2026-08-27',
+      manifestPath: 'review-candidates/2026-08-27/review-manifest.json',
+      ledgerPath: 'review-candidates/2026-08-27/discovery-ledger.json',
+    });
+  });
+
+  it.each([
+    ['actor', { actor: 'other-user' }],
+    ['triggering actor', { triggeringActor: 'other-user' }],
+    ['repository', { repository: 'ZiZ-LG/other-repo' }],
+    ['confirmation', { confirmation: `APPROVE ${PROMOTION_SHA}` }],
+    ['stale SHA', { candidateSha: PROMOTION_SHA }],
+  ])('rejects a wrong %s', (_label, override) => {
+    expect(() => evaluateReviewedApprovalRequest({ ...policyInput(), ...override })).toThrow();
+  });
+
+  it('rejects wrong base, head prefix, cross-repository or non-Draft PR state', () => {
+    const input = policyInput();
+    expect(() => evaluateReviewedApprovalRequest({
+      ...input,
+      pr: { ...input.pr, base: { ...input.pr.base, ref: 'release' } },
+    })).toThrow('approval PR must target the default branch');
+    expect(() => evaluateReviewedApprovalRequest({
+      ...input,
+      pr: { ...input.pr, head: { ...input.pr.head, ref: 'feature/not-daily' } },
+    })).toThrow('approval PR head must be the matching daily candidate branch');
+    expect(() => evaluateReviewedApprovalRequest({
+      ...input,
+      pr: { ...input.pr, head: { ...input.pr.head, repository: 'fork/repository' } },
+    })).toThrow('cross-repository approval PRs are forbidden');
+    expect(() => evaluateReviewedApprovalRequest({
+      ...input,
+      pr: { ...input.pr, draft: false },
+    })).toThrow('approval PR must remain open and Draft');
+  });
+
+  it('rejects unexpected paths, file modes, empty candidates and unresolved manual records', () => {
+    const input = policyInput();
+    expect(() => evaluateReviewedApprovalRequest({
+      ...input,
+      changedFiles: [...input.changedFiles, { filename: 'src/main.tsx', status: 'modified' }],
+      pr: { ...input.pr, changedFiles: 3 },
+    })).toThrow('approval PR contains an unexpected changed path');
+    expect(() => evaluateReviewedApprovalRequest({
+      ...input,
+      changedFiles: [{ ...input.changedFiles[0], status: 'removed' }, input.changedFiles[1]],
+    })).toThrow('approval PR review files must be added or modified');
+    expect(() => evaluateReviewedApprovalRequest({
+      ...input,
+      manifest: manifest([]),
+    })).toThrow('review manifest contains no retained candidates');
+    expect(() => evaluateReviewedApprovalRequest({
+      ...input,
+      manifest: {
+        ...manifest(),
+        manualReviewRecords: [{ candidateId: 'ED-MANUAL' }],
+      } as unknown as DailyReviewManifest,
+    })).toThrow('manualReviewRecords must be empty before approval');
   });
 });

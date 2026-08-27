@@ -75,6 +75,49 @@ export interface ReviewedApprovalSeal {
   readonly releaseTagRule: string;
 }
 
+export interface ReviewedApprovalPullRequest {
+  readonly number: number;
+  readonly state: string;
+  readonly draft: boolean;
+  readonly changedFiles: number;
+  readonly head: {
+    readonly sha: string;
+    readonly ref: string;
+    readonly repository: string;
+  };
+  readonly base: {
+    readonly ref: string;
+    readonly repository: string;
+  };
+}
+
+export interface ReviewedApprovalChangedFile {
+  readonly filename: string;
+  readonly status: string;
+}
+
+export interface ReviewedApprovalRequestInput {
+  readonly actor: string;
+  readonly triggeringActor: string;
+  readonly repositoryOwner: string;
+  readonly repository: string;
+  readonly defaultBranch: string;
+  readonly candidateSha: string;
+  readonly confirmation: string;
+  readonly pr: ReviewedApprovalPullRequest;
+  readonly changedFiles: readonly ReviewedApprovalChangedFile[];
+  readonly manifest: DailyReviewManifest;
+}
+
+export interface VerifiedReviewedApprovalRequest {
+  readonly prNumber: number;
+  readonly candidateSha: string;
+  readonly headRef: string;
+  readonly editorialDate: string;
+  readonly manifestPath: string;
+  readonly ledgerPath: string;
+}
+
 function requireText(value: unknown, label: string): asserts value is string {
   if (typeof value !== 'string' || value.trim() === '') {
     throw new Error(`${label} is required`);
@@ -116,6 +159,89 @@ function equalStrings(left: readonly string[], right: readonly string[]) {
 
 function promotionReleaseTagRule(editorialDate: string) {
   return `stephen-content-${editorialDate}-${RELEASE_TAG_SUFFIX_RULE}`;
+}
+
+export function evaluateReviewedApprovalRequest(
+  input: ReviewedApprovalRequestInput,
+): VerifiedReviewedApprovalRequest {
+  requireText(input.repositoryOwner, 'repository owner');
+  requireRepository(input.repository);
+  if (input.repository.split('/')[0] !== input.repositoryOwner) {
+    throw new Error('approval repository does not belong to the repository owner');
+  }
+  if (input.actor !== input.repositoryOwner || input.triggeringActor !== input.repositoryOwner) {
+    throw new Error('only the repository owner may dispatch reviewed approval');
+  }
+  requireFullGitSha(input.candidateSha);
+  if (input.confirmation !== `APPROVE ${input.candidateSha}`) {
+    throw new Error('approval confirmation does not bind the candidate SHA');
+  }
+  requireText(input.defaultBranch, 'default branch');
+  if (!Number.isInteger(input.pr.number) || input.pr.number < 1) {
+    throw new Error('approval PR number is invalid');
+  }
+  if (input.pr.state !== 'open' || input.pr.draft !== true) {
+    throw new Error('approval PR must remain open and Draft');
+  }
+  if (input.pr.head.repository !== input.repository
+    || input.pr.base.repository !== input.repository) {
+    throw new Error('cross-repository approval PRs are forbidden');
+  }
+  if (input.pr.base.ref !== input.defaultBranch) {
+    throw new Error('approval PR must target the default branch');
+  }
+  requireFullGitSha(input.pr.head.sha, 'PR head SHA');
+  if (input.pr.head.sha !== input.candidateSha) {
+    throw new Error('candidate SHA does not match current PR head');
+  }
+  requireDateOnly(input.manifest.editorialDate, 'manifest editorialDate');
+  const expectedHead = `codex/stephen-daily-${input.manifest.editorialDate}`;
+  if (input.pr.head.ref !== expectedHead) {
+    throw new Error('approval PR head must be the matching daily candidate branch');
+  }
+  if (input.manifest.schemaVersion !== 1
+    || input.manifest.task !== 'SAAS-606'
+    || input.manifest.reviewState !== 'pending_owner_review'
+    || input.manifest.publicationState !== 'not_published'
+    || input.manifest.controls.autoPublishingEnabled !== false
+    || input.manifest.controls.stopSwitchEngaged !== true) {
+    throw new Error('review manifest publication controls are unsafe');
+  }
+  if (input.manifest.manualReviewRecords.length !== 0) {
+    throw new Error('manualReviewRecords must be empty before approval');
+  }
+  if (input.manifest.candidates.length === 0) {
+    throw new Error('review manifest contains no retained candidates');
+  }
+  input.manifest.candidates.forEach((candidate) => {
+    if (!parseDailyPublicationDraft(candidate.publicationDraft)) {
+      throw new Error(`${candidate.candidateId} publicationDraft is required`);
+    }
+  });
+
+  const manifestPath = `review-candidates/${input.manifest.editorialDate}/review-manifest.json`;
+  const ledgerPath = `review-candidates/${input.manifest.editorialDate}/discovery-ledger.json`;
+  const allowed = new Set([manifestPath, ledgerPath]);
+  if (input.pr.changedFiles !== input.changedFiles.length
+    || input.changedFiles.some((file) => !allowed.has(file.filename))) {
+    throw new Error('approval PR contains an unexpected changed path');
+  }
+  if (input.changedFiles.length !== allowed.size
+    || [...allowed].some((path) => !input.changedFiles.some((file) => file.filename === path))) {
+    throw new Error('approval PR must contain both daily review files');
+  }
+  if (input.changedFiles.some((file) => file.status !== 'added' && file.status !== 'modified')) {
+    throw new Error('approval PR review files must be added or modified');
+  }
+
+  return {
+    prNumber: input.pr.number,
+    candidateSha: input.candidateSha,
+    headRef: input.pr.head.ref,
+    editorialDate: input.manifest.editorialDate,
+    manifestPath,
+    ledgerPath,
+  };
 }
 
 function buildReviewedItem(
