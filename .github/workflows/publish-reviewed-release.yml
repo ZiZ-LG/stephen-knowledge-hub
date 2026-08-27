@@ -6,39 +6,153 @@ on:
       - Stephen approve reviewed content
     types:
       - completed
+  workflow_dispatch:
+    inputs:
+      approval_run_id:
+        description: Original successful approval workflow run ID
+        required: true
+        type: string
+      approval_run_attempt:
+        description: Original successful approval workflow run attempt
+        required: true
+        type: string
 
 permissions:
   contents: write
-  checks: read
   actions: read
+  pull-requests: read
 
 concurrency:
-  group: stephen-reviewed-release-${{ github.event.workflow_run.id }}-${{ github.event.workflow_run.run_attempt }}
+  group: stephen-reviewed-release-${{ github.event.workflow_run.id || inputs.approval_run_id }}-${{ github.event.workflow_run.run_attempt || inputs.approval_run_attempt }}
   cancel-in-progress: false
 
 jobs:
   release:
     if: >-
-      github.event.workflow_run.event == 'workflow_dispatch'
-      && github.event.workflow_run.status == 'completed'
+      github.event_name == 'workflow_dispatch'
+      || (
+        github.event_name == 'workflow_run'
+        && github.event.workflow_run.event == 'workflow_dispatch'
+        && github.event.workflow_run.status == 'completed'
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
+      - name: Resolve and authenticate the exact source approval run
+        id: source
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          ACTOR: ${{ github.actor }}
+          TRIGGERING_ACTOR: ${{ github.triggering_actor }}
+          REPOSITORY_OWNER: ${{ github.repository_owner }}
+          GH_REPO: ${{ github.repository }}
+          CURRENT_REF: ${{ github.ref_name }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          RELEASE_CONTROL_SHA: ${{ github.sha }}
+          AUTOMATIC_RUN_ID: ${{ github.event.workflow_run.id }}
+          AUTOMATIC_RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          AUTOMATIC_SOURCE_EVENT: ${{ github.event.workflow_run.event }}
+          AUTOMATIC_SOURCE_STATUS: ${{ github.event.workflow_run.status }}
+          INPUT_RUN_ID: ${{ inputs.approval_run_id }}
+          INPUT_RUN_ATTEMPT: ${{ inputs.approval_run_attempt }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          [[ "$RELEASE_CONTROL_SHA" =~ ^[0-9a-f]{40}$ ]]
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            [[ "$ACTOR" == "$REPOSITORY_OWNER" ]]
+            [[ "$TRIGGERING_ACTOR" == "$REPOSITORY_OWNER" ]]
+            [[ "$CURRENT_REF" == "$DEFAULT_BRANCH" ]]
+            approval_run_id="$INPUT_RUN_ID"
+            approval_run_attempt="$INPUT_RUN_ATTEMPT"
+          else
+            [[ "$EVENT_NAME" == "workflow_run" ]]
+            [[ "$AUTOMATIC_SOURCE_EVENT" == "workflow_dispatch" ]]
+            [[ "$AUTOMATIC_SOURCE_STATUS" == "completed" ]]
+            approval_run_id="$AUTOMATIC_RUN_ID"
+            approval_run_attempt="$AUTOMATIC_RUN_ATTEMPT"
+          fi
+          [[ "$approval_run_id" =~ ^[1-9][0-9]*$ ]]
+          [[ "$approval_run_attempt" =~ ^[1-9][0-9]*$ ]]
+          gh api --method GET \
+            "repos/$GH_REPO/actions/runs/$approval_run_id/attempts/$approval_run_attempt" \
+            > "$RUNNER_TEMP/saas-608-approval-run.json"
+          jq -e \
+            --argjson runId "$approval_run_id" \
+            --argjson runAttempt "$approval_run_attempt" \
+            --arg repository "$GH_REPO" \
+            --arg owner "$REPOSITORY_OWNER" \
+            --arg defaultBranch "$DEFAULT_BRANCH" \
+            '.id == $runId
+              and .run_attempt == $runAttempt
+              and .repository.full_name == $repository
+              and .event == "workflow_dispatch"
+              and .status == "completed"
+              and .conclusion == "success"
+              and .path == ".github/workflows/approve-reviewed-content.yml"
+              and .head_branch == $defaultBranch
+              and .actor.login == $owner
+              and .triggering_actor.login == $owner
+              and (.head_sha | test("^[0-9a-f]{40}$"))' \
+            "$RUNNER_TEMP/saas-608-approval-run.json" >/dev/null
+          artifact_name="stephen-reviewed-release-handoff-$approval_run_id-$approval_run_attempt"
+          {
+            echo "run_id=$approval_run_id"
+            echo "run_attempt=$approval_run_attempt"
+            echo "approval_control_sha=$(jq -r .head_sha "$RUNNER_TEMP/saas-608-approval-run.json")"
+            echo "artifact_name=$artifact_name"
+            echo "release_control_sha=$RELEASE_CONTROL_SHA"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Read the exact approval artifact and trusted job facts
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          APPROVAL_RUN_ID: ${{ steps.source.outputs.run_id }}
+          APPROVAL_RUN_ATTEMPT: ${{ steps.source.outputs.run_attempt }}
+          ARTIFACT_NAME: ${{ steps.source.outputs.artifact_name }}
+        run: |
+          set -euo pipefail
+          gh api --method GET \
+            "repos/$GH_REPO/actions/runs/$APPROVAL_RUN_ID/artifacts?per_page=100" \
+            > "$RUNNER_TEMP/saas-608-approval-artifacts.json"
+          jq --arg name "$ARTIFACT_NAME" \
+            '[.artifacts[] | select(.name == $name)]
+            | if length == 1 then .[0]
+              else error("missing or duplicate exact approval handoff artifact")
+              end' "$RUNNER_TEMP/saas-608-approval-artifacts.json" \
+            > "$RUNNER_TEMP/saas-608-approval-artifact.json"
+          jq -e \
+            --argjson runId "$APPROVAL_RUN_ID" \
+            '.expired == false
+              and (.id | type == "number" and . >= 1)
+              and (.digest | test("^sha256:[0-9a-f]{64}$"))
+              and .workflow_run.id == $runId' \
+            "$RUNNER_TEMP/saas-608-approval-artifact.json" >/dev/null
+          gh api --method GET \
+            "repos/$GH_REPO/actions/runs/$APPROVAL_RUN_ID/attempts/$APPROVAL_RUN_ATTEMPT/jobs?per_page=100" \
+            > "$RUNNER_TEMP/saas-608-approval-jobs.json"
+          jq '[.jobs[] | select(.name == "approve")]
+            | if length == 1 then .[0]
+              else error("missing or duplicate trusted approval job")
+              end' "$RUNNER_TEMP/saas-608-approval-jobs.json" \
+            > "$RUNNER_TEMP/saas-608-approval-job.json"
+
       - name: Download the durable approval-run handoff
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          name: stephen-reviewed-release-handoff-${{ github.event.workflow_run.id }}-${{ github.event.workflow_run.run_attempt }}
+          name: ${{ steps.source.outputs.artifact_name }}
           path: handoff
           github-token: ${{ github.token }}
-          run-id: ${{ github.event.workflow_run.id }}
+          run-id: ${{ steps.source.outputs.run_id }}
 
       - name: Validate the bounded workflow-run handoff
         id: handoff
         env:
           HANDOFF_PATH: handoff/release-handoff.json
-          WORKFLOW_RUN_ID: ${{ github.event.workflow_run.id }}
-          WORKFLOW_RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
-          WORKFLOW_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          WORKFLOW_RUN_ID: ${{ steps.source.outputs.run_id }}
+          WORKFLOW_RUN_ATTEMPT: ${{ steps.source.outputs.run_attempt }}
+          WORKFLOW_HEAD_SHA: ${{ steps.source.outputs.approval_control_sha }}
         run: |
           set -euo pipefail
           jq -e \
@@ -69,47 +183,36 @@ jobs:
             echo "control_sha=$(jq -r .controlSha "$HANDOFF_PATH")"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Check out trusted default-branch controls
+      - name: Check out trusted Release controls
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ steps.handoff.outputs.control_sha }}
+          ref: ${{ steps.source.outputs.release_control_sha }}
           path: trusted
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Bind trusted Release controls to this workflow SHA
+        working-directory: trusted
+        env:
+          RELEASE_CONTROL_SHA: ${{ steps.source.outputs.release_control_sha }}
+        run: |
+          set -euo pipefail
+          [[ "$(git rev-parse HEAD)" == "$RELEASE_CONTROL_SHA" ]]
 
       - name: Set up Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
 
-      - name: Read the completed trusted approval workflow run
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          APPROVAL_RUN_ID: ${{ steps.handoff.outputs.approval_run_id }}
-          APPROVAL_RUN_ATTEMPT: ${{ steps.handoff.outputs.approval_run_attempt }}
-        run: |
-          set -euo pipefail
-          gh api --method GET \
-            "repos/$GH_REPO/actions/runs/$APPROVAL_RUN_ID/attempts/$APPROVAL_RUN_ATTEMPT" \
-            > "$RUNNER_TEMP/saas-608-approval-run.json"
-          jq -e '.status == "completed"' "$RUNNER_TEMP/saas-608-approval-run.json" >/dev/null
-
-      - name: Read merged PR, exact check and repository Release facts
+      - name: Read merged PR and repository Release facts
         env:
           GITHUB_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           PR_NUMBER: ${{ steps.handoff.outputs.pr }}
-          SEAL_SHA: ${{ steps.handoff.outputs.seal_sha }}
           RELEASE_TAG: ${{ steps.handoff.outputs.release_tag }}
-          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           set -euo pipefail
           gh api --method GET "repos/$GH_REPO/pulls/$PR_NUMBER" > "$RUNNER_TEMP/saas-608-release-pr.json"
-          gh api --method GET "repos/$GH_REPO/commits/$SEAL_SHA/check-runs" \
-            > "$RUNNER_TEMP/saas-608-check-runs.json"
-          gh api --method GET "repos/$GH_REPO/immutable-releases" \
-            > "$RUNNER_TEMP/saas-608-immutability.json"
           if gh api --method GET "repos/$GH_REPO/git/ref/tags/$RELEASE_TAG" \
             > "$RUNNER_TEMP/saas-608-existing-tag.json" 2>/dev/null; then
             :
@@ -125,6 +228,32 @@ jobs:
               else error("duplicate Release tag identity")
               end' "$RUNNER_TEMP/saas-608-release-pages.json" \
             > "$RUNNER_TEMP/saas-608-existing-release.json"
+
+      - name: Read fail-closed repository governance facts
+        env:
+          GH_TOKEN: ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          [[ -n "$GH_TOKEN" ]]
+          gh api --method GET "repos/$GH_REPO/immutable-releases" \
+            > "$RUNNER_TEMP/saas-608-immutability.json"
+          gh api --paginate --slurp --method GET \
+            "repos/$GH_REPO/collaborators?affiliation=all&per_page=100" \
+            > "$RUNNER_TEMP/saas-608-collaborator-pages.json"
+          jq '[.[][] | select(.permissions.push == true) | { login }]' \
+            "$RUNNER_TEMP/saas-608-collaborator-pages.json" \
+            > "$RUNNER_TEMP/saas-608-write-collaborators.json"
+          gh api --paginate --slurp --method GET \
+            "repos/$GH_REPO/rulesets?includes_parents=true&per_page=100" \
+            > "$RUNNER_TEMP/saas-608-ruleset-pages.json"
+          jq -r '[.[][] | select(.name == "Protect Stephen immutable Release tags") | .id]
+            | if length == 1 then .[0] else error("missing or duplicate Stephen tag ruleset") end' \
+            "$RUNNER_TEMP/saas-608-ruleset-pages.json" \
+            > "$RUNNER_TEMP/saas-608-tag-ruleset-id.txt"
+          tag_ruleset_id=$(cat "$RUNNER_TEMP/saas-608-tag-ruleset-id.txt")
+          gh api --method GET "repos/$GH_REPO/rulesets/$tag_ruleset_id" \
+            > "$RUNNER_TEMP/saas-608-tag-ruleset.json"
 
       - name: Check out the exact approval seal tree
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -147,6 +276,9 @@ jobs:
             --artifact "$GITHUB_WORKSPACE/release/dist" \
             --source-sha "$SEAL_SHA" \
             --metadata-file "$GITHUB_WORKSPACE/release/dist/.stephen-release.json"
+          jq -n --arg sealSha "$SEAL_SHA" \
+            '{ sealSha: $sealSha, verified: true }' \
+            > "$RUNNER_TEMP/saas-608-exact-seal-rebuild.json"
 
       - name: Create deterministic Release assets
         id: assets
@@ -205,22 +337,6 @@ jobs:
           else
             merge_reachable=false
           fi
-          gh api --paginate --slurp --method GET \
-            "repos/$GH_REPO/collaborators?affiliation=all&per_page=100" \
-            > "$RUNNER_TEMP/saas-608-collaborator-pages.json"
-          jq '[.[][] | select(.permissions.push == true) | { login }]' \
-            "$RUNNER_TEMP/saas-608-collaborator-pages.json" \
-            > "$RUNNER_TEMP/saas-608-write-collaborators.json"
-          gh api --paginate --slurp --method GET \
-            "repos/$GH_REPO/rulesets?includes_parents=true&per_page=100" \
-            > "$RUNNER_TEMP/saas-608-ruleset-pages.json"
-          jq -r '[.[][] | select(.name == "Protect Stephen immutable Release tags") | .id]
-            | if length == 1 then .[0] else error("missing or duplicate Stephen tag ruleset") end' \
-            "$RUNNER_TEMP/saas-608-ruleset-pages.json" \
-            > "$RUNNER_TEMP/saas-608-tag-ruleset-id.txt"
-          tag_ruleset_id=$(cat "$RUNNER_TEMP/saas-608-tag-ruleset-id.txt")
-          gh api --method GET "repos/$GH_REPO/rulesets/$tag_ruleset_id" \
-            > "$RUNNER_TEMP/saas-608-tag-ruleset.json"
           promotion_record="${APPROVAL_RECORD%/approval.json}/promotion.json"
           test -f "release/$APPROVAL_RECORD"
           test -f "release/$promotion_record"
@@ -237,8 +353,10 @@ jobs:
             --arg sealParent "$seal_parent" \
             --slurpfile payload "$RUNNER_TEMP/saas-608-event-payload.json" \
             --slurpfile pr "$RUNNER_TEMP/saas-608-release-pr.json" \
-            --slurpfile checks "$RUNNER_TEMP/saas-608-check-runs.json" \
             --slurpfile approvalRun "$RUNNER_TEMP/saas-608-approval-run.json" \
+            --slurpfile approvalArtifact "$RUNNER_TEMP/saas-608-approval-artifact.json" \
+            --slurpfile approvalJob "$RUNNER_TEMP/saas-608-approval-job.json" \
+            --slurpfile exactSealRebuild "$RUNNER_TEMP/saas-608-exact-seal-rebuild.json" \
             --slurpfile writers "$RUNNER_TEMP/saas-608-write-collaborators.json" \
             --slurpfile tagRuleset "$RUNNER_TEMP/saas-608-tag-ruleset.json" \
             --slurpfile immutable "$RUNNER_TEMP/saas-608-immutability.json" \
@@ -262,15 +380,6 @@ jobs:
                 baseRepository: $pr[0].base.repo.full_name,
                 baseRef: $pr[0].base.ref
               },
-              checkRuns: ($checks[0].check_runs | map({
-                name,
-                headSha: .head_sha,
-                status,
-                conclusion,
-                appSlug: .app.slug,
-                externalId: .external_id,
-                detailsUrl: .details_url
-              })),
               approvalRun: {
                 id: $approvalRun[0].id,
                 runAttempt: $approvalRun[0].run_attempt,
@@ -282,6 +391,20 @@ jobs:
                 actor: $approvalRun[0].actor.login,
                 triggeringActor: $approvalRun[0].triggering_actor.login
               },
+              approvalArtifact: {
+                id: $approvalArtifact[0].id,
+                name: $approvalArtifact[0].name,
+                expired: $approvalArtifact[0].expired,
+                digest: $approvalArtifact[0].digest,
+                workflowRunId: $approvalArtifact[0].workflow_run.id
+              },
+              approvalJob: {
+                name: $approvalJob[0].name,
+                status: $approvalJob[0].status,
+                conclusion: $approvalJob[0].conclusion,
+                steps: ($approvalJob[0].steps | map({ number, name, status, conclusion }))
+              },
+              exactSealRebuild: $exactSealRebuild[0],
               writeCollaborators: $writers[0],
               releaseTagRuleset: {
                 name: $tagRuleset[0].name,
@@ -370,7 +493,34 @@ jobs:
                 > "$RUNNER_TEMP/saas-608-upload.json"
             done
 
-      - name: Publish the complete Release
+      - name: Refresh governance facts before immutable publication
+        if: steps.policy.outputs.status != 'already_immutable'
+        env:
+          GH_TOKEN: ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          [[ -n "$GH_TOKEN" ]]
+          gh api --method GET "repos/$GH_REPO/immutable-releases" \
+            > "$RUNNER_TEMP/saas-608-prepublish-immutability.json"
+          gh api --paginate --slurp --method GET \
+            "repos/$GH_REPO/collaborators?affiliation=all&per_page=100" \
+            > "$RUNNER_TEMP/saas-608-prepublish-collaborator-pages.json"
+          jq '[.[][] | select(.permissions.push == true) | { login }]' \
+            "$RUNNER_TEMP/saas-608-prepublish-collaborator-pages.json" \
+            > "$RUNNER_TEMP/saas-608-prepublish-write-collaborators.json"
+          gh api --paginate --slurp --method GET \
+            "repos/$GH_REPO/rulesets?includes_parents=true&per_page=100" \
+            > "$RUNNER_TEMP/saas-608-prepublish-ruleset-pages.json"
+          jq -r '[.[][] | select(.name == "Protect Stephen immutable Release tags") | .id]
+            | if length == 1 then .[0] else error("missing or duplicate Stephen tag ruleset") end' \
+            "$RUNNER_TEMP/saas-608-prepublish-ruleset-pages.json" \
+            > "$RUNNER_TEMP/saas-608-prepublish-tag-ruleset-id.txt"
+          tag_ruleset_id=$(cat "$RUNNER_TEMP/saas-608-prepublish-tag-ruleset-id.txt")
+          gh api --method GET "repos/$GH_REPO/rulesets/$tag_ruleset_id" \
+            > "$RUNNER_TEMP/saas-608-prepublish-tag-ruleset.json"
+
+      - name: Verify fresh policy immediately before immutable publication
         if: steps.policy.outputs.status != 'already_immutable'
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -392,16 +542,10 @@ jobs:
             "repos/$GH_REPO/commits/$DEFAULT_BRANCH" --jq .sha)
           git -C trusted fetch --no-tags origin "$current_default_sha"
           git -C trusted merge-base --is-ancestor "$merge_sha" "$current_default_sha"
-          gh api --paginate --slurp --method GET \
-            "repos/$GH_REPO/collaborators?affiliation=all&per_page=100" \
-            | jq '[.[][] | select(.permissions.push == true) | { login }]' \
-            > "$RUNNER_TEMP/saas-608-prepublish-write-collaborators.json"
-          tag_ruleset_id=$(cat "$RUNNER_TEMP/saas-608-tag-ruleset-id.txt")
-          gh api --method GET "repos/$GH_REPO/rulesets/$tag_ruleset_id" \
-            > "$RUNNER_TEMP/saas-608-prepublish-tag-ruleset.json"
           jq --arg currentDefaultSha "$current_default_sha" \
             --slurpfile writers "$RUNNER_TEMP/saas-608-prepublish-write-collaborators.json" \
             --slurpfile tagRuleset "$RUNNER_TEMP/saas-608-prepublish-tag-ruleset.json" \
+            --slurpfile immutable "$RUNNER_TEMP/saas-608-prepublish-immutability.json" \
             --slurpfile existing "$RUNNER_TEMP/saas-608-prepublish-release.json" \
             '.defaultBranchHeadSha = $currentDefaultSha
             | .mergeReachableFromDefault = true
@@ -414,6 +558,7 @@ jobs:
               includedRefs: $tagRuleset[0].conditions.ref_name.include,
               ruleTypes: ($tagRuleset[0].rules | map(.type))
             }
+            | .immutableReleases = { enabled: $immutable[0].enabled }
             | .existingTag = null
             | .existingRelease = {
               id: $existing[0].id,
@@ -432,6 +577,15 @@ jobs:
               and .releaseId == $releaseId
               and (.missingAssets | length) == 0' \
             "$RUNNER_TEMP/saas-608-prepublish-policy.json" >/dev/null
+
+      - name: Publish the complete Release
+        if: steps.policy.outputs.status != 'already_immutable'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_ID: ${{ steps.draft.outputs.release_id }}
+        run: |
+          set -euo pipefail
           gh api --method PATCH "repos/$GH_REPO/releases/$RELEASE_ID" \
             -F draft=false \
             -f make_latest=false \

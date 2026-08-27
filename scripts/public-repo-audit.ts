@@ -102,7 +102,16 @@ function exactPermissions(
     && entries.every(([name, access]) => actual.get(name) === access);
 }
 
-function reviewedWorkflowHasUnsafeSurface(text: string) {
+const releaseGovernanceSecret = '${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}';
+
+function reviewedWorkflowHasUnsafeSurface(path: string, text: string) {
+  const governanceSecretMatches = text.match(
+    /\$\{\{\s*secrets\.STEPHEN_RELEASE_GOVERNANCE_TOKEN\s*\}\}/g,
+  ) ?? [];
+  if (path === releaseWorkflowPath && governanceSecretMatches.length !== 2) return true;
+  const secretSanitizedText = path === releaseWorkflowPath
+    ? text.split(releaseGovernanceSecret).join('')
+    : text;
   return [
     /^\s*environment\s*:/m,
     /\$\{\{\s*secrets\./,
@@ -115,7 +124,7 @@ function reviewedWorkflowHasUnsafeSurface(text: string) {
     /\bproduction\b/i,
     /git\s+push[^\n]*(?:--force|-f\b)/,
     /git\s+reset\s+--hard/,
-  ].some((pattern) => pattern.test(text));
+  ].some((pattern) => pattern.test(secretSanitizedText));
 }
 
 function approvalWorkflowContract(text: string) {
@@ -131,9 +140,6 @@ function approvalWorkflowContract(text: string) {
     /stephen-reviewed-release-cli\.ts verify-chain/,
     /npm run check/,
     /stephen-release-cli\.ts verify/,
-    /repos\/\$GH_REPO\/check-runs/,
-    /name=stephen-reviewed-release/,
-    /external_id="stephen-reviewed-release:/,
     /\.base\.sha == \$baseSha/,
     /merge-base --is-ancestor "\$BASE_SHA" "\$CANDIDATE_SHA"/,
     /merge-base --is-ancestor "\$BASE_SHA" "\$SEAL_SHA"/,
@@ -144,6 +150,8 @@ function approvalWorkflowContract(text: string) {
     /actions\/upload-artifact@[0-9a-f]{40}/,
     /stephen-reviewed-release-handoff-\$\{\{ github\.run_id \}\}-\$\{\{ github\.run_attempt \}\}/,
   ].every((pattern) => pattern.test(text))
+    && !/checks:\s*write/.test(text)
+    && !/repos\/\$GH_REPO\/check-runs/.test(text)
     && !/repos\/\$GH_REPO\/dispatches/.test(text)
     && !/(?:repos\/\$GH_REPO\/releases|git\/refs|uploads\.github\.com)/.test(text);
 }
@@ -151,13 +159,24 @@ function approvalWorkflowContract(text: string) {
 function releaseWorkflowContract(text: string) {
   return [
     /^on:\s*\n\s{2}workflow_run:/m,
+    /^\s{2}workflow_dispatch:\s*$/m,
+    /^\s{6}approval_run_id:\s*$/m,
+    /^\s{6}approval_run_attempt:\s*$/m,
     /Stephen approve reviewed content/,
-    /group:\s*stephen-reviewed-release-\$\{\{ github\.event\.workflow_run\.id \}\}-\$\{\{ github\.event\.workflow_run\.run_attempt \}\}/,
+    /group:\s*stephen-reviewed-release-/,
+    /ACTOR:\s*\$\{\{ github\.actor \}\}/,
+    /TRIGGERING_ACTOR:\s*\$\{\{ github\.triggering_actor \}\}/,
+    /\[\[ "\$CURRENT_REF" == "\$DEFAULT_BRANCH" \]\]/,
+    /actions\/runs\/\$approval_run_id\/attempts\/\$approval_run_attempt/,
+    /actions\/runs\/\$APPROVAL_RUN_ID\/artifacts\?per_page=100/,
+    /actions\/runs\/\$APPROVAL_RUN_ID\/attempts\/\$APPROVAL_RUN_ATTEMPT\/jobs\?per_page=100/,
     /actions\/download-artifact@[0-9a-f]{40}/,
     /stephen-reviewed-release-handoff-/,
     /repos\/\$GH_REPO\/immutable-releases/,
-    /commits\/\$SEAL_SHA\/check-runs/,
-    /ref:\s*\$\{\{ steps\.handoff\.outputs\.control_sha \}\}/,
+    /secrets\.STEPHEN_RELEASE_GOVERNANCE_TOKEN/,
+    /name:\s*Read fail-closed repository governance facts/,
+    /name:\s*Refresh governance facts before immutable publication/,
+    /ref:\s*\$\{\{ steps\.source\.outputs\.release_control_sha \}\}/,
     /commits\/\$DEFAULT_BRANCH/,
     /merge-base --is-ancestor "\$merge_sha" "\$current_default_sha"/,
     /collaborators\?affiliation=all/,
@@ -166,6 +185,10 @@ function releaseWorkflowContract(text: string) {
     /validate-release --request/,
     /npm run check/,
     /stephen-release-cli\.ts verify/,
+    /saas-608-exact-seal-rebuild\.json/,
+    /approvalArtifact:/,
+    /approvalJob:/,
+    /exactSealRebuild:/,
     /tar --sort=name --mtime='@0'/,
     /gzip -n -9/,
     /-F draft=true/,
@@ -176,6 +199,8 @@ function releaseWorkflowContract(text: string) {
     /\.immutable == true/,
     /\.status == "already_immutable"/,
   ].every((pattern) => pattern.test(text))
+    && !/commits\/\$SEAL_SHA\/check-runs/.test(text)
+    && !/checks:\s*(?:read|write)/.test(text)
     && !/git\/refs/.test(text)
     && !/repository_dispatch/.test(text);
 }
@@ -298,7 +323,7 @@ export function auditPublicEntries(
         pushFinding(findings, findingKeys, 'ci-write-boundary', entry.path);
       }
       if (entry.path === approvalWorkflowPath || entry.path === releaseWorkflowPath) {
-        if (reviewedWorkflowHasUnsafeSurface(text)) {
+        if (reviewedWorkflowHasUnsafeSurface(entry.path, text)) {
           pushFinding(findings, findingKeys, 'reviewed-workflow-boundary', entry.path);
         }
       }
@@ -306,7 +331,6 @@ export function auditPublicEntries(
         if (!exactPermissions(topLevelWorkflowPermissions(text), {
           contents: 'write',
           'pull-requests': 'write',
-          checks: 'write',
         })) {
           pushFinding(findings, findingKeys, 'reviewed-workflow-permissions', entry.path);
         }
@@ -317,8 +341,8 @@ export function auditPublicEntries(
       if (entry.path === releaseWorkflowPath) {
         if (!exactPermissions(topLevelWorkflowPermissions(text), {
           contents: 'write',
-          checks: 'read',
           actions: 'read',
+          'pull-requests': 'read',
         })) {
           pushFinding(findings, findingKeys, 'reviewed-workflow-permissions', entry.path);
         }

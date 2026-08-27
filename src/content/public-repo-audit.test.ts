@@ -175,11 +175,13 @@ describe('public repository disclosure audit', () => {
     expect(result).toEqual([]);
   });
 
-  it('accepts the trusted exact-SHA approval workflow with its bounded write permissions', async () => {
+  it('accepts the trusted exact-SHA approval workflow without a custom check writer', async () => {
     const workflow = await readFile(approvalWorkflowPath, 'utf8');
     expect(findings([
       file('.github/workflows/approve-reviewed-content.yml', workflow),
     ])).toEqual([]);
+    expect(workflow).not.toContain('checks: write');
+    expect(workflow).not.toContain('repos/$GH_REPO/check-runs');
   });
 
   it('rejects unsafe reviewed-release permissions, runner surfaces and mutable operations', () => {
@@ -203,11 +205,17 @@ describe('public repository disclosure audit', () => {
     expect(result).toContainEqual({ category: 'reviewed-workflow-contract', path });
   });
 
-  it('accepts the immutable Release workflow with only contents write plus checks/actions read', async () => {
+  it('accepts the owner-only durable-artifact Release recovery workflow', async () => {
     const workflow = await readFile(releaseWorkflowPath, 'utf8');
     expect(findings([
       file('.github/workflows/publish-reviewed-release.yml', workflow),
     ])).toEqual([]);
+    expect(workflow).toContain('workflow_dispatch:');
+    expect(workflow).toContain('approval_run_id:');
+    expect(workflow).toContain('approval_run_attempt:');
+    expect(workflow).toContain('pull-requests: read');
+    expect(workflow).toContain('secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN');
+    expect(workflow).not.toContain('commits/$SEAL_SHA/check-runs');
   });
 
   it('rejects a Release workflow that has extra permissions or omits immutable final-state proof', () => {

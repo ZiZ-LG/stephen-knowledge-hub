@@ -19,7 +19,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  checks: write
 
 concurrency:
   group: stephen-public-content-writer
@@ -278,26 +277,6 @@ jobs:
             --pr-head-sha "$(git rev-parse HEAD)" \
             --repository "$GH_REPO" \
             --release-tag "$RELEASE_TAG"
-
-      - name: Record the successful exact-seal check
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          SEAL_SHA: ${{ steps.seal.outputs.seal_sha }}
-          APPROVAL_RUN_ID: ${{ github.run_id }}
-          APPROVAL_RUN_ATTEMPT: ${{ github.run_attempt }}
-        run: |
-          set -euo pipefail
-          gh api --method POST "repos/$GH_REPO/check-runs" \
-            -f name=stephen-reviewed-release \
-            -f head_sha="$SEAL_SHA" \
-            -f external_id="stephen-reviewed-release:$APPROVAL_RUN_ID:$APPROVAL_RUN_ATTEMPT:$SEAL_SHA" \
-            -f details_url="https://github.com/$GH_REPO/actions/runs/$APPROVAL_RUN_ID/attempts/$APPROVAL_RUN_ATTEMPT" \
-            -f status=completed \
-            -f conclusion=success \
-            -f 'output[title]=Stephen reviewed release gate passed' \
-            -f 'output[summary]=The exact approval seal passed the complete repository gate.' \
-            > "$RUNNER_TEMP/saas-608-check.json"
 
       - name: Build the durable reviewed-release handoff
         env:
