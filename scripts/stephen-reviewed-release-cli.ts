@@ -185,7 +185,9 @@ async function readRegularText(root: string, relativePath: string, label: string
   const path = containedPath(root, relativePath, label);
   await assertNoSymlinks(root, path, label);
   const info = await lstat(path);
-  if (!info.isFile() || info.isSymbolicLink()) throw new Error(`${label} must be a regular file`);
+  if (!info.isFile() || info.isSymbolicLink() || (info.mode & 0o111) !== 0) {
+    throw new Error(`${label} must be a regular non-executable file`);
+  }
   return { path, text: await readFile(path, 'utf8') };
 }
 

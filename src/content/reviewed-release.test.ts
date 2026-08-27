@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { spawnSync } from 'node:child_process';
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { chmod, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 
@@ -315,22 +315,27 @@ describe('SAAS-608 bounded filesystem CLI', () => {
       ['--experimental-strip-types', REVIEWED_RELEASE_CLI, ...args],
       { encoding: 'utf8' },
     );
+    const promoteArgs = [
+      'promote',
+      '--root', root,
+      '--manifest', 'review-candidates/2026-08-27/review-manifest.json',
+      '--ledger', 'review-candidates/2026-08-27/discovery-ledger.json',
+      '--candidate-sha', CANDIDATE_SHA,
+      '--current-head-sha', CANDIDATE_SHA,
+      '--approver', 'ZiZ-LG',
+      '--repository-owner', 'ZiZ-LG',
+      '--repository', 'ZiZ-LG/stephen-knowledge-hub',
+      '--approved-at', APPROVED_AT,
+      '--pr-number', '42',
+    ] as const;
 
     try {
       await installInputs();
-      const promoteArgs = [
-        'promote',
-        '--root', root,
-        '--manifest', 'review-candidates/2026-08-27/review-manifest.json',
-        '--ledger', 'review-candidates/2026-08-27/discovery-ledger.json',
-        '--candidate-sha', CANDIDATE_SHA,
-        '--current-head-sha', CANDIDATE_SHA,
-        '--approver', 'ZiZ-LG',
-        '--repository-owner', 'ZiZ-LG',
-        '--repository', 'ZiZ-LG/stephen-knowledge-hub',
-        '--approved-at', APPROVED_AT,
-        '--pr-number', '42',
-      ] as const;
+      await chmod(manifestPath, 0o755);
+      const executable = run(promoteArgs);
+      expect(executable.status).toBe(1);
+      expect(executable.stderr).toContain('review manifest must be a regular non-executable file');
+      await chmod(manifestPath, 0o644);
       const promoted = run(promoteArgs);
       expect(promoted.status, promoted.stderr).toBe(0);
       expect(JSON.parse(promoted.stdout)).toMatchObject({

@@ -22,6 +22,7 @@ declare module 'node:fs/promises' {
   ): Promise<string | undefined>;
   export function mkdtemp(prefix: string): Promise<string>;
   export function lstat(path: string): Promise<{
+    readonly mode: number;
     readonly size: number;
     isDirectory(): boolean;
     isFile(): boolean;
