@@ -33,6 +33,9 @@ import {
   type ReviewedPromotionRecord,
 } from './stephen-reviewed-release.ts';
 
+const PUBLIC_SITEMAP_PATH = 'public/sitemap.xml';
+const STEPHEN_ORIGIN = 'https://stephen.lake2ocean.top';
+
 type CliCommand =
   | { readonly command: 'promote'; readonly options: ReadonlyMap<string, string> }
   | { readonly command: 'seal'; readonly options: ReadonlyMap<string, string> }
@@ -243,6 +246,33 @@ async function writeExclusive(path: string, value: unknown) {
   await writeFile(path, jsonBytes(value), { encoding: 'utf8', flag: 'wx' });
 }
 
+function addPromotedItemsToSitemap(
+  sitemap: string,
+  items: readonly ReviewedKnowledgeItem[],
+  approvedAt: string,
+) {
+  const closingTag = '</urlset>';
+  const closingIndex = sitemap.indexOf(closingTag);
+  if (closingIndex < 0
+    || closingIndex !== sitemap.lastIndexOf(closingTag)
+    || sitemap.slice(closingIndex + closingTag.length).trim() !== '') {
+    throw new Error('public sitemap must contain exactly one final urlset closing tag');
+  }
+
+  const publishedDate = new Date(approvedAt).toISOString().slice(0, 10);
+  const entries = [...items]
+    .sort((left, right) => left.slug.localeCompare(right.slug))
+    .map((item) => {
+      const location = `${STEPHEN_ORIGIN}/items/${item.slug}/`;
+      if (sitemap.includes(`<loc>${location}</loc>`)) {
+        throw new Error(`public sitemap already contains promoted item: ${item.slug}`);
+      }
+      return `  <url><loc>${location}</loc><lastmod>${publishedDate}</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>`;
+    });
+
+  return `${sitemap.slice(0, closingIndex).trimEnd()}\n${entries.join('\n')}\n${closingTag}\n`;
+}
+
 function reviewInputDate(manifestPath: string, ledgerPath: string) {
   const manifestMatch = manifestPath.match(
     /^review-candidates\/(\d{4}-\d{2}-\d{2})\/review-manifest\.json$/,
@@ -294,6 +324,12 @@ async function promote(options: ReadonlyMap<string, string>) {
     ledgerSha256: sha256(ledgerFile.text),
     existingItems: await loadExistingPublishedItems(root),
   });
+  const sitemapFile = await readRegularText(root, PUBLIC_SITEMAP_PATH, 'public sitemap');
+  const promotedSitemap = addPromotedItemsToSitemap(
+    sitemapFile.text,
+    result.items,
+    option(options, '--approved-at'),
+  );
   const promotionRelative = `editorial-releases/${editorialDate}/${candidateSha.slice(0, 12)}/promotion.json`;
   const outputRelativePaths = [...result.record.publishedPaths, promotionRelative];
   const outputPaths = await preflightOutputs(root, outputRelativePaths);
@@ -301,6 +337,7 @@ async function promote(options: ReadonlyMap<string, string>) {
     await writeExclusive(outputPaths[index], result.items[index]);
   }
   await writeExclusive(outputPaths[outputPaths.length - 1], result.record);
+  await writeFile(sitemapFile.path, promotedSitemap, 'utf8');
   await rm(manifestFile.path);
   await rm(ledgerFile.path);
   return {
@@ -310,6 +347,7 @@ async function promote(options: ReadonlyMap<string, string>) {
     promotionRecord: promotionRelative,
     promotedItemIds: result.record.promotedItemIds,
     publishedPaths: result.record.publishedPaths,
+    sitemapPath: PUBLIC_SITEMAP_PATH,
   } as const;
 }
 
