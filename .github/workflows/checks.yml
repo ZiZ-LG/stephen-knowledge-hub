@@ -1,0 +1,53 @@
+name: Stephen checks
+
+on:
+  push:
+    branches:
+      - main
+      - 'codex/**'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stephen-checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check application and editorial automation
+        run: npm run typecheck
+
+      - name: Test application and editorial automation
+        run: npm test
+
+      - name: Build static site
+        run: npm run build
+
+      - name: Bind the static artifact to this source SHA
+        run: |
+          node --experimental-strip-types scripts/stephen-release-cli.ts verify \
+            --artifact "$GITHUB_WORKSPACE/dist" \
+            --source-sha "$GITHUB_SHA" \
+            --metadata-file "$GITHUB_WORKSPACE/dist/.stephen-release.json"
+
+      - name: Audit the public repository boundary
+        run: npm run audit:public
