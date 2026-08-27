@@ -177,7 +177,7 @@ permissions:
   pull-requests: read
 ```
 
-Use `GITHUB_TOKEN` for PR, actions, tag, Release, content and mutation calls. Use `GOVERNANCE_TOKEN: ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}` only on read-only steps that fetch immutable Release status, collaborators, and repository rulesets; fail immediately when it is absent. Re-fetch all three governance facts immediately before final publication, then validate again before the mutation step.
+Use `GITHUB_TOKEN` for PR, actions, tag, Release, content and mutation calls. Bind `GH_TOKEN: ${{ secrets.STEPHEN_RELEASE_GOVERNANCE_TOKEN }}` only on the two read-only steps that fetch immutable Release status, collaborators, and repository rulesets; fail immediately when it is absent. Re-fetch all three governance facts immediately before final publication, then validate again before the mutation step.
 
 - [x] **Step 6: Remove the custom check producer**
 

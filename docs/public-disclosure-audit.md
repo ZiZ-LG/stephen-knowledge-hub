@@ -1,7 +1,7 @@
 # Public disclosure audit
 
 Date: 2026-08-27
-Status: public `main` baseline established; SAAS-608 exact-SHA release gate under final landing; schedule disabled
+Status: public `main` baseline established; SAAS-608 exact-SHA Release recovery repair under final landing; schedule disabled
 
 ## Intended public scope
 
@@ -50,9 +50,9 @@ Latest pre-push run:
 ```json
 {
   "status": "pass",
-  "branchName": "codex/stephen-reviewed-release-loop",
-  "scannedFiles": 99,
-  "scannedBytes": 1037035,
+  "branchName": "codex/saas-608-release-recovery",
+  "scannedFiles": 105,
+  "scannedBytes": 1122635,
   "workflowFiles": 4,
   "findings": []
 }
@@ -66,9 +66,9 @@ Latest pre-push run:
 4. Confirm CODEOWNERS resolves to a user or team with write access after the GitHub repository exists.
 5. Enable GitHub private vulnerability reporting before inviting external contributors.
 6. Keep the daily schedule variable unset unless a separate enablement is approved.
-7. Merge SAAS-608 only after its exact head CI and post-merge `main` SHA CI both pass.
+7. Keep the merged SAAS-608 baseline intact; merge the recovery repair only after its exact head CI and post-merge `main` SHA CI both pass.
 8. Enable native Immutable Releases only after the workflow code is present on `main`; verify the API reports `enabled: true` and do not add an Environment or server secret.
-9. Create and verify the active no-bypass tag ruleset named `Protect Stephen immutable Release tags`, targeting only `refs/tags/stephen-content-*` with update and deletion restrictions.
+9. Create and verify the active no-bypass tag ruleset named `Protect Stephen immutable Release tags`, targeting only `refs/tags/stephen-content-*`, with an empty exclude list plus update and deletion restrictions.
 10. Store a fine-grained token as `STEPHEN_RELEASE_GOVERNANCE_TOKEN`; scope it only to `ZiZ-LG/stephen-knowledge-hub` and grant only `Administration: read`. Never add it to build, artifact, approval, or Release mutation steps.
 
 This audit is a technical disclosure and provenance check. It does not replace a rights-holder decision for third-party material or jurisdiction-specific legal advice.
