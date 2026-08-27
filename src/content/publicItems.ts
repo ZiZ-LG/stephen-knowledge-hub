@@ -1,5 +1,7 @@
-import type { SeedCandidate } from '../domain';
+import type { ReviewedKnowledgeItem } from '../domain';
 import { approvedSeedItems } from './items';
+import { approvedDailyItems } from './publishedItems';
+import { validateApprovedReviewedItems } from './validate';
 
 // This explicit allowlist is the manual publication gate. Adding a future
 // reviewed seed to items.ts cannot make it public without another
@@ -15,7 +17,7 @@ const OWNER_APPROVED_SEED_IDS = [
 
 const approvedSeedById = new Map(approvedSeedItems.map((item) => [item.id, item]));
 
-export const approvedKnowledgeItems: readonly SeedCandidate[] = OWNER_APPROVED_SEED_IDS
+const ownerApprovedSeedItems = OWNER_APPROVED_SEED_IDS
   .map((id) => {
     const item = approvedSeedById.get(id);
     if (!item) {
@@ -23,3 +25,10 @@ export const approvedKnowledgeItems: readonly SeedCandidate[] = OWNER_APPROVED_S
     }
     return item;
   });
+
+export const approvedKnowledgeItems: readonly ReviewedKnowledgeItem[] = [
+  ...ownerApprovedSeedItems,
+  ...approvedDailyItems,
+];
+
+validateApprovedReviewedItems(approvedKnowledgeItems);

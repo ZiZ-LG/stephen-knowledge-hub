@@ -4,6 +4,7 @@ import {
   type EvidenceRef,
   type KnowledgeItem,
   type LocalizedText,
+  type ReviewedKnowledgeItem,
   type SeedCandidate,
 } from '../domain';
 import { sourceRegistry, type SourceRegistryEntry } from './sources';
@@ -124,18 +125,21 @@ export function validateKnowledgeItems(items: readonly KnowledgeItem[]) {
   }
 }
 
-interface SeedLifecycleGate {
-  readonly editorialStatus: SeedCandidate['editorialStatus'];
-  readonly reviewStatus: SeedCandidate['review']['status'];
+interface ReviewedLifecycleGate {
+  readonly editorialStatus: ReviewedKnowledgeItem['editorialStatus'];
+  readonly reviewStatus: ReviewedKnowledgeItem['review']['status'];
   readonly collectionError: string;
   readonly reviewError: string;
 }
 
-function validateSeedCollection(
-  items: readonly SeedCandidate[],
+function validateReviewedCollection(
+  items: readonly ReviewedKnowledgeItem[],
   sources: readonly SourceRegistryEntry[],
-  lifecycle: SeedLifecycleGate,
+  lifecycle: ReviewedLifecycleGate,
 ) {
+  if (items.some((item) => item.publicationMode !== 'manual')) {
+    throw new Error('approved reviewed content requires manual publication');
+  }
   validateUniqueItems(items);
 
   const sourceById = new Map(sources.map((source) => [source.id, source]));
@@ -148,21 +152,18 @@ function validateSeedCollection(
   const conclusionScopes = new Set(['single_authority', 'cross_organization', 'editorial_synthesis']);
 
   for (const item of items) {
-    if (!item.seedContent || item.editorialStatus !== lifecycle.editorialStatus) {
+    if (item.editorialStatus !== lifecycle.editorialStatus) {
       throw new Error(lifecycle.collectionError);
-    }
-    if (item.publicationMode !== 'manual') {
-      throw new Error('seed content requires manual approval');
     }
     if (item.review.status !== lifecycle.reviewStatus) {
       throw new Error(lifecycle.reviewError);
     }
     validateIsoDate(item.review.verifiedAt, 'review verifiedAt');
     if (item.tags.length === 0) {
-      throw new Error('seed candidate tags must not be empty');
+      throw new Error('reviewed content tags must not be empty');
     }
     if (item.evidence.some((evidence) => !evidence.allowlisted)) {
-      throw new Error('seed candidate evidence must be allowlisted');
+      throw new Error('reviewed content evidence must be allowlisted');
     }
     if (item.evidence.some((evidence) => !sourceById.has(evidence.sourceId))) {
       throw new Error(`${item.id} evidence source is not registered`);
@@ -222,6 +223,34 @@ function validateSeedCollection(
     ].join('\n');
     if (authoredChinese.includes('代理')) {
       throw new Error(`${item.id} must keep Agent terminology in English`);
+    }
+  }
+
+  return mainlandItemIds;
+}
+
+export function validateApprovedReviewedItems(
+  items: readonly ReviewedKnowledgeItem[],
+  sources: readonly SourceRegistryEntry[] = sourceRegistry,
+) {
+  validateReviewedCollection(items, sources, {
+    editorialStatus: 'approved',
+    reviewStatus: 'approved',
+    collectionError: 'public collection contains non-approved item',
+    reviewError: 'approved item is missing owner approval',
+  });
+}
+
+function validateSeedCollection(
+  items: readonly SeedCandidate[],
+  sources: readonly SourceRegistryEntry[],
+  lifecycle: ReviewedLifecycleGate,
+) {
+  const mainlandItemIds = validateReviewedCollection(items, sources, lifecycle);
+
+  for (const item of items) {
+    if (!item.seedContent || !item.seedCategory) {
+      throw new Error(lifecycle.collectionError);
     }
   }
 

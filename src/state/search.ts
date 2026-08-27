@@ -1,4 +1,4 @@
-import type { KnowledgeDomain, SeedCandidate } from '../domain';
+import type { KnowledgeDomain, ReviewedKnowledgeItem } from '../domain';
 
 interface SearchFilters {
   readonly domains: readonly KnowledgeDomain[];
@@ -9,14 +9,14 @@ function normalize(value: string) {
   return value.normalize('NFKC').toLocaleLowerCase();
 }
 
-function matchesDomains(item: SeedCandidate, filters?: SearchFilters) {
+function matchesDomains(item: ReviewedKnowledgeItem, filters?: SearchFilters) {
   if (!filters || filters.domains.length === 0) return true;
   return filters.mode === 'and'
     ? filters.domains.every((domain) => item.domains.includes(domain))
     : filters.domains.some((domain) => item.domains.includes(domain));
 }
 
-function scoreItem(item: SeedCandidate, tokens: readonly string[]) {
+function scoreItem(item: ReviewedKnowledgeItem, tokens: readonly string[]) {
   const weightedFields = [
     [item.title.zh, 12],
     [item.originalTitle ?? '', 10],
@@ -37,7 +37,7 @@ function scoreItem(item: SeedCandidate, tokens: readonly string[]) {
 }
 
 export function searchKnowledge(
-  items: readonly SeedCandidate[],
+  items: readonly ReviewedKnowledgeItem[],
   query: string,
   filters?: SearchFilters,
 ) {

@@ -1,4 +1,4 @@
-import type { KnowledgeTool, KnowledgeTopic, SeedCandidate } from '../domain';
+import type { KnowledgeTool, KnowledgeTopic, ReviewedKnowledgeItem } from '../domain';
 import { localize, type Language } from '../i18n';
 import { selectTodayItems } from '../navigation';
 import InternalLink from '../components/InternalLink';
@@ -11,7 +11,7 @@ export default function TodayPage({
   tools,
   language,
 }: {
-  readonly items: readonly SeedCandidate[];
+  readonly items: readonly ReviewedKnowledgeItem[];
   readonly topics: readonly KnowledgeTopic[];
   readonly tools: readonly KnowledgeTool[];
   readonly language: Language;

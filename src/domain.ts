@@ -144,7 +144,7 @@ export interface DeeperAnalysis {
 }
 
 export interface ReviewedKnowledgeItem extends KnowledgeItem {
-  readonly seedCategory: SeedContentCategory;
+  readonly seedCategory?: SeedContentCategory;
   readonly conclusionScope: ConclusionScope;
   readonly supportingFacts: readonly SupportingFact[];
   readonly deeperAnalysis: DeeperAnalysis;
@@ -156,6 +156,7 @@ export interface ReviewedKnowledgeItem extends KnowledgeItem {
 
 export interface SeedCandidate extends ReviewedKnowledgeItem {
   readonly seedContent: true;
+  readonly seedCategory: SeedContentCategory;
 }
 
 export interface KnowledgeTopic {

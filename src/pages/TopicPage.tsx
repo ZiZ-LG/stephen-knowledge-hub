@@ -1,4 +1,4 @@
-import type { KnowledgeTool, KnowledgeTopic, SeedCandidate } from '../domain';
+import type { KnowledgeTool, KnowledgeTopic, ReviewedKnowledgeItem } from '../domain';
 import { domainLabels, localize, type Language } from '../i18n';
 import InternalLink from '../components/InternalLink';
 import KnowledgeCard from '../components/KnowledgeCard';
@@ -10,13 +10,13 @@ export default function TopicPage({
   language,
 }: {
   readonly topic: KnowledgeTopic;
-  readonly items: readonly SeedCandidate[];
+  readonly items: readonly ReviewedKnowledgeItem[];
   readonly tools: readonly KnowledgeTool[];
   readonly language: Language;
 }) {
   const topicItems = topic.itemIds
     .map((id) => items.find((item) => item.id === id))
-    .filter((item): item is SeedCandidate => item !== undefined);
+    .filter((item): item is ReviewedKnowledgeItem => item !== undefined);
   const topicTools = topic.toolIds
     .map((id) => tools.find((tool) => tool.id === id))
     .filter((tool): tool is KnowledgeTool => tool !== undefined);
