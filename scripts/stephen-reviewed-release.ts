@@ -684,7 +684,7 @@ function containsForbiddenServerField(value: unknown): boolean {
 
 function expectedReleaseAssetNames(sealSha: string) {
   return [
-    '.stephen-release.json',
+    'default.stephen-release.json',
     `stephen-site-${sealSha.slice(0, 12)}.tar.gz`,
   ].sort((left, right) => left.localeCompare(right));
 }
