@@ -50,9 +50,9 @@ Latest pre-push run:
 ```json
 {
   "status": "pass",
-  "branchName": "codex/saas-608-release-recovery",
+  "branchName": "codex/saas-608-release-asset-name",
   "scannedFiles": 105,
-  "scannedBytes": 1122635,
+  "scannedBytes": 1125661,
   "workflowFiles": 4,
   "findings": []
 }

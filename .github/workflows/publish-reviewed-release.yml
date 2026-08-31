@@ -308,7 +308,7 @@ jobs:
             '{
               assets: [
                 { name: $archiveName, path: $archivePath, sha256: $archiveSha },
-                { name: ".stephen-release.json", path: $metadataPath, sha256: $metadataSha }
+                { name: "default.stephen-release.json", path: $metadataPath, sha256: $metadataSha }
               ]
             }' > "$RUNNER_TEMP/saas-608-assets.json"
           {

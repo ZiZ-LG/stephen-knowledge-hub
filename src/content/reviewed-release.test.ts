@@ -30,6 +30,9 @@ const APPROVED_AT = '2026-08-27T10:30:00.000Z';
 const REVIEWED_RELEASE_CLI = decodeURIComponent(
   new URL('../../scripts/stephen-reviewed-release-cli.ts', import.meta.url).pathname,
 );
+const PUBLISH_REVIEWED_RELEASE_WORKFLOW = decodeURIComponent(
+  new URL('../../.github/workflows/publish-reviewed-release.yml', import.meta.url).pathname,
+);
 const FIXTURE_MANIFEST = decodeURIComponent(
   new URL('../../scripts/fixtures/saas-608-review-manifest.json', import.meta.url).pathname,
 );
@@ -685,7 +688,7 @@ describe('SAAS-608 immutable Release request policy', () => {
         name: 'stephen-site-333333333333.tar.gz',
         sha256: 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',
       }, {
-        name: '.stephen-release.json',
+        name: 'default.stephen-release.json',
         sha256: 'dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd',
       }],
       existingTag: null,
@@ -699,8 +702,77 @@ describe('SAAS-608 immutable Release request policy', () => {
       releaseTag: 'stephen-content-2026-08-27-333333333333',
       targetCommitish: SEAL_SHA,
       releaseId: null,
-      missingAssets: ['.stephen-release.json', 'stephen-site-333333333333.tar.gz'],
+      missingAssets: ['default.stephen-release.json', 'stephen-site-333333333333.tar.gz'],
     });
+  });
+
+  it('uses the GitHub-safe metadata asset name when recovering an uploaded Draft', async () => {
+    const input = releaseInput();
+    const expectedAssets = input.expectedAssets;
+    expect(expectedAssets.map((asset) => asset.name)).toContain('default.stephen-release.json');
+    expect(expectedAssets.every((asset) => !asset.name.startsWith('.'))).toBe(true);
+    const assets = expectedAssets.map((asset, index) => ({
+      id: index + 1,
+      name: asset.name,
+      digest: `sha256:${asset.sha256}`,
+    }));
+
+    expect(evaluateReviewedReleaseRequest({
+      ...input,
+      expectedAssets,
+      existingRelease: {
+        id: 7,
+        tagName: input.payload.releaseTag,
+        targetCommitish: SEAL_SHA,
+        draft: true,
+        immutable: false,
+        assets,
+      },
+    })).toEqual({
+      status: 'reuse_draft',
+      releaseTag: input.payload.releaseTag,
+      targetCommitish: SEAL_SHA,
+      releaseId: 7,
+      missingAssets: [],
+    });
+
+    const workflow = await readFile(PUBLISH_REVIEWED_RELEASE_WORKFLOW, 'utf8');
+    expect(workflow).toContain(
+      '{ name: "default.stephen-release.json", path: $metadataPath, sha256: $metadataSha }',
+    );
+    expect(workflow).not.toContain('{ name: ".stephen-release.json", path:');
+  });
+
+  it('rejects the legacy leading-dot metadata asset name at both policy boundaries', () => {
+    const input = releaseInput();
+    const legacyExpectedAssets = input.expectedAssets.map((asset) => (
+      asset.name === 'default.stephen-release.json'
+        ? { ...asset, name: '.stephen-release.json' }
+        : asset
+    ));
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      expectedAssets: legacyExpectedAssets,
+    })).toThrow('Release asset set is invalid');
+
+    const existingAssets = input.expectedAssets.map((asset, index) => ({
+      id: index + 1,
+      name: asset.name === 'default.stephen-release.json'
+        ? '.stephen-release.json'
+        : asset.name,
+      digest: `sha256:${asset.sha256}`,
+    }));
+    expect(() => evaluateReviewedReleaseRequest({
+      ...input,
+      existingRelease: {
+        id: 7,
+        tagName: input.payload.releaseTag,
+        targetCommitish: SEAL_SHA,
+        draft: true,
+        immutable: false,
+        assets: existingAssets,
+      },
+    })).toThrow('existing Release contains an unexpected asset');
   });
 
   it('rejects an unmerged PR and a mismatched merge or seal', () => {
@@ -950,7 +1022,7 @@ describe('SAAS-608 immutable Release request policy', () => {
       releaseTag: input.payload.releaseTag,
       targetCommitish: SEAL_SHA,
       releaseId: 7,
-      missingAssets: ['.stephen-release.json'],
+      missingAssets: ['default.stephen-release.json'],
     });
     expect(evaluateReviewedReleaseRequest({
       ...input,

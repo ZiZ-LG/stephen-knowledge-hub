@@ -283,7 +283,7 @@ git commit -m "feat(saas-608): approve and merge exact reviewed SHA"
 
 **Interfaces:**
 - Consumes the completed approval `workflow_run` and its private immutable handoff artifact; derives the merge SHA again from the merged PR API.
-- Produces Draft Release, `stephen-site-<sealSha12>.tar.gz`, `.stephen-release.json`, and final immutable published Release.
+- Produces Draft Release, `stephen-site-<sealSha12>.tar.gz`, the external metadata asset `default.stephen-release.json`, and final immutable published Release. The verified build tree keeps its internal `.stephen-release.json` filename.
 
 - [ ] **Step 1: Write failing release-policy tests**
 
@@ -297,7 +297,7 @@ Implement pure validation and deterministic tag/asset naming, then rerun to PASS
 
 - [ ] **Step 3: Add the Release workflow**
 
-Use `contents: write`, `actions: read`, and `pull-requests: read` on `GITHUB_TOKEN`. Use `STEPHEN_RELEASE_GOVERNANCE_TOKEN` only in the two read-only governance steps; it must be limited to `ZiZ-LG/stephen-knowledge-hub` with only `Administration: read`. Normalize automatic `workflow_run` and owner-only recovery dispatch inputs to one exact approval run ID/attempt, bind the original private handoff artifact and trusted successful approval-step sequence to that run, and execute repaired Release policy from the current trusted workflow SHA rather than the historical approval control SHA. Validate current `main`, approval-run provenance, the sole push collaborator, active empty-exclude/no-bypass update/deletion tag rules, and `immutable-releases.enabled == true`, then rebuild and verify the exact seal. Generate `.stephen-release.json`, create a deterministic tarball, create/reuse only a matching Draft Release, upload all assets, require the tag to remain absent, revalidate current main/immutable setting/ruleset/writer/digests immediately before publishing, and require the final REST response to report `immutable: true` and the newly created protected tag to target the seal SHA. The transient custom check is neither created nor consumed.
+Use `contents: write`, `actions: read`, and `pull-requests: read` on `GITHUB_TOKEN`. Use `STEPHEN_RELEASE_GOVERNANCE_TOKEN` only in the two read-only governance steps; it must be limited to `ZiZ-LG/stephen-knowledge-hub` with only `Administration: read`. Normalize automatic `workflow_run` and owner-only recovery dispatch inputs to one exact approval run ID/attempt, bind the original private handoff artifact and trusted successful approval-step sequence to that run, and execute repaired Release policy from the current trusted workflow SHA rather than the historical approval control SHA. Validate current `main`, approval-run provenance, the sole push collaborator, active empty-exclude/no-bypass update/deletion tag rules, and `immutable-releases.enabled == true`, then rebuild and verify the exact seal. Generate the build-tree `.stephen-release.json`, expose it as the GitHub-safe Release asset `default.stephen-release.json`, create a deterministic tarball, create/reuse only a matching Draft Release, upload all assets, require the tag to remain absent, revalidate current main/immutable setting/ruleset/writer/digests immediately before publishing, and require the final REST response to report `immutable: true` and the newly created protected tag to target the seal SHA. The transient custom check is neither created nor consumed.
 
 - [ ] **Step 4: Verify no deployment surface**
 

@@ -262,7 +262,7 @@ Parse the effective workflow YAML, reject job-level GitHub token permission over
 
 **Interfaces:**
 - Consumes: all prior commits plus repository secret `STEPHEN_RELEASE_GOVERNANCE_TOKEN`.
-- Produces: one merged repair PR, green exact-main CI, and immutable Release `stephen-content-2026-08-27-d24d2128bc5b`.
+- Produces: the merged recovery-architecture PR plus this bounded GitHub-safe asset-name follow-up PR, green exact-main CI, and immutable Release `stephen-content-2026-08-27-d24d2128bc5b`.
 
 - [x] **Step 1: Run fresh final local verification**
 
@@ -282,7 +282,7 @@ Expected: only SAAS-608 workflow, policy, tests, audit, runbook, and plan files;
 
 - [ ] **Step 3: Push and create the repair PR**
 
-Push `codex/saas-608-release-recovery`, create a PR to `main`, and include the incident evidence, permission split, artifact/step/rebuild proof model, no-deployment boundary, exact test commands, and the required secret prerequisite.
+Push `codex/saas-608-release-asset-name`, create a PR to `main`, and include the failed recovery-run evidence, GitHub's leading-dot asset-name normalization, the unchanged permission and no-deployment boundaries, exact test commands, and the required secret prerequisite.
 
 - [ ] **Step 4: Wait for review and PR CI**
 
@@ -311,4 +311,4 @@ Wait for the recovery workflow to complete successfully.
 
 - [ ] **Step 8: Verify the final immutable Release and boundaries**
 
-Require tag `stephen-content-2026-08-27-d24d2128bc5b` to point to `d24d2128bc5b996f3064eedef26125f8c0303268`; require immutable API state `true`; require exactly `.stephen-release.json` and `stephen-site-d24d2128bc5b.tar.gz` with matching digests; require no deployment records; require `STEPHEN_DAILY_SCHEDULE_ENABLED` to remain absent.
+Require tag `stephen-content-2026-08-27-d24d2128bc5b` to point to `d24d2128bc5b996f3064eedef26125f8c0303268`; require immutable API state `true`; require exactly `default.stephen-release.json` and `stephen-site-d24d2128bc5b.tar.gz` with matching digests; require no deployment records; require `STEPHEN_DAILY_SCHEDULE_ENABLED` to remain absent. The build tree still contains `.stephen-release.json`; the external Release name is intentionally GitHub-safe because GitHub normalizes leading-dot upload names.
