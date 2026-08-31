@@ -1314,10 +1314,10 @@ export function validateDailyIntakeWorkflow(workflow: string) {
   const schedules = [...workflow.matchAll(
     /^\s*-\s*cron:\s*['"]([^'"]+)['"]\s*$/gm,
   )].map((match) => match[1]);
-  const expectedSchedules = ['30 23 * * *', '30 8 * * *'];
+  const expectedSchedules = ['30 23 * * 0,2,4', '30 8 * * 1,3,5'];
   if (schedules.length !== expectedSchedules.length
     || expectedSchedules.some((schedule) => !schedules.includes(schedule))) {
-    throw new Error('workflow schedules must represent Beijing 07:30 and 16:30');
+    throw new Error('workflow schedules must represent Monday-Wednesday-Friday Beijing 07:30 and 16:30');
   }
   if (!/^\s{2}review:\s*\n\s{4}if:\s*github\.event_name != 'schedule' \|\| vars\.STEPHEN_DAILY_SCHEDULE_ENABLED == '1'\s*\n\s{4}runs-on:/m
     .test(workflow)) {
@@ -1390,6 +1390,9 @@ export function validateDailyIntakeWorkflow(workflow: string) {
   }
   if (!workflow.includes('gh pr create --draft')) {
     throw new Error('workflow must create a Draft PR');
+  }
+  if (/\bgh\s+pr\s+(?:ready|merge|review)\b/.test(workflow)) {
+    throw new Error('daily candidate workflow must not approve, merge, or mark review PR ready');
   }
   if (!workflow.includes('gh pr edit')) {
     throw new Error('workflow must update the existing Draft PR');
