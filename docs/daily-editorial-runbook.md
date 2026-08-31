@@ -1,8 +1,8 @@
 # 自我修养知识库｜每日编辑与受控发布手册 v1
 
-> 状态：`PUBLIC_REPOSITORY / REVIEWED_RELEASE_GATE`；`SCHEDULE_DISABLED`
+> 状态：`PUBLIC_REPOSITORY / REVIEWED_RELEASE_GATE`；`SCHEDULE_GATED_MWF`
 >
-> 当前边界：本公开仓库负责发现、候选审核、正式内容提交、静态构建与不可变 GitHub Release，不持有生产凭据，也不执行部署、流量切换或回滚。`STEPHEN_DAILY_SCHEDULE_ENABLED` 默认未启用；任何新内容仍须逐条人工终审，线上投放由独立的私有运维边界另行批准。
+> 当前边界：本公开仓库负责发现、候选审核、正式内容提交、静态构建与不可变 GitHub Release，不持有生产凭据，也不执行部署、流量切换或回滚。周一、周三、周五的候选扫描仅在 `STEPHEN_DAILY_SCHEDULE_ENABLED` 精确为字符串 `1` 时执行；该变量只启用候选 Draft PR，任何新内容仍须逐条人工终审，线上投放由独立的私有运维边界另行批准。
 
 ## 1. 目标与边界
 
@@ -71,7 +71,7 @@
 
 每次扫描只创建“发现记录”，至少包含：稳定候选 ID、`sourceId`、规范原文 URL、原文标题、发布时间、抓取时间、短摘要、短证据摘录、事件键、内容指纹、规则版本和 provenance。页面不可访问、发布时间不明、非 HTTPS、链接主机越界、来源不在登记表或证据冲突时进入 `manual_review`；无法满足候选字段要求的记录进入 manifest 的 `manualReviewRecords` 人工分流区，不进入拟发布候选。
 
-SAAS-606 的机器节奏固定为北京时间 `07:30` 和 `16:30`，GitHub Actions 分别使用 UTC cron `30 23 * * *` 和 `30 8 * * *`。同一天两次运行由全局 concurrency 串行执行，并复用同一个 `codex/stephen-daily-YYYY-MM-DD` 分支和同一个 Draft PR。日内第二次扫描的“新发现数”只统计尚未进入当日 discovery ledger 的非重复 ID，重试同一份报告时该值为 `0`。
+SAAS-606 的机器节奏固定为自然周的周一、周三、周五，北京时间 `07:30` 和 `16:30` 各运行一次。GitHub Actions 分别使用 UTC cron `30 23 * * 0,2,4`（UTC 周日、周二、周四 23:30，对应次日北京时间 07:30）和 `30 8 * * 1,3,5`（UTC 周一、周三、周五 08:30，对应北京时间 16:30）。当前不接入中国法定节假日及调休日历。同一个北京时间日期的两次运行由全局 concurrency 串行执行，并复用同一个 `codex/stephen-daily-YYYY-MM-DD` 分支和同一个 Draft PR。日内第二次扫描的“新发现数”只统计尚未进入当日 discovery ledger 的非重复 ID，重试同一份报告时该值为 `0`。
 
 ### 3.2 形成候选
 
@@ -258,7 +258,7 @@ permissions:
 
 每日候选与人工批准只使用 GitHub 自带 `GITHUB_TOKEN`、固定到完整 commit SHA 的 `actions/checkout`、`actions/setup-node` 和 runner 中的 GitHub CLI，不使用 PAT、第三方 PR Action、`pull_request_target` 或候选 artifact。候选分支使用普通 push，不 force-push。复用候选分支前，工作流会在受信任 checkout 上确认该分支相对目标 base 只修改当天的 `review-manifest.json` 和 `discovery-ledger.json`，并确认两者都存在且为 `100644 blob`；删除整文件、symlink、可执行文件以及任何脚本、依赖、workflow 或其他路径变化，都会在执行候选分支代码前失败关闭。每日候选与人工批准共用 `stephen-public-content-writer` 并发组；Release 使用按审批 run ID 与 attempt 区分的独立并发组，避免待运行交接被后续每日任务或另一审批 attempt 替换。静态审计禁止候选/批准工作流调用 tag 或 Release 接口。批准工作流使用私有 artifact 只传递经过精确检查的发布交接，不承载密钥或候选生成数据。Release 唯一例外是两个只读治理步骤使用仓库 Secret `STEPHEN_RELEASE_GOVERNANCE_TOKEN`；该 fine-grained token 仅限本仓库且只有 `Administration: read`，不会进入构建、artifact、PR 或 Release mutation 步骤。
 
-两个 cron 会随工作流进入默认分支而被 GitHub 登记，但 `review` job 默认失败关闭：只有仓库变量 `STEPHEN_DAILY_SCHEDULE_ENABLED` 被项目所有者显式设为字符串 `1`，schedule 事件才会执行。变量缺失、为空或为其他值时，定时运行只显示为 skipped，不扫描来源、不读取 AI Secrets、不写分支或 PR；`workflow_dispatch` 不受该开关影响。定时和人工 live 运行都必须从仓库默认分支执行并以默认分支为 base，只有实际执行的 live 路径会读取 AI Secrets；fixture 模式强制以被 dispatch 的非默认功能分支为 base，不能指向 `main`，也不会注入 AI Secrets。
+两个周一、周三、周五 cron 会随工作流进入默认分支而被 GitHub 登记，但 `review` job 保持失败关闭：只有仓库变量 `STEPHEN_DAILY_SCHEDULE_ENABLED` 被项目所有者在变更合并且精确 `main` SHA 的全部 CI 通过后显式设为字符串 `1`，schedule 事件才会执行。变量缺失、为空或为其他值时，定时运行只显示为 skipped，不扫描来源、不读取 AI Secrets、不写分支或 PR；`workflow_dispatch` 不受该开关影响。该变量不会批准候选、改变 `pending_owner_review / not_published`、创建 Release 或执行部署。定时和人工 live 运行都必须从仓库默认分支执行并以默认分支为 base，只有实际执行的 live 路径会读取 AI Secrets；fixture 模式强制以被 dispatch 的非默认功能分支为 base，不能指向 `main`，也不会注入 AI Secrets。
 
 ### 12.2 同日复用与项目所有者删除
 

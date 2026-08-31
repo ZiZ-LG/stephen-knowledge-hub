@@ -216,13 +216,18 @@ describe('SAAS-606 daily review identity', () => {
 });
 
 describe('public repository daily workflow boundary', () => {
-  it('pins actions and keeps scheduled candidate disclosure explicitly disabled', async () => {
+  it('pins actions and keeps scheduled candidate disclosure behind explicit opt-in', async () => {
     const workflow = await readFile(publicWorkflowPath, 'utf8');
     const actionReferences = [...workflow.matchAll(/^\s*-?\s*uses:\s*([^\s#]+)/gm)]
       .map((match) => match[1]);
+    const contract = validateDailyIntakeWorkflow(workflow);
 
     expect(actionReferences).toHaveLength(2);
     expect(actionReferences.every((reference) => /@[0-9a-f]{40}$/.test(reference))).toBe(true);
+    expect(contract.schedules).toEqual([
+      '30 23 * * 0,2,4',
+      '30 8 * * 1,3,5',
+    ]);
     expect(workflow).toContain("vars.STEPHEN_DAILY_SCHEDULE_ENABLED == '1'");
     expect(workflow).not.toContain('pull_request_target');
     expect(workflow).not.toContain('working-directory: app');
@@ -679,8 +684,8 @@ name: Stephen daily candidate review
 # Public repository notice: review candidates are publicly visible even before website publication.
 on:
   schedule:
-    - cron: '30 23 * * *'
-    - cron: '30 8 * * *'
+    - cron: '30 23 * * 0,2,4'
+    - cron: '30 8 * * 1,3,5'
   workflow_dispatch:
 permissions:
   contents: write
@@ -760,7 +765,7 @@ jobs:
 describe('SAAS-606 GitHub workflow safety contract', () => {
   it('accepts the approved schedules, runner, permissions and review commands', () => {
     expect(validateDailyIntakeWorkflow(validWorkflowContract)).toEqual({
-      schedules: ['30 23 * * *', '30 8 * * *'],
+      schedules: ['30 23 * * 0,2,4', '30 8 * * 1,3,5'],
       runner: 'ubuntu-latest',
       permissions: ['contents: write', 'pull-requests: write'],
     });
@@ -779,8 +784,8 @@ describe('SAAS-606 GitHub workflow safety contract', () => {
     },
     {
       label: 'wrong Beijing schedule',
-      workflow: validWorkflowContract.replace("'30 23 * * *'", "'30 7 * * *'"),
-      error: 'workflow schedules must represent Beijing 07:30 and 16:30',
+      workflow: validWorkflowContract.replace("'30 23 * * 0,2,4'", "'30 7 * * 0,2,4'"),
+      error: 'workflow schedules must represent Monday-Wednesday-Friday Beijing 07:30 and 16:30',
     },
     {
       label: 'scheduled production runs enabled by default',
@@ -820,6 +825,21 @@ describe('SAAS-606 GitHub workflow safety contract', () => {
       label: 'non-draft PR',
       workflow: validWorkflowContract.replace('gh pr create --draft', 'gh pr create'),
       error: 'workflow must create a Draft PR',
+    },
+    {
+      label: 'Draft PR marked ready by automation',
+      workflow: `${validWorkflowContract}\n      - run: gh pr ready 42\n`,
+      error: 'daily candidate workflow must not approve, merge, or mark review PR ready',
+    },
+    {
+      label: 'Draft PR merged by automation',
+      workflow: `${validWorkflowContract}\n      - run: gh pr merge 42 --merge\n`,
+      error: 'daily candidate workflow must not approve, merge, or mark review PR ready',
+    },
+    {
+      label: 'Draft PR approved by automation',
+      workflow: `${validWorkflowContract}\n      - run: gh pr review 42 --approve\n`,
+      error: 'daily candidate workflow must not approve, merge, or mark review PR ready',
     },
     {
       label: 'candidate paths relative to the app working directory',
