@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "task": "SAAS-606",
   "editorialDate": "2026-09-16",
-  "generatedAt": "2026-09-16T01:29:25.661Z",
+  "generatedAt": "2026-09-16T13:37:30.942Z",
   "reviewState": "pending_owner_review",
   "publicationState": "not_published",
   "controls": {
@@ -879,6 +879,36 @@
         "mode": "deterministic_fallback",
         "fallbackReason": "ai_not_configured",
         "titleZh": "官方更新候选｜GPT-6 Astra: A new generation of intelligence",
+        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
+        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
+        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
+        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
+        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-77AB1E5C1AFF3FDD",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Reimagining advertising with AI",
+      "canonicalUrl": "https://openai.com/index/reimagining-advertising-with-ai",
+      "publishedAt": "2026-09-16T13:00:00.000Z",
+      "fetchedAt": "2026-09-16T13:37:30.942Z",
+      "sourceSummary": "Explore new AI-powered advertising experiences from OpenAI, including Sponsored Agents, tools for marketers, and integrations with HubSpot and Shopify.",
+      "evidenceExcerpt": "Explore new AI-powered advertising experiences from OpenAI, including Sponsored Agents, tools for marketers, and integrations with HubSpot and Shopify.",
+      "eventKey": "event-845120d4a4335fb3",
+      "contentFingerprint": "6386df05f1dceffa",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "官方更新候选｜Reimagining advertising with AI",
         "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
         "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
         "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
