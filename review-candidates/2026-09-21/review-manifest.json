@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "task": "SAAS-606",
   "editorialDate": "2026-09-21",
-  "generatedAt": "2026-09-21T01:16:19.392Z",
+  "generatedAt": "2026-09-21T15:14:10.155Z",
   "reviewState": "pending_owner_review",
   "publicationState": "not_published",
   "controls": {
@@ -881,6 +881,36 @@
         "fallbackReason": "ai_not_configured",
         "titleZh": "官方更新候选｜How agents can delegate better",
         "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
+        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
+        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
+        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
+        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-73A3CDD724897E35",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "How V7 gives AI agents institutional memory",
+      "canonicalUrl": "https://openai.com/index/v7",
+      "publishedAt": "2026-09-21T00:00:00.000Z",
+      "fetchedAt": "2026-09-21T15:14:10.155Z",
+      "sourceSummary": "Using GPT-5.6, V7 turns scattered company files into context agents can use to complete complex, source-linked work.",
+      "evidenceExcerpt": "Using GPT-5.6, V7 turns scattered company files into context agents can use to complete complex, source-linked work.",
+      "eventKey": "event-e8bd51036cb78f7c",
+      "contentFingerprint": "130b0fff5784d8db",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "官方更新候选｜How V7 gives AI agents institutional memory",
+        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
         "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
         "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
         "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",

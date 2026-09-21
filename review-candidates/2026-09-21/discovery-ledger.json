@@ -32,6 +32,7 @@
     "ED-67BC80C4FB55F07C",
     "ED-6A1D373A13E1D1DF",
     "ED-7210C69D4705D076",
+    "ED-73A3CDD724897E35",
     "ED-7421BA7AF325F414",
     "ED-77AB1E5C1AFF3FDD",
     "ED-793763BC44CE901A",
@@ -76,6 +77,19 @@
         "rejected": 0,
         "manualReview": 60,
         "proposed": 60
+      }
+    },
+    {
+      "fetchedAt": "2026-09-21T15:14:10.155Z",
+      "summary": {
+        "sourcesConfigured": 2,
+        "sourcesScanned": 2,
+        "sourcesFailed": 0,
+        "newDiscoveries": 1,
+        "duplicates": 0,
+        "rejected": 0,
+        "manualReview": 60,
+        "proposed": 61
       }
     }
   ]
