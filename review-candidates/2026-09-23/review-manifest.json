@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "task": "SAAS-606",
   "editorialDate": "2026-09-23",
-  "generatedAt": "2026-09-23T01:33:47.303Z",
+  "generatedAt": "2026-09-23T13:46:07.928Z",
   "reviewState": "pending_owner_review",
   "publicationState": "not_published",
   "controls": {
@@ -1376,6 +1376,37 @@
       "publicationState": "not_published"
     },
     {
+      "candidateId": "ED-BC1DF34AFAE5455A",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "OpenAI extends cyber access to Ukraine for civilian defense",
+      "canonicalUrl": "https://openai.com/index/openai-extends-cyber-access-to-ukraine-for-civilian-defense",
+      "publishedAt": "2026-09-23T13:00:00.000Z",
+      "fetchedAt": "2026-09-23T13:46:07.928Z",
+      "sourceSummary": "OpenAI is extending access to its Daybreak program to the Government of Ukraine to support the cyber defense of civilian infrastructure.",
+      "evidenceExcerpt": "OpenAI is extending access to its Daybreak program to the Government of Ukraine to support the cyber defense of civilian infrastructure.",
+      "eventKey": "event-7a1cfb6cc92dcff7",
+      "contentFingerprint": "02fb6669074b0085",
+      "riskLevel": "high",
+      "riskReasons": [
+        "high risk requires manual review",
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "官方更新候选｜OpenAI extends cyber access to Ukraine for civilian defense",
+        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
+        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
+        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
+        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
+        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
       "candidateId": "ED-BD08F81492402E85",
       "sourceId": "openai-news-rss",
       "sourceName": "OpenAI News",
@@ -1487,6 +1518,36 @@
         "mode": "deterministic_fallback",
         "fallbackReason": "ai_not_configured",
         "titleZh": "官方更新候选｜Rapidly scaling online storage to serve over 1 billion ChatGPT users",
+        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
+        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
+        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
+        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
+        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-C7A47194243317F3",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Grab and OpenAI bring practical AI skills to Southeast Asia",
+      "canonicalUrl": "https://openai.com/index/grab-openai-ai-skills-southeast-asia",
+      "publishedAt": "2026-09-23T00:00:00.000Z",
+      "fetchedAt": "2026-09-23T13:46:07.928Z",
+      "sourceSummary": "OpenAI and Grab launch GO Forward with AI, a regional programme helping 30,000 partners build practical AI skills across Southeast Asia.",
+      "evidenceExcerpt": "OpenAI and Grab launch GO Forward with AI, a regional programme helping 30,000 partners build practical AI skills across Southeast Asia.",
+      "eventKey": "event-ab37d292a38c00e8",
+      "contentFingerprint": "9cedea98ec12941e",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "官方更新候选｜Grab and OpenAI bring practical AI skills to Southeast Asia",
         "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
         "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
         "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",

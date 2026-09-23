@@ -48,10 +48,12 @@
     "ED-B155D4689A5D503D",
     "ED-B2479BDB39406DC6",
     "ED-BA8B5946D84F966B",
+    "ED-BC1DF34AFAE5455A",
     "ED-BD08F81492402E85",
     "ED-C10AD01A5D9D2A21",
     "ED-C388CD4130CE37B2",
     "ED-C4435C9B9B09FCFA",
+    "ED-C7A47194243317F3",
     "ED-D5F097D4863484FC",
     "ED-D68287D73E57B1DB",
     "ED-DA9E4DB2A6E346D2",
@@ -76,6 +78,19 @@
         "rejected": 0,
         "manualReview": 60,
         "proposed": 60
+      }
+    },
+    {
+      "fetchedAt": "2026-09-23T13:46:07.928Z",
+      "summary": {
+        "sourcesConfigured": 2,
+        "sourcesScanned": 2,
+        "sourcesFailed": 0,
+        "newDiscoveries": 2,
+        "duplicates": 0,
+        "rejected": 0,
+        "manualReview": 60,
+        "proposed": 62
       }
     }
   ]
