@@ -11,279 +11,6 @@
   },
   "candidates": [
     {
-      "candidateId": "ED-02A414103C3B6C0A",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "Expanding Google Antigravity for enterprise customers",
-      "canonicalUrl": "https://cloud.google.com/blog/products/ai-machine-learning/expanding-google-antigravity-for-enterprise-customers",
-      "publishedAt": "2026-08-20T17:30:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Since announcing Google Antigravity in Gemini Enterprise Agent Platform at I/O in May, we’ve heard helpful feedback from our customers. Your developers want easy access to coding agents across surfac",
-      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Since announcing Google Antigravity in Gemini Enterprise Agent Platform at I/O",
-      "eventKey": "event-4405de02beabe52f",
-      "contentFingerprint": "163256573af5f9c7",
-      "riskLevel": "high",
-      "riskReasons": [
-        "high risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Expanding Google Antigravity for enterprise customers",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-047EF9E1001C3842",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "What Google Cloud announced in AI this month",
-      "canonicalUrl": "https://cloud.google.com/blog/products/ai-machine-learning/what-google-cloud-announced-in-ai-this-month",
-      "publishedAt": "2026-09-01T16:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph\"><p data-block-key=\"wws10\"><b><i>Editor’s note</i></b><i>: Want to keep up with the latest from Google Cloud? Check back here for a monthly recap of our latest updates, announcements, resources, events, learning opportunities, and more.</i></p><hr/><p",
-      "evidenceExcerpt": "<div class=\"block-paragraph\"><p data-block-key=\"wws10\"><b><i>Editor’s note</i></b><i>: Want to keep up with the latest from Google Cloud? Check back here for a",
-      "eventKey": "event-bd64176cac70e71d",
-      "contentFingerprint": "f9ddafbd3c5c006d",
-      "riskLevel": "high",
-      "riskReasons": [
-        "high risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜What Google Cloud announced in AI this month",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-095BFFAA5F2E486C",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Funding grants for new research into AI and teen development",
-      "canonicalUrl": "https://openai.com/index/teen-development-research-grants",
-      "publishedAt": "2026-09-08T09:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "Apply now for OpenAI’s $5 million grant program supporting independent research on how generative AI affects teen development, well-being, and safety.",
-      "evidenceExcerpt": "Apply now for OpenAI’s $5 million grant program supporting independent research on how generative AI affects teen development, well-being, and safety.",
-      "eventKey": "event-be4904c3780283ae",
-      "contentFingerprint": "f090cb0864424978",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Funding grants for new research into AI and teen development",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-0CC75BEAFA26FD87",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "Building cost-effective, high-throughput gen AI workflows in Google Dataflow",
-      "canonicalUrl": "https://cloud.google.com/blog/products/data-analytics/cost-effective-genai-workflows-in-google-dataflow",
-      "publishedAt": "2026-08-18T16:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Real-time streaming pipelines are the operational backbone of modern enterprises, continuously processing everything from customer support interactions to transaction logs. Traditionally, streaming D",
-      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Real-time streaming pipelines are the operational backbone of modern enterprise",
-      "eventKey": "event-d5cba402ab383024",
-      "contentFingerprint": "aea7775fda468f5f",
-      "riskLevel": "medium",
-      "riskReasons": [
-        "medium risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Building cost-effective, high-throughput gen AI workflows in Google Dataflow",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-0E0C55D9A22F90CB",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "How Cooley is accelerating IPO work with ChatGPT",
-      "canonicalUrl": "https://openai.com/index/cooley-gopublic",
-      "publishedAt": "2026-09-17T12:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "Cooley built GO Public with ChatGPT Work to bring intelligence to the IPO process, helping lawyers surface issues earlier and focus judgment where it matters most.",
-      "evidenceExcerpt": "Cooley built GO Public with ChatGPT Work to bring intelligence to the IPO process, helping lawyers surface issues earlier and focus judgment where it matters mo",
-      "eventKey": "event-ba33e5d3099b76e5",
-      "contentFingerprint": "11a4c46f5631fa9c",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜How Cooley is accelerating IPO work with ChatGPT",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-10C9CC4C50890C10",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "How a researcher uses Codex and ChatGPT to search for new antimicrobial molecules",
-      "canonicalUrl": "https://openai.com/index/using-codex-chatgpt-to-search-for-new-antimicrobials",
-      "publishedAt": "2026-09-10T16:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "César de la Fuente’s lab uses Codex and ChatGPT to search living and extinct genomes for antimicrobial candidates to fight drug-resistant infections.",
-      "evidenceExcerpt": "César de la Fuente’s lab uses Codex and ChatGPT to search living and extinct genomes for antimicrobial candidates to fight drug-resistant infections.",
-      "eventKey": "event-44ac96a3f860967a",
-      "contentFingerprint": "15b5b1291bcd9663",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜How a researcher uses Codex and ChatGPT to search for new antimicrobial molecules",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-11C501F1F01BC3B6",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Now everyone can put data to work",
-      "canonicalUrl": "https://openai.com/index/put-data-to-work",
-      "publishedAt": "2026-09-10T15:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "Meet the Data agent in ChatGPT Work. Connect company data, uncover insights, and build interactive dashboards with AI using natural language.",
-      "evidenceExcerpt": "Meet the Data agent in ChatGPT Work. Connect company data, uncover insights, and build interactive dashboards with AI using natural language.",
-      "eventKey": "event-e92af1ae7cc2c24d",
-      "contentFingerprint": "50c37275ae31ba3e",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Now everyone can put data to work",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-146D9AF72E7B4DE7",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "On the Navier–Stokes Millennium Prize Problem",
-      "canonicalUrl": "https://openai.com/index/navier-stokes-solution",
-      "publishedAt": "2026-09-08T10:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "We’re sharing an AI-generated solution to the Navier–Stokes Millennium Prize Problem, including a writeup and a formal proof in Lean.",
-      "evidenceExcerpt": "We’re sharing an AI-generated solution to the Navier–Stokes Millennium Prize Problem, including a writeup and a formal proof in Lean.",
-      "eventKey": "event-d8a1d1b7b87fdb42",
-      "contentFingerprint": "4c2b38cc48a1659f",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜On the Navier–Stokes Millennium Prize Problem",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-1E1D29AE24738ECF",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "How GPT-5.6 Sol helps run quantum computing experiments",
-      "canonicalUrl": "https://openai.com/index/codex-quantum-computing-experiments",
-      "publishedAt": "2026-09-08T17:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "See how an MIT researcher uses GPT-5.6 Sol with Codex to autonomously run quantum computing experiments, analyze results, and calibrate qubits.",
-      "evidenceExcerpt": "See how an MIT researcher uses GPT-5.6 Sol with Codex to autonomously run quantum computing experiments, analyze results, and calibrate qubits.",
-      "eventKey": "event-e9cd71a1351ef853",
-      "contentFingerprint": "a10bfdc7edf0b97f",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜How GPT-5.6 Sol helps run quantum computing experiments",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
       "candidateId": "ED-24AE129E1332404C",
       "sourceId": "openai-news-rss",
       "sourceName": "OpenAI News",
@@ -304,228 +31,87 @@
       "editorialDraft": {
         "mode": "deterministic_fallback",
         "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Introducing Astra for Law",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
+        "titleZh": "Astra for Law 发布：法律行业 AI 进入“专用检索索引+受控访问”阶段",
+        "summaryZh": "OpenAI 推出面向法律工作的 GPT-6 Astra 配置，结合法律数据源、律所定制工作流与法律级保密控制，目前通过受信访问计划向部分律所开放；Google 也已为 Gemini Enterprise 推出法律行业方案。",
+        "whyItMattersZh": "法律是对准确性和保密要求最高的行业之一，厂商用专用索引、受控访问和数据保留控制来回应顾虑，这套打法会被复制到其他强监管行业。",
+        "salesImplicationZh": "面向专业服务客户时，重点讨论引用可追溯、错误率边界、数据保留与访问控制，而不是只展示生成效果；公开的准确率远未达到可免审核的程度。",
+        "roleOrgImplicationZh": "律所等专业机构需要设立 AI 产出审核责任人，明确哪些产出必须由律师复核；法律 AI 公司既是厂商客户，也是潜在竞争者。",
+        "nextActionZh": "为一个专业服务客户整理“准确率—审核—保密”三项要求，用“干系人与组织采用风险清单”标出谁对 AI 产出负最终责任。"
       },
       "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-25C62B81B354ABA2",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "How Fyxer built an AI executive assistant people trust",
-      "canonicalUrl": "https://openai.com/index/fyxer",
-      "publishedAt": "2026-09-14T12:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "Fyxer uses OpenAI models, fine-tuning, memory, and real user feedback to organize inboxes and draft emails in each user’s voice.",
-      "evidenceExcerpt": "Fyxer uses OpenAI models, fine-tuning, memory, and real user feedback to organize inboxes and draft emails in each user’s voice.",
-      "eventKey": "event-4a79b3f551c8ed1b",
-      "contentFingerprint": "ebe49a22516d50be",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜How Fyxer built an AI executive assistant people trust",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-2A62C5A39511C06E",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "Changing the game: Using agentic AI to secure infrastructure code",
-      "canonicalUrl": "https://cloud.google.com/blog/topics/systems/using-ai-agents-to-secure-google-infrastructure",
-      "publishedAt": "2026-09-18T16:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">AI is accelerating software development at an unprecedented pace. But as code generation scales, so do the challenges of securing the code, especially emerging AI-based vulnerability exploitations. T",
-      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">AI is accelerating software development at an unprecedented pace. But as code g",
-      "eventKey": "event-255755917e3ec2a0",
-      "contentFingerprint": "132974a2f90cecd9",
-      "riskLevel": "high",
-      "riskReasons": [
-        "high risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Changing the game: Using agentic AI to secure infrastructure code",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-2E92C83551BE638E",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "Cloud CISO Perspectives: How Google monitors AI threats and advances AI defenses",
-      "canonicalUrl": "https://cloud.google.com/blog/products/identity-security/cloud-ciso-perspectives-how-google-monitors-ai-threats-advances-ai-defenses",
-      "publishedAt": "2026-09-16T16:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph\"><p data-block-key=\"eucpw\">Welcome to the first Cloud CISO Perspectives for September 2026. Today, Sandra Joyce shares the latest details on Google’s visibility into how attackers are using AI, and how we’re using AI to stop them.</p><p data-block-key=",
-      "evidenceExcerpt": "<div class=\"block-paragraph\"><p data-block-key=\"eucpw\">Welcome to the first Cloud CISO Perspectives for September 2026. Today, Sandra Joyce shares the latest de",
-      "eventKey": "event-576b768bcc645401",
-      "contentFingerprint": "54e97af782f9a283",
-      "riskLevel": "high",
-      "riskReasons": [
-        "high risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Cloud CISO Perspectives: How Google monitors AI threats and advances AI defenses",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-2EE52C637449821C",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "How workers are unlocking new ways of working",
-      "canonicalUrl": "https://openai.com/index/unlocking-new-ways-of-working",
-      "publishedAt": "2026-09-16T09:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "New OpenAI Economic Research shows how workers use AI beyond traditional roles and which new activities become recurring parts of their work.",
-      "evidenceExcerpt": "New OpenAI Economic Research shows how workers use AI beyond traditional roles and which new activities become recurring parts of their work.",
-      "eventKey": "event-7f6b383fc77f1702",
-      "contentFingerprint": "1c31aab25062b55d",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜How workers are unlocking new ways of working",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-3099522FAC238FB1",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Advisory Group on Mathematics and Artificial Intelligence",
-      "canonicalUrl": "https://openai.com/index/advisory-group-on-mathematics-and-ai",
-      "publishedAt": "2026-09-21T12:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "OpenAI is working with an independent Advisory Group on Mathematics and Artificial Intelligence to guide the review and communication of emerging AI results.",
-      "evidenceExcerpt": "OpenAI is working with an independent Advisory Group on Mathematics and Artificial Intelligence to guide the review and communication of emerging AI results.",
-      "eventKey": "event-6781990f1fff154a",
-      "contentFingerprint": "b27dae1bedd60e00",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Advisory Group on Mathematics and Artificial Intelligence",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-3DB92DC6B612E6DB",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Perplexity trusts GPT-6 Astra with end-to-end systems",
-      "canonicalUrl": "https://openai.com/index/perplexity-improving-accuracy-with-astra",
-      "publishedAt": "2026-09-14T00:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "Perplexity uses Astra to write communications, change software, and monitor production systems, and checks in much less frequently than with earlier models.",
-      "evidenceExcerpt": "Perplexity uses Astra to write communications, change software, and monitor production systems, and checks in much less frequently than with earlier models.",
-      "eventKey": "event-200009bca8063842",
-      "contentFingerprint": "e34a9a6a91dd76c2",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Perplexity trusts GPT-6 Astra with end-to-end systems",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-453D309AE5CEB158",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "1Password increases engineering productivity 21% with Codex",
-      "canonicalUrl": "https://openai.com/index/1password",
-      "publishedAt": "2026-09-08T00:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "Engineers at 1Password use Codex to rapidly build new features and internal tools, reaching production-readiness while maintaining rigorous security policies.",
-      "evidenceExcerpt": "Engineers at 1Password use Codex to rapidly build new features and internal tools, reaching production-readiness while maintaining rigorous security policies.",
-      "eventKey": "event-b70013451c226885",
-      "contentFingerprint": "25c5eaeed25b2f5b",
-      "riskLevel": "high",
-      "riskReasons": [
-        "high risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜1Password increases engineering productivity 21% with Codex",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "astra-for-law-legal-vertical",
+        "kind": "update",
+        "domains": [
+          "enterprise_sales",
+          "ai_technology"
+        ],
+        "topicSlugs": [
+          "ai-trust-governance",
+          "workflow-adoption"
+        ],
+        "tags": [
+          "法律行业",
+          "行业方案",
+          "准确率",
+          "数据保密"
+        ],
+        "toolIds": [
+          "stakeholder-adoption-risk",
+          "discovery-interview"
+        ],
+        "audience": [
+          "ai_ae",
+          "solution",
+          "sales_leader"
+        ],
+        "freshness": "current",
+        "conclusionScope": "cross_organization",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [
+          {
+            "sourceId": "google-cloud-ai-blog",
+            "title": "Google is a Leader in the 2026 Gartner® Magic Quadrant™ for Enterprise AI Assistants",
+            "publisher": "Google Cloud Blog",
+            "url": "https://cloud.google.com/blog/products/ai-machine-learning/google-is-a-leader-in-2026-gartner-magic-quadrant-for-enterprise-ai-assistants",
+            "publishedAt": "2026-09-09T18:00:00.000Z",
+            "level": "official",
+            "language": "en",
+            "dateBasis": "published"
+          }
+        ],
+        "supportingFacts": [
+          {
+            "statement": "OpenAI 称 Astra for Law 为法律工作提供前沿智能、律所定制工作流、法律数据源接入，以及用于保密客户工作的法律级控制。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "Astra for Law 在 Vals AI Legal Research Bench 私有验证集 200 题中的整体正确率为 54%，仅用网页搜索的 GPT-6 Astra 为 38.7%；目前通过受信访问计划向选定律所开放。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "Google Cloud 称其已为 Gemini Enterprise 推出面向法律与金融服务的专门方案，并建立在受治理的控制平面之上。",
+            "evidenceIndexes": [
+              2
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "通用模型加上专用法律检索索引、领域指令和访问控制，把“通用能力”转化为可被专业机构接受的受控产品。",
+          "businessValue": "受控访问与数据保留控制降低了律所的采用顾虑，专用索引提升了检索准确率，为高单价专业服务场景打开市场。",
+          "boundary": "54% 的正确率说明仍必须人工复核，不能作为替代律师的证据；覆盖范围以美国法律为主，中国法律场景不适用；受信访问资格与数据保留条款以官方为准。"
+        },
+        "changeWindow": "within_90_days",
+        "factType": "company_claim",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。原候选风险等级为 high，请重点核对。已直接读取 Google Cloud 原文核对行业方案表述。起草环境无法直接访问 openai.com，产品定位依据 OpenAI RSS 原文摘要；具体数字与日期依据多家媒体对原文的转述交叉核对（SiliconANGLE、Artificial Lawyer、PYMNTS）。批准前请对照 OpenAI 原文逐项核实数字，与原文不符时以原文为准并修改或删除该事实。"
+      }
     },
     {
       "candidateId": "ED-52D58E73C9E4B3FB",
@@ -547,15 +133,88 @@
       "editorialDraft": {
         "mode": "deterministic_fallback",
         "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜GPT-6 Astra: The next generation in intelligence for work",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
+        "titleZh": "GPT-6 Astra 进入 ChatGPT Work、Codex 与 API：高价旗舰主打推理与电脑操作",
+        "summaryZh": "OpenAI 将 GPT-6 Astra 定位为其面向企业最强的模型，强调高级推理、电脑操作以及写作与设计判断，并在 ChatGPT Work、Codex 和 API 中提供。",
+        "whyItMattersZh": "Astra 把“让 AI 直接操作软件完成多步骤任务”推进企业主流产品，客户问题将从“能不能用”转向“哪些流程值得交给高价模型”。",
+        "salesImplicationZh": "Astra 单价明显高于 Sol 与 Luna，销售要把它定位到高价值、高复杂度环节，用任务完成时间和人工步骤减少来证明溢价，而不是全量替换。",
+        "roleOrgImplicationZh": "电脑操作类能力涉及权限、审计和人工复核，IT、安全与业务负责人需要在试点前明确哪些系统允许 Agent 操作。",
+        "nextActionZh": "用“POC 成功画布”为一个客户流程定义 Astra 试点边界：允许操作的系统、人工审批节点，以及与 Sol 对比的成本和完成时间指标。"
       },
       "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "gpt-6-astra-business-flagship",
+        "kind": "update",
+        "domains": [
+          "ai_technology",
+          "enterprise_sales"
+        ],
+        "topicSlugs": [
+          "agent-business-model",
+          "workflow-adoption"
+        ],
+        "tags": [
+          "GPT-6",
+          "Agent",
+          "电脑操作",
+          "模型分层"
+        ],
+        "toolIds": [
+          "poc-success-canvas",
+          "ai-maturity-scan"
+        ],
+        "audience": [
+          "ai_ae",
+          "solution",
+          "sales_leader"
+        ],
+        "freshness": "current",
+        "conclusionScope": "single_authority",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [
+          {
+            "sourceId": "openai-news-rss",
+            "title": "Introducing GPT-6 Sol and Luna",
+            "publisher": "OpenAI News",
+            "url": "https://openai.com/index/introducing-gpt-6-sol-and-luna",
+            "publishedAt": "2026-09-22T18:00:00.000Z",
+            "level": "official",
+            "language": "en",
+            "dateBasis": "published"
+          }
+        ],
+        "supportingFacts": [
+          {
+            "statement": "OpenAI 称 GPT-6 Astra 是其面向业务的最强模型，具备高级推理、电脑操作以及更强的写作与设计判断能力。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "GPT-6 Astra API 标价为每百万 token 输入 10 美元、输出 50 美元，高于随后发布的同代 Sol 与 Luna。",
+            "evidenceIndexes": [
+              1,
+              2
+            ]
+          },
+          {
+            "statement": "OpenAI 于 9 月 22 日发布 GPT-6 Sol 与 Luna，作为在能力与成本之间做不同平衡的日常工作模型。",
+            "evidenceIndexes": [
+              2
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "厂商用旗舰模型承载最难的任务并维持高价，同时用低价层级扩大用量，形成同代内的价格分层。",
+          "businessValue": "高价模型只有在减少人工步骤或缩短周期时才划算；分层让方案可以采用“少量旗舰+大量低价”的组合来平衡效果与成本。",
+          "boundary": "基准成绩与定价来自厂商发布及媒体转述，需以官方页面为准；电脑操作在客户真实系统中的稳定性与权限风险尚未经独立验证。"
+        },
+        "changeWindow": "within_90_days",
+        "factType": "company_claim",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。起草环境无法直接访问 openai.com，产品定位依据 OpenAI RSS 原文摘要；具体数字与日期依据多家媒体对原文的转述交叉核对（DataCamp、OpenRouter、Artificial Analysis）。批准前请对照 OpenAI 原文逐项核实数字，与原文不符时以原文为准并修改或删除该事实。"
+      }
     },
     {
       "candidateId": "ED-596C9D1E4AFF89E9",
@@ -577,286 +236,87 @@
       "editorialDraft": {
         "mode": "deterministic_fallback",
         "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Introducing GPT-6 Sol and Luna",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
+        "titleZh": "GPT-6 Sol 与 Luna 发布：API 价格较上一代减半，模型分层选型成为方案标配",
+        "summaryZh": "OpenAI 于 9 月 22 日发布 GPT-6 Sol 与 Luna 两款模型，在能力与成本之间提供不同平衡；据发布信息，两者 API 单价均为上一代 GPT-5.6 同级模型的一半，并配合提示缓存改进进一步降低重复调用成本。",
+        "whyItMattersZh": "同一厂商内部已形成“旗舰 Astra—主力 Sol—轻量 Luna”的分层，客户方案不再是选一个模型，而是按任务组合不同层级。",
+        "salesImplicationZh": "报价与 ROI 测算要按任务拆分模型层级：高价值推理用 Astra 或 Sol，大批量分类与抽取用 Luna；单价减半会让此前因成本搁置的场景重新值得评估。",
+        "roleOrgImplicationZh": "解决方案与 FinOps 需要共同维护“任务—模型—成本”对照表，销售在 POC 阶段就把模型切换与单价变动写进假设。",
+        "nextActionZh": "选一个在跟的客户场景，用“价值假设一页纸”分别按 Sol 和 Luna 估算单次任务成本，确认降价能否让 POC 的 ROI 过线。"
       },
       "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-5D7B3BAAA6EBC232",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "The Work Now Within Reach",
-      "canonicalUrl": "https://openai.com/index/the-work-now-within-reach",
-      "publishedAt": "2026-09-08T13:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "Explore how more capable, affordable AI can expand the work people and businesses can accomplish—and make growth more economical.",
-      "evidenceExcerpt": "Explore how more capable, affordable AI can expand the work people and businesses can accomplish—and make growth more economical.",
-      "eventKey": "event-730351b116d0c044",
-      "contentFingerprint": "d10898343097fe26",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜The Work Now Within Reach",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-60E61F73DC079A42",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "Now introducing Gemini Enterprise for Financial Services",
-      "canonicalUrl": "https://cloud.google.com/blog/products/ai-machine-learning/introducing-gemini-enterprise-for-financial-services",
-      "publishedAt": "2026-08-25T12:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Protecting capital in today's markets requires immense speed and precision. A financial analyst preparing a deal memo works across licensed market data, internal models, and confidential client files",
-      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Protecting capital in today's markets requires immense speed and precision. A f",
-      "eventKey": "event-477ede3f4b0aac02",
-      "contentFingerprint": "9d0b2609624e0f5f",
-      "riskLevel": "high",
-      "riskReasons": [
-        "high risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Now introducing Gemini Enterprise for Financial Services",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-61646001AAF01C24",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Hex turns complex analysis into visual reports with GPT‑6 Astra",
-      "canonicalUrl": "https://openai.com/index/hex-gpt-6-astra",
-      "publishedAt": "2026-09-16T12:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "GPT-6 Astra helps Hex’s data agents turn answers into interactive visualizations that employees are proud to share.",
-      "evidenceExcerpt": "GPT-6 Astra helps Hex’s data agents turn answers into interactive visualizations that employees are proud to share.",
-      "eventKey": "event-141c4ee0c0ea6c2f",
-      "contentFingerprint": "91cb1b26e3d3db8f",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Hex turns complex analysis into visual reports with GPT‑6 Astra",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-65AE2F61091423DA",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Introducing ChatGPT Images 2.5",
-      "canonicalUrl": "https://openai.com/index/introducing-chatgpt-images-2-5",
-      "publishedAt": "2026-09-08T11:30:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "ChatGPT Images 2.5 helps turn your ideas, sketches, and reference photos into more personalized, polished images that better reflect your ideas.",
-      "evidenceExcerpt": "ChatGPT Images 2.5 helps turn your ideas, sketches, and reference photos into more personalized, polished images that better reflect your ideas.",
-      "eventKey": "event-c9842421e59f4e14",
-      "contentFingerprint": "4cc113b6e336c1ae",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Introducing ChatGPT Images 2.5",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-67BC80C4FB55F07C",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Our framework for reporting model misalignment",
-      "canonicalUrl": "https://openai.com/index/model-misalignment-reporting-framework",
-      "publishedAt": "2026-09-16T17:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "OpenAI shares a framework for tracking, investigating, and disclosing model misalignment, alongside six reports of unexpected or concerning model behavior.",
-      "evidenceExcerpt": "OpenAI shares a framework for tracking, investigating, and disclosing model misalignment, alongside six reports of unexpected or concerning model behavior.",
-      "eventKey": "event-2bb0eeadf4a724a7",
-      "contentFingerprint": "15a7c724c5eb07be",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Our framework for reporting model misalignment",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-6A1D373A13E1D1DF",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Introducing the Australian Youth Safety Blueprint",
-      "canonicalUrl": "https://openai.com/index/australian-youth-safety-blueprint",
-      "publishedAt": "2026-09-18T12:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "OpenAI introduces the Australian Youth Safety Blueprint, a six-pillar roadmap for safer AI experiences that protect and empower young people.",
-      "evidenceExcerpt": "OpenAI introduces the Australian Youth Safety Blueprint, a six-pillar roadmap for safer AI experiences that protect and empower young people.",
-      "eventKey": "event-7673391da8c01c2a",
-      "contentFingerprint": "c7bb08fe30d6d714",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Introducing the Australian Youth Safety Blueprint",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-7210C69D4705D076",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "How agents can delegate better",
-      "canonicalUrl": "https://cloud.google.com/blog/products/ai-machine-learning/how-agents-can-delegate-better",
-      "publishedAt": "2026-08-21T16:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">In any organizational behavior class, students will learn that effective delegation is among the most important skills for a seasoned leader. Getting meaningful work done involves careful coordinatio",
-      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">In any organizational behavior class, students will learn that effective delega",
-      "eventKey": "event-88321ebd17fffa85",
-      "contentFingerprint": "5315281574b3428b",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜How agents can delegate better",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-73A3CDD724897E35",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "How V7 gives AI agents institutional memory",
-      "canonicalUrl": "https://openai.com/index/v7",
-      "publishedAt": "2026-09-21T00:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "Using GPT-5.6, V7 turns scattered company files into context agents can use to complete complex, source-linked work.",
-      "evidenceExcerpt": "Using GPT-5.6, V7 turns scattered company files into context agents can use to complete complex, source-linked work.",
-      "eventKey": "event-e8bd51036cb78f7c",
-      "contentFingerprint": "130b0fff5784d8db",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜How V7 gives AI agents institutional memory",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-77AB1E5C1AFF3FDD",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Reimagining advertising with AI",
-      "canonicalUrl": "https://openai.com/index/reimagining-advertising-with-ai",
-      "publishedAt": "2026-09-16T13:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "Explore new AI-powered advertising experiences from OpenAI, including Sponsored Agents, tools for marketers, and integrations with HubSpot and Shopify.",
-      "evidenceExcerpt": "Explore new AI-powered advertising experiences from OpenAI, including Sponsored Agents, tools for marketers, and integrations with HubSpot and Shopify.",
-      "eventKey": "event-845120d4a4335fb3",
-      "contentFingerprint": "6386df05f1dceffa",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Reimagining advertising with AI",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "gpt-6-sol-luna-price-tiering",
+        "kind": "update",
+        "domains": [
+          "ai_technology",
+          "enterprise_sales"
+        ],
+        "topicSlugs": [
+          "agent-business-model",
+          "ai-poc-scale"
+        ],
+        "tags": [
+          "GPT-6",
+          "模型分层",
+          "API定价",
+          "TCO"
+        ],
+        "toolIds": [
+          "value-hypothesis-one-pager",
+          "poc-success-canvas"
+        ],
+        "audience": [
+          "ai_ae",
+          "solution",
+          "transitioning_seller"
+        ],
+        "freshness": "current",
+        "conclusionScope": "single_authority",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [
+          {
+            "sourceId": "openai-news-rss",
+            "title": "Better prompt caching for GPT-6",
+            "publisher": "OpenAI News",
+            "url": "https://openai.com/index/better-prompt-caching-for-gpt-6",
+            "publishedAt": "2026-09-22T21:00:00.000Z",
+            "level": "official",
+            "language": "en",
+            "dateBasis": "published"
+          }
+        ],
+        "supportingFacts": [
+          {
+            "statement": "OpenAI 于 2026-09-22 发布 GPT-6 Sol 与 Luna，定位为以不同能力与成本平衡把前沿智能带入日常工作的两款模型。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "发布口径为：GPT-6 Sol 每百万 token 输入 2 美元、输出 10 美元，GPT-6 Luna 输入 0.10 美元、输出 0.50 美元，均为 GPT-5.6 同级模型价格的一半。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "OpenAI 同日说明 GPT-6 通过更高缓存命中率、诊断工具和显式断点等控制降低延迟与成本。",
+            "evidenceIndexes": [
+              2
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "推理效率与缓存改进降低了单位服务成本，厂商把部分降幅让渡为标价，并用分层模型覆盖不同价位的任务。",
+          "businessValue": "单位成本下降扩大了“算得过账”的场景范围，尤其是大批量、低单价任务；分层也让客户无需更换厂商即可优化 TCO。",
+          "boundary": "价格以 OpenAI 官方定价页为准且可能调整；单价减半不等于总成本减半，实际成本取决于 token 用量、缓存命中率与所选层级；能力对比未经客户任务实测，不应直接用于承诺效果。"
+        },
+        "changeWindow": "within_30_days",
+        "factType": "company_claim",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。起草环境无法直接访问 openai.com，产品定位依据 OpenAI RSS 原文摘要；具体数字与日期依据多家媒体对原文的转述交叉核对（VentureBeat、TechCrunch、The New Stack）。批准前请对照 OpenAI 原文逐项核实数字，与原文不符时以原文为准并修改或删除该事实。"
+      }
     },
     {
       "candidateId": "ED-793763BC44CE901A",
@@ -878,136 +338,69 @@
       "editorialDraft": {
         "mode": "deterministic_fallback",
         "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Introducing the Agents API",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
+        "titleZh": "OpenAI 推出 Agents API：Codex 运行框架变成托管服务，长时 Agent 进入平台化阶段",
+        "summaryZh": "OpenAI 以公测形式发布 Agents API，以 Codex harness 托管编排、长时会话和工具调用；企业可以选择 OpenAI 托管沙箱、自有基础设施或合作伙伴环境来运行 Agent。",
+        "whyItMattersZh": "长时 Agent 的难点（上下文管理、中断恢复、工具编排）正被平台吸收，客户自建框架的必要性下降，竞争焦点转向工具接入、数据权限与运行环境。",
+        "salesImplicationZh": "讨论 Agent 项目时要问清运行在哪里（厂商托管还是自有环境）、开放哪些工具和数据、失败如何恢复，这些决定安全评审与采购路径。",
+        "roleOrgImplicationZh": "平台工程的工作从“自建编排框架”转向“定义工具、权限与沙箱”，解决方案岗位需要讲清托管与自托管的取舍。",
+        "nextActionZh": "用“干系人与组织采用风险清单”列出客户对托管沙箱与自有基础设施的安全、合规要求，确定 POC 采用哪种运行方式。"
       },
       "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-83002994511E85D2",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Helping older adults use AI in everyday life",
-      "canonicalUrl": "https://openai.com/index/helping-older-adults-use-ai-in-everyday-life",
-      "publishedAt": "2026-09-16T16:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "OpenAI and AARP are bringing free, hands-on ChatGPT workshops to 1,000 older adults across 10 U.S. cities to build practical AI skills safely.",
-      "evidenceExcerpt": "OpenAI and AARP are bringing free, hands-on ChatGPT workshops to 1,000 older adults across 10 U.S. cities to build practical AI skills safely.",
-      "eventKey": "event-cdfc6d534ad30e8a",
-      "contentFingerprint": "7a4a92992bb76033",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Helping older adults use AI in everyday life",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-832E7D323EC14DB8",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "How AlloyDB ScaNN scales vector search to 10 billion vectors",
-      "canonicalUrl": "https://cloud.google.com/blog/products/databases/alloydb-scann-index-four-level-tree-improves-vector-search",
-      "publishedAt": "2026-08-20T16:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">To satisfy the demands of enterprise-grade agentic AI applications, underlying vector databases often struggle to scale effectively as modern use cases can scale to billions of vectors.</span></p> <p",
-      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">To satisfy the demands of enterprise-grade agentic AI applications, underlying",
-      "eventKey": "event-71d7cedae0dbd924",
-      "contentFingerprint": "280de6cbf0c6cd43",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜How AlloyDB ScaNN scales vector search to 10 billion vectors",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-896BFF6016A4C21F",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Paul Christiano joins OpenAI Foundation Board",
-      "canonicalUrl": "https://openai.com/index/paul-christiano-joins-openai-foundation-board",
-      "publishedAt": "2026-09-09T17:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "Paul Christiano joins the OpenAI Foundation Board and its Safety and Security Committee, bringing experience in AI alignment, safety, and standards.",
-      "evidenceExcerpt": "Paul Christiano joins the OpenAI Foundation Board and its Safety and Security Committee, bringing experience in AI alignment, safety, and standards.",
-      "eventKey": "event-9d48261985e8bf4b",
-      "contentFingerprint": "23752b759027a17a",
-      "riskLevel": "high",
-      "riskReasons": [
-        "high risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Paul Christiano joins OpenAI Foundation Board",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-8E41728F8E0BCE24",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "OpenAI expands initiatives to support journalism from classrooms to newsrooms",
-      "canonicalUrl": "https://openai.com/index/supporting-journalism-from-classrooms-to-newsrooms",
-      "publishedAt": "2026-09-08T00:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "OpenAI is expanding support for journalism with tools, training, and partnerships for students, educators, journalists, and news organizations.",
-      "evidenceExcerpt": "OpenAI is expanding support for journalism with tools, training, and partnerships for students, educators, journalists, and news organizations.",
-      "eventKey": "event-2fb0ab26813f1ff8",
-      "contentFingerprint": "81dc00b457c5e81a",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜OpenAI expands initiatives to support journalism from classrooms to newsrooms",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "openai-agents-api-managed-harness",
+        "kind": "update",
+        "domains": [
+          "ai_technology",
+          "enterprise_sales"
+        ],
+        "topicSlugs": [
+          "agent-business-model",
+          "ai-trust-governance"
+        ],
+        "tags": [
+          "Agent",
+          "Agents API",
+          "托管运行",
+          "平台化"
+        ],
+        "toolIds": [
+          "poc-success-canvas",
+          "stakeholder-adoption-risk"
+        ],
+        "audience": [
+          "solution",
+          "ai_ae"
+        ],
+        "freshness": "current",
+        "conclusionScope": "single_authority",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [],
+        "supportingFacts": [
+          {
+            "statement": "OpenAI 称 Agents API 是由 Codex harness 驱动的托管服务，负责编排、长时会话与工具调用，用于构建和上线云端 Agent。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "Agents API 于 2026-09-10 以公测形式推出，支持在 OpenAI 托管沙箱、自托管或合作伙伴沙箱中运行，且不额外收取平台费用。",
+            "evidenceIndexes": [
+              1
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "厂商把原本由客户自建的 Agent 运行框架产品化，客户只需提供工具与运行环境，编排与上下文管理由平台负责。",
+          "businessValue": "降低长时 Agent 的工程门槛与上线周期，让客户把资源投入到业务工具接入和权限设计上。",
+          "boundary": "公测阶段功能与条款可能变化；托管运行意味着更深的厂商绑定，自托管与合作伙伴沙箱的能力差异、数据驻留与合规要求需按客户逐一核实。"
+        },
+        "changeWindow": "within_90_days",
+        "factType": "company_claim",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。起草环境无法直接访问 openai.com，产品定位依据 OpenAI RSS 原文摘要；具体数字与日期依据多家媒体对原文的转述交叉核对（Neomanex、Flowtivity、The Robotics Media）。批准前请对照 OpenAI 原文逐项核实数字，与原文不符时以原文为准并修改或删除该事实。"
+      }
     },
     {
       "candidateId": "ED-9037F00381069F0E",
@@ -1029,15 +422,69 @@
       "editorialDraft": {
         "mode": "deterministic_fallback",
         "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Google is a Leader in the 2026 Gartner® Magic Quadrant™ for Enterprise AI Assistants",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
+        "titleZh": "Gartner 首份企业 AI 助手魔力象限发布：Google 列为领导者，采购评估走向标准化",
+        "summaryZh": "Google 宣布在 Gartner 首份 2026 企业 AI 助手魔力象限中被列为领导者，并把 Gemini Enterprise 的优势归纳为统一入口、开放连接、简单定价、内置治理与全栈能力。",
+        "whyItMattersZh": "首份魔力象限意味着“企业 AI 助手”成为独立采购品类，客户的采购委员会会开始用分析师框架做横向对比。",
+        "salesImplicationZh": "预计客户会拿魔力象限做短名单；销售需要准备统一入口、第三方连接（如 Microsoft 365）、定价模式与 Agent 治理的对比材料，而不只强调模型能力。",
+        "roleOrgImplicationZh": "采购、IT 与安全会更早介入评估；销售需要识别谁在用分析师报告作为决策依据。",
+        "nextActionZh": "用“客户发现访谈”确认目标客户是否参考 Gartner 报告、在意哪些评估维度，并据此调整演示重点。"
       },
       "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "gartner-mq-enterprise-ai-assistants-2026",
+        "kind": "event",
+        "domains": [
+          "enterprise_sales",
+          "ai_technology"
+        ],
+        "topicSlugs": [
+          "ai-buying-committee",
+          "ai-trust-governance"
+        ],
+        "tags": [
+          "Gartner",
+          "竞争格局",
+          "采购评估",
+          "Agent治理"
+        ],
+        "toolIds": [
+          "discovery-interview"
+        ],
+        "audience": [
+          "ai_ae",
+          "sales_leader",
+          "solution"
+        ],
+        "freshness": "current",
+        "conclusionScope": "single_authority",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [],
+        "supportingFacts": [
+          {
+            "statement": "Google 称 Gartner 在首份 2026 企业 AI 助手魔力象限中，基于愿景完整性与执行能力两个维度将其列为领导者。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "Google 列举的 Gemini Enterprise 优势包括统一的 AI 入口、延伸到 Microsoft 365 等第三方的开放连接、含聊天与搜索的基础订阅及按量付费选项，以及不额外收费的 Agent 治理。",
+            "evidenceIndexes": [
+              1
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "分析师报告把分散的产品归入统一品类并给出评估维度，采购方据此建立短名单和比较框架。",
+          "businessValue": "对卖方而言，理解评估维度可以提前准备对比证据；对买方而言，统一框架降低了评估成本。",
+          "boundary": "以上为 Google 对报告的自述解读，未阅读 Gartner 报告原文；其他厂商的定位未在本条核实；魔力象限反映分析师评估，不代表客户实际效果。"
+        },
+        "changeWindow": "within_90_days",
+        "factType": "company_claim",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。已直接读取 Google Cloud 原文，核对“首份”“愿景完整性与执行能力”及五项优势表述；未访问 Gartner 报告原文。"
+      }
     },
     {
       "candidateId": "ED-91E4D4E60615C320",
@@ -1059,291 +506,85 @@
       "editorialDraft": {
         "mode": "deterministic_fallback",
         "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Better prompt caching for GPT-6",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
+        "titleZh": "GPT-6 提示缓存升级：命中率、诊断工具与显式断点成为 Agent 成本优化的关键杠杆",
+        "summaryZh": "OpenAI 说明 GPT-6 提升了默认缓存命中率，并新增缓存诊断、显式断点等控制，帮助开发者降低延迟与成本；缓存改进也是其下调 GPT-6 API 价格的依据之一。",
+        "whyItMattersZh": "Agent 类任务反复携带大量相同上下文，缓存命中率直接决定实际账单，是比单价更容易被忽视、影响却更大的成本变量。",
+        "salesImplicationZh": "在 TCO 测算中单独列出“缓存命中率”假设，并提醒客户：提示结构（稳定内容在前、变化内容在后）会显著影响成本。",
+        "roleOrgImplicationZh": "工程团队需要把缓存命中率纳入监控指标，由 FinOps 与开发共同对账，而不是只看模型单价。",
+        "nextActionZh": "为一个长上下文客户场景估算有缓存与无缓存两种情况下的月成本差异，写入“价值假设一页纸”的成本部分。"
       },
       "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-9B38C0DCF07BB263",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Supporting independent journalism in Ukraine",
-      "canonicalUrl": "https://openai.com/index/supporting-independent-journalism-in-ukraine",
-      "publishedAt": "2026-09-07T00:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "OpenAI, AIRPPU and WAN-IFRA launch an AI program to help Ukrainian news organizations strengthen innovation, resilience, and independent journalism.",
-      "evidenceExcerpt": "OpenAI, AIRPPU and WAN-IFRA launch an AI program to help Ukrainian news organizations strengthen innovation, resilience, and independent journalism.",
-      "eventKey": "event-30803b738af35386",
-      "contentFingerprint": "37637195e4e02299",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Supporting independent journalism in Ukraine",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-9CF09434E3D0F2E1",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Cognition helps Devin test its own work with GPT‑6 Astra",
-      "canonicalUrl": "https://openai.com/index/cognition-devin-testing-with-astra",
-      "publishedAt": "2026-09-11T16:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "GPT‑6 Astra improves Devin’s ability to test software and show that it works, with the goal of helping engineers review less code and ship more.",
-      "evidenceExcerpt": "GPT‑6 Astra improves Devin’s ability to test software and show that it works, with the goal of helping engineers review less code and ship more.",
-      "eventKey": "event-9de90d14e4d1937f",
-      "contentFingerprint": "86c3a3ea0a7b036d",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Cognition helps Devin test its own work with GPT‑6 Astra",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-A47641DA7173B0AC",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "The AI policy window is open. We need to act.",
-      "canonicalUrl": "https://openai.com/index/ai-policy-window",
-      "publishedAt": "2026-09-09T13:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "Chris Lehane argues that stronger AI capabilities require stronger safety evidence, shared standards, and durable policy action while the policy window remains open.",
-      "evidenceExcerpt": "Chris Lehane argues that stronger AI capabilities require stronger safety evidence, shared standards, and durable policy action while the policy window remains",
-      "eventKey": "event-a6c7779fd698322b",
-      "contentFingerprint": "dda6213a18590b8d",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜The AI policy window is open. We need to act.",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-AA430CB168365DB8",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "Cloud CISO Perspectives: Sticking to security fundamentals in the AI era",
-      "canonicalUrl": "https://cloud.google.com/blog/products/identity-security/cloud-ciso-perspectives-sticking-to-security-fundamentals-in-the-ai-era",
-      "publishedAt": "2026-08-21T16:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph\"><p data-block-key=\"eucpw\">Welcome to the first Cloud CISO Perspectives for August 2026. Today, Chris Betz explains why the AI era makes it more important than ever to lean into security fundamentals.</p><p data-block-key=\"3e9dh\">As with all Cloud CISO",
-      "evidenceExcerpt": "<div class=\"block-paragraph\"><p data-block-key=\"eucpw\">Welcome to the first Cloud CISO Perspectives for August 2026. Today, Chris Betz explains why the AI era m",
-      "eventKey": "event-c2998a773d5cb1d5",
-      "contentFingerprint": "c5cd63a72a6a3d36",
-      "riskLevel": "high",
-      "riskReasons": [
-        "high risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Cloud CISO Perspectives: Sticking to security fundamentals in the AI era",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-ACC7824758B45B9E",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "FinOps for the AI era: New flexible billing and cost controls for agents",
-      "canonicalUrl": "https://cloud.google.com/blog/products/ai-machine-learning/flexible-billing-and-cost-controls-for-agents-on-google-cloud",
-      "publishedAt": "2026-08-26T13:30:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><strong><span style=\"vertical-align: baseline;\">Editor's note:</span></strong><em><span style=\"vertical-align: baseline;\"> A product image was updated after initial publication.</span></em></p> <hr/> <p><span style=\"vertical-align: baselin",
-      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><strong><span style=\"vertical-align: baseline;\">Editor's note:</span></strong><em><span style=\"vertical-align: baseline",
-      "eventKey": "event-7242d0067145d2ab",
-      "contentFingerprint": "279cad5ae3bede16",
-      "riskLevel": "high",
-      "riskReasons": [
-        "high risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜FinOps for the AI era: New flexible billing and cost controls for agents",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-AF97207834EA86A3",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "How Box is unlocking multimodal enterprise agents with Gemini Embeddings 2",
-      "canonicalUrl": "https://cloud.google.com/blog/topics/partners/box-ai-agents-gemini-embeddings-multimodal-enterprise-ai",
-      "publishedAt": "2026-08-18T16:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Enterprise content management is experiencing its biggest architectural shift since the cloud migration era. </span></p> <p><span style=\"vertical-align: baseline;\">For years, enterprises have stored",
-      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Enterprise content management is experiencing its biggest architectural shift s",
-      "eventKey": "event-8d4df305d841564f",
-      "contentFingerprint": "e2d1aa69a1e7b5b6",
-      "riskLevel": "high",
-      "riskReasons": [
-        "high risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜How Box is unlocking multimodal enterprise agents with Gemini Embeddings 2",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-AFF8511B091CA4F1",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "What’s new in AI infrastructure and orchestration in August",
-      "canonicalUrl": "https://cloud.google.com/blog/topics/ai-infrastructure/whats-new-in-ai-infrastructure-this-month",
-      "publishedAt": "2026-08-31T16:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Welcome back to </span><span style=\"font-style: italic; vertical-align: baseline;\">What’s new in AI infrastructure and orchestration this month</span><span style=\"vertical-align: baseline;\">, a colle",
-      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Welcome back to </span><span style=\"font-style: italic; vertical-align: baselin",
-      "eventKey": "event-5a49a9e1cd8330d5",
-      "contentFingerprint": "7691d8fcaf777cdf",
-      "riskLevel": "medium",
-      "riskReasons": [
-        "medium risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜What’s new in AI infrastructure and orchestration in August",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-B155D4689A5D503D",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "Reimagining work: How Pythian’s internal AI playbook delivers customer ROI",
-      "canonicalUrl": "https://cloud.google.com/blog/topics/startups/how-pythians-internal-ai-playbook-delivers-customer-roi",
-      "publishedAt": "2026-08-27T16:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">When </span><a href=\"https://www.pythian.com/\" rel=\"noopener\" target=\"_blank\"><span style=\"text-decoration: underline; vertical-align: baseline;\">Pythian</span></a><span style=\"vertical-align: baseli",
-      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">When </span><a href=\"https://www.pythian.com/\" rel=\"noopener\" target=\"_blank\"><",
-      "eventKey": "event-3d94d00b19606ea4",
-      "contentFingerprint": "40b2ee24370a3977",
-      "riskLevel": "medium",
-      "riskReasons": [
-        "medium risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Reimagining work: How Pythian’s internal AI playbook delivers customer ROI",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-B2479BDB39406DC6",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "10 questions every startup should answer before moving to production with their AI prototype",
-      "canonicalUrl": "https://cloud.google.com/blog/topics/developers-practitioners/10-questions-for-your-startup-developers",
-      "publishedAt": "2026-08-20T16:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">It’s never been easier to start an AI-powered startup on Google Cloud. </span></p> <p><span style=\"vertical-align: baseline;\">You grab an API key from </span><a href=\"https://aistudio.google.com/\" re",
-      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">It’s never been easier to start an AI-powered startup on Google Cloud. </span><",
-      "eventKey": "event-45efa3a470132517",
-      "contentFingerprint": "2f5565d70202a2be",
-      "riskLevel": "medium",
-      "riskReasons": [
-        "medium risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜10 questions every startup should answer before moving to production with their AI prototype",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "gpt-6-prompt-caching-tco",
+        "kind": "update",
+        "domains": [
+          "ai_technology",
+          "enterprise_sales"
+        ],
+        "topicSlugs": [
+          "ai-poc-scale",
+          "agent-business-model"
+        ],
+        "tags": [
+          "提示缓存",
+          "TCO",
+          "成本优化",
+          "GPT-6"
+        ],
+        "toolIds": [
+          "value-hypothesis-one-pager"
+        ],
+        "audience": [
+          "solution",
+          "ai_ae"
+        ],
+        "freshness": "current",
+        "conclusionScope": "single_authority",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [
+          {
+            "sourceId": "openai-news-rss",
+            "title": "Introducing GPT-6 Sol and Luna",
+            "publisher": "OpenAI News",
+            "url": "https://openai.com/index/introducing-gpt-6-sol-and-luna",
+            "publishedAt": "2026-09-22T18:00:00.000Z",
+            "level": "official",
+            "language": "en",
+            "dateBasis": "published"
+          }
+        ],
+        "supportingFacts": [
+          {
+            "statement": "OpenAI 称 GPT-6 通过更高的缓存命中率、新的诊断工具、显式断点和相关控制来降低延迟与成本。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "OpenAI 披露其评估中的缓存命中率在一周内从 83% 提升至 91%，缓存输入 token 折扣最高可达 90%。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "OpenAI 同日发布 GPT-6 Sol 与 Luna，强调在能力与成本之间提供不同平衡。",
+            "evidenceIndexes": [
+              2
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "重复出现的提示前缀被缓存后无需重新计算，命中率越高，输入 token 的有效单价与响应延迟越低；诊断工具让开发者能定位未命中的原因。",
+          "businessValue": "对长上下文、多轮调用的 Agent 场景，缓存优化可能比更换模型更快地降低成本，并让成本可解释、可优化。",
+          "boundary": "83% 到 91% 为 OpenAI 自有评估口径，客户实际命中率取决于提示结构与调用模式；折扣比例、缓存有效时长以官方文档为准。"
+        },
+        "changeWindow": "within_30_days",
+        "factType": "company_claim",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。起草环境无法直接访问 openai.com，产品定位依据 OpenAI RSS 原文摘要；具体数字与日期依据多家媒体对原文的转述交叉核对（AlphaSignal、Crypto Briefing，并参考 OpenAI 开发者文档搜索摘要）。批准前请对照 OpenAI 原文逐项核实数字，与原文不符时以原文为准并修改或删除该事实。"
+      }
     },
     {
       "candidateId": "ED-BA8B5946D84F966B",
@@ -1365,227 +606,86 @@
       "editorialDraft": {
         "mode": "deterministic_fallback",
         "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜How Orange built FinOps accountability, and why agents are next",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
+        "titleZh": "Orange 的 FinOps 实践：成本责任靠组织机制落地，Agent 负责扩展到更多团队",
+        "summaryZh": "Google Cloud 记录了 Orange 如何通过 100 多人的 FinOps 社区、FinOps Clean Days 与游戏化活动，把云与 AI 成本变成各团队共担的责任，并探索用 AI Agent 触达中心团队覆盖不到的工程师。",
+        "whyItMattersZh": "AI 支出增长快且分散在各团队，谁对成本负责往往不清楚；这个案例说明成本治理首先是组织变革问题，其次才是工具问题。",
+        "salesImplicationZh": "当客户担心 AI 成本失控时，可以把“成本透明+责任共担机制”作为扩容方案的一部分，而不是只承诺降价。",
+        "roleOrgImplicationZh": "FinOps 从中心团队的专项工作变成跨团队实践；Agent 可以承担分析与提醒等重复工作，但需要明确责任人。",
+        "nextActionZh": "用“干系人与组织采用风险清单”为一个扩容中的客户识别谁对 AI 花费负责、有无定期复盘机制，以及能否引入类似的集中清理日。"
       },
       "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-BC1DF34AFAE5455A",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "OpenAI extends cyber access to Ukraine for civilian defense",
-      "canonicalUrl": "https://openai.com/index/openai-extends-cyber-access-to-ukraine-for-civilian-defense",
-      "publishedAt": "2026-09-23T13:00:00.000Z",
-      "fetchedAt": "2026-09-23T13:46:07.928Z",
-      "sourceSummary": "OpenAI is extending access to its Daybreak program to the Government of Ukraine to support the cyber defense of civilian infrastructure.",
-      "evidenceExcerpt": "OpenAI is extending access to its Daybreak program to the Government of Ukraine to support the cyber defense of civilian infrastructure.",
-      "eventKey": "event-7a1cfb6cc92dcff7",
-      "contentFingerprint": "02fb6669074b0085",
-      "riskLevel": "high",
-      "riskReasons": [
-        "high risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜OpenAI extends cyber access to Ukraine for civilian defense",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-BD08F81492402E85",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Higgsfield AI ships new video features in a day with GPT-6 Astra",
-      "canonicalUrl": "https://openai.com/index/higgsfield-from-prompt-to-production-with-astra",
-      "publishedAt": "2026-09-21T12:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "With GPT-6 Astra, Higgsfield AI makes video ad creation easier for small businesses and brings new creative tools to market faster.",
-      "evidenceExcerpt": "With GPT-6 Astra, Higgsfield AI makes video ad creation easier for small businesses and brings new creative tools to market faster.",
-      "eventKey": "event-957fc9d242cc4087",
-      "contentFingerprint": "f794d583a4096f3c",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Higgsfield AI ships new video features in a day with GPT-6 Astra",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-C10AD01A5D9D2A21",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Expanding AI access and cyber defense for federal, state, local, and tribal governments",
-      "canonicalUrl": "https://openai.com/index/expanding-ai-access-us-government",
-      "publishedAt": "2026-09-10T07:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "OpenAI and GSA will offer eligible federal, state, local, and tribal governments $0 license fees, 50% off usage, and expanded cyber defense support.",
-      "evidenceExcerpt": "OpenAI and GSA will offer eligible federal, state, local, and tribal governments $0 license fees, 50% off usage, and expanded cyber defense support.",
-      "eventKey": "event-8760a6ff204df1ae",
-      "contentFingerprint": "67e8b9346640a384",
-      "riskLevel": "high",
-      "riskReasons": [
-        "high risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Expanding AI access and cyber defense for federal, state, local, and tribal governments",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-C388CD4130CE37B2",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "How KDDI built Buffmee, a faster, reliable consumer RAG app",
-      "canonicalUrl": "https://cloud.google.com/blog/topics/customers/how-kddi-optimized-rag-performance-with-agent-development-kit",
-      "publishedAt": "2026-09-08T16:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">When building consumer-facing generative AI applications, balancing high generation quality with fast response times across diverse media types, can be challenging. KDDI, a major telecommunications c",
-      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">When building consumer-facing generative AI applications, balancing high genera",
-      "eventKey": "event-a9cfa2154a8fcbe1",
-      "contentFingerprint": "f0efd6128bffe701",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜How KDDI built Buffmee, a faster, reliable consumer RAG app",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-C4435C9B9B09FCFA",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Rapidly scaling online storage to serve over 1 billion ChatGPT users",
-      "canonicalUrl": "https://openai.com/index/scaling-storage-one-billion-users-part-one",
-      "publishedAt": "2026-09-11T10:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "Learn how OpenAI evolved Habitat from a Python library into a globally distributed storage platform serving 1 billion ChatGPT users and 22M requests per second.",
-      "evidenceExcerpt": "Learn how OpenAI evolved Habitat from a Python library into a globally distributed storage platform serving 1 billion ChatGPT users and 22M requests per second.",
-      "eventKey": "event-6ac7e555f71607ad",
-      "contentFingerprint": "134a0aa5f035f85c",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Rapidly scaling online storage to serve over 1 billion ChatGPT users",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-C7A47194243317F3",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Grab and OpenAI bring practical AI skills to Southeast Asia",
-      "canonicalUrl": "https://openai.com/index/grab-openai-ai-skills-southeast-asia",
-      "publishedAt": "2026-09-23T00:00:00.000Z",
-      "fetchedAt": "2026-09-23T13:46:07.928Z",
-      "sourceSummary": "OpenAI and Grab launch GO Forward with AI, a regional programme helping 30,000 partners build practical AI skills across Southeast Asia.",
-      "evidenceExcerpt": "OpenAI and Grab launch GO Forward with AI, a regional programme helping 30,000 partners build practical AI skills across Southeast Asia.",
-      "eventKey": "event-ab37d292a38c00e8",
-      "contentFingerprint": "9cedea98ec12941e",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Grab and OpenAI bring practical AI skills to Southeast Asia",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-D5F097D4863484FC",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Expanding OpenAI Academy with new learning paths",
-      "canonicalUrl": "https://openai.com/index/expanding-openai-academy-with-new-learning-paths",
-      "publishedAt": "2026-09-21T07:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "Explore new OpenAI Academy learning paths for employees, developers, leaders, educators, and students to build and demonstrate practical AI skills.",
-      "evidenceExcerpt": "Explore new OpenAI Academy learning paths for employees, developers, leaders, educators, and students to build and demonstrate practical AI skills.",
-      "eventKey": "event-8172f35e0aebda8f",
-      "contentFingerprint": "2b594fe01dca24f8",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Expanding OpenAI Academy with new learning paths",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "orange-finops-shared-accountability-agents",
+        "kind": "case",
+        "domains": [
+          "role_org",
+          "enterprise_sales"
+        ],
+        "topicSlugs": [
+          "workflow-adoption",
+          "ai-poc-scale"
+        ],
+        "tags": [
+          "FinOps",
+          "成本治理",
+          "组织变革",
+          "Agent"
+        ],
+        "toolIds": [
+          "stakeholder-adoption-risk"
+        ],
+        "audience": [
+          "sales_leader",
+          "customer_success",
+          "solution"
+        ],
+        "freshness": "current",
+        "conclusionScope": "cross_organization",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [
+          {
+            "sourceId": "openai-news-rss",
+            "title": "How to connect AI usage to business value",
+            "publisher": "OpenAI News",
+            "url": "https://openai.com/index/how-to-connect-ai-usage-to-business-value",
+            "publishedAt": "2026-09-16T12:00:00.000Z",
+            "level": "official",
+            "language": "en",
+            "dateBasis": "published"
+          }
+        ],
+        "supportingFacts": [
+          {
+            "statement": "Google Cloud 介绍，Orange 的 FinOps 社区超过 100 人，通过 FinOps Clean Days 与游戏化黑客松推动工程团队清理云支出，该社区在内部的 NPS 超过 70。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "文章指出，中心 FinOps 团队无法直接触达数千名工程师，AI Agent 可承担耗时的复杂分析，并降低个人参与 FinOps 的摩擦。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "OpenAI 介绍的管理分析能力可汇总 ChatGPT Work 与 Codex 的用量与花费，并通过 Admin API 与业务系统数据结合。",
+            "evidenceIndexes": [
+              2
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "受保护的集中时间、社区带教与可见的激励，把成本优化从“与交付争时间”的额外工作变成团队共同行为；Agent 则把中心团队的分析能力复制给更多人。",
+          "businessValue": "成本透明与责任共担让 AI 扩容更容易获得预算批准，也降低了因成本失控而缩减项目的风险。",
+          "boundary": "单一客户案例，由厂商顾问撰写；NPS 为企业内部口径；Agent 扩展部分是方向性建议，尚无效果数据。"
+        },
+        "changeWindow": "within_90_days",
+        "factType": "company_claim",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。已直接读取 Google Cloud 原文核对 100 多人社区、Clean Days、NPS 超过 70 与 Agent 扩展表述。起草环境无法直接访问 openai.com，产品定位依据 OpenAI RSS 原文摘要；具体数字与日期依据多家媒体对原文的转述交叉核对（.NET Ramblings 转载及搜索摘要）。批准前请对照 OpenAI 原文逐项核实数字，与原文不符时以原文为准并修改或删除该事实。"
+      }
     },
     {
       "candidateId": "ED-D68287D73E57B1DB",
@@ -1607,166 +707,89 @@
       "editorialDraft": {
         "mode": "deterministic_fallback",
         "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜How to connect AI usage to business value",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
+        "titleZh": "把 AI 使用量连到业务价值：用量分析只是起点，价值要由业务负责人共同认定",
+        "summaryZh": "OpenAI 介绍 ChatGPT Work 与 Codex 的管理分析能力，可汇总用量、花费、任务与部分产出指标；Google Cloud 记录的 Orange 案例则说明，成本与价值的责任需要通过社区、机制和激励落实到每个团队。",
+        "whyItMattersZh": "企业 AI 的续约和扩容越来越取决于能否证明价值；只报告活跃用户和 token 消耗，回答不了预算方的问题。",
+        "salesImplicationZh": "在销售与客户成功阶段，提前与客户约定“用量—流程—业务结果”三层口径，并确定由哪位业务负责人确认价值，避免续约时只有用量数据。",
+        "roleOrgImplicationZh": "客户成功岗位需要从“推动使用”升级为“与业务方共同认定价值”，管理员报表要与业务系统数据（如工单解决时长）结合。",
+        "nextActionZh": "为一个已上线客户列出三层指标表：用量（活跃用户、花费）、流程（任务类型、完成时间）、结果（业务 KPI），并标注每层的数据来源与确认人。"
       },
       "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-DA9E4DB2A6E346D2",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Build more natural voice experiences with GPT‑Live‑1 in the API",
-      "canonicalUrl": "https://openai.com/index/introducing-gpt-live-1-in-the-api",
-      "publishedAt": "2026-09-10T00:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "GPT‑Live‑1 brings natural, full-duplex voice conversations to the API, with stronger instruction following, custom voices, and telephony support.",
-      "evidenceExcerpt": "GPT‑Live‑1 brings natural, full-duplex voice conversations to the API, with stronger instruction following, custom voices, and telephony support.",
-      "eventKey": "event-a47534e4c4e6e1b0",
-      "contentFingerprint": "e3ff8339eb3ca2a1",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Build more natural voice experiences with GPT‑Live‑1 in the API",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-DE850D8BA9A43D6C",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Parallel cut research time and cost in half with GPT‑6 Astra",
-      "canonicalUrl": "https://openai.com/index/parallel-cuts-time-and-cost-with-astra",
-      "publishedAt": "2026-09-22T12:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "GPT‑6 Astra allowed Parallel’s agents to research and synthesize labor-market data in half the time and at half the cost vs. prior models.",
-      "evidenceExcerpt": "GPT‑6 Astra allowed Parallel’s agents to research and synthesize labor-market data in half the time and at half the cost vs. prior models.",
-      "eventKey": "event-a33940e0a4777103",
-      "contentFingerprint": "29b4a5184cfa780f",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Parallel cut research time and cost in half with GPT‑6 Astra",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-DFEF0D6941B0110A",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "Spanner migrations: Automating dual-write with Antigravity CLI for minimal disruption",
-      "canonicalUrl": "https://cloud.google.com/blog/topics/developers-practitioners/using-antigravity-cli-to-streamline-dual-write-database-migration",
-      "publishedAt": "2026-09-04T16:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">When Google's Finance Engineering team needed to modernize their legacy data layer, they chose </span><a href=\"https://cloud.google.com/spanner?e=48754805\"><span style=\"text-decoration: underline; ve",
-      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">When Google's Finance Engineering team needed to modernize their legacy data la",
-      "eventKey": "event-ce065a14fc983c46",
-      "contentFingerprint": "3985e22c363d3516",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Spanner migrations: Automating dual-write with Antigravity CLI for minimal disruption",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-E4EADF538B2C01E3",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Priorities and principles for effective third party assessments",
-      "canonicalUrl": "https://openai.com/index/priorities-principles-third-party-assessments",
-      "publishedAt": "2026-09-22T00:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "OpenAI outlines priorities and principles for rigorous, secure, and independent third-party AI safety assessments of frontier models and safeguards.",
-      "evidenceExcerpt": "OpenAI outlines priorities and principles for rigorous, secure, and independent third-party AI safety assessments of frontier models and safeguards.",
-      "eventKey": "event-133fe14027030022",
-      "contentFingerprint": "99b38839c67b6e21",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Priorities and principles for effective third party assessments",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-E6FF96D60FBA5C51",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "Now introducing Gemini Enterprise for Legal",
-      "canonicalUrl": "https://cloud.google.com/blog/products/ai-machine-learning/introducing-gemini-enterprise-for-legal",
-      "publishedAt": "2026-08-25T12:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Few professions are as exacting as the practice of law. A team reviewing a contract or building a case works inside strictly privileged information, firm-specific playbooks, and a body of law that ch",
-      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Few professions are as exacting as the practice of law. A team reviewing a cont",
-      "eventKey": "event-41b7802b5269815e",
-      "contentFingerprint": "d91778ed779dd4dd",
-      "riskLevel": "high",
-      "riskReasons": [
-        "high risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Now introducing Gemini Enterprise for Legal",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "connect-ai-usage-to-business-value",
+        "kind": "method",
+        "domains": [
+          "enterprise_sales",
+          "role_org"
+        ],
+        "topicSlugs": [
+          "ai-poc-scale",
+          "workflow-adoption",
+          "ai-buying-committee"
+        ],
+        "tags": [
+          "价值证明",
+          "续约扩容",
+          "用量分析",
+          "客户成功"
+        ],
+        "toolIds": [
+          "value-hypothesis-one-pager",
+          "ai-maturity-scan"
+        ],
+        "audience": [
+          "ai_ae",
+          "sales_leader",
+          "customer_success",
+          "transitioning_seller"
+        ],
+        "freshness": "current",
+        "conclusionScope": "cross_organization",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [
+          {
+            "sourceId": "google-cloud-ai-blog",
+            "title": "How Orange built FinOps accountability, and why agents are next",
+            "publisher": "Google Cloud Blog",
+            "url": "https://cloud.google.com/blog/topics/telecommunications/how-orange-uses-agents-to-make-finops-everyones-responsibility",
+            "publishedAt": "2026-09-16T16:00:00.000Z",
+            "level": "official",
+            "language": "en",
+            "dateBasis": "published"
+          }
+        ],
+        "supportingFacts": [
+          {
+            "statement": "OpenAI 称 ChatGPT Admin Console 的分析功能汇总 ChatGPT Work 与 Codex 的用量与花费、任务洞察和产出指标，并可通过 Admin API 与业务系统数据结合。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "OpenAI 指出，用量与任务数据只是起点，需要业务负责人补充流程变化、结果是否改善及改善价值等背景才能评估价值。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "Google Cloud 介绍，Orange 通过 100 多人的 FinOps 社区、FinOps Clean Days 和游戏化活动推动成本责任共担，并探索用 AI Agent 扩展到中心团队覆盖不到的工程师。",
+            "evidenceIndexes": [
+              2
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "用量数据只说明“用了多少”；只有与流程和业务结果结合、并由业务方确认，才形成可用于预算决策的价值证据，而组织机制决定这些数据是否有人采取行动。",
+          "businessValue": "为续约、扩容和预算争取提供可审计的证据链，也帮助销售与客户成功识别低采用团队和培训需求。",
+          "boundary": "OpenAI 的分析能力只覆盖其自有产品内的数据；Orange 是厂商博客记录的单一客户实践，相关数字为企业自述，不能推广为普遍效果。"
+        },
+        "changeWindow": "within_90_days",
+        "factType": "editorial_inference",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。已直接读取 Google Cloud 关于 Orange 的原文并核对 100 多人社区、Clean Days 与 Agent 扩展的表述。起草环境无法直接访问 openai.com，产品定位依据 OpenAI RSS 原文摘要；具体数字与日期依据多家媒体对原文的转述交叉核对（.NET Ramblings 转载及搜索摘要）。批准前请对照 OpenAI 原文逐项核实数字，与原文不符时以原文为准并修改或删除该事实。"
+      }
     },
     {
       "candidateId": "ED-E7025780767CE943",
@@ -1789,106 +812,88 @@
       "editorialDraft": {
         "mode": "deterministic_fallback",
         "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Introducing ChatGPT for Financial Services",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
+        "titleZh": "ChatGPT for Financial Services 发布：通用模型厂商开始打包“模型+行业数据+工作流”",
+        "summaryZh": "OpenAI 推出面向金融服务的 ChatGPT Work 定制版本，结合内置金融数据与 GPT-6 Astra，用于研究、建模与客户材料；Google 也已为 Gemini Enterprise 推出法律和金融服务行业方案。",
+        "whyItMattersZh": "两大厂商同时切入金融等强监管行业，竞争从模型能力转向行业数据、预置工作流与治理控制，行业 ISV 和集成商会直接感受到压力。",
+        "salesImplicationZh": "面向金融客户时，要准备与“厂商行业版”的对比：数据源覆盖、引用可追溯、合规控制、与现有系统的集成，以及客户自有数据如何接入。",
+        "roleOrgImplicationZh": "售前需要懂行业工作流（研究、估值、建模、路演材料）的人，而不仅是懂模型的人；合规与风控应在发现阶段就参与。",
+        "nextActionZh": "用“客户发现访谈”问清目标金融客户的三个高频分析流程与数据来源，判断厂商行业版能覆盖多少、缺口在哪里。"
       },
       "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-EF4DAA0F5AD1CD6E",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "An Alien Mind",
-      "canonicalUrl": "https://openai.com/index/an-alien-mind",
-      "publishedAt": "2026-09-06T09:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "Jakub Pachocki reflects on increasingly capable AI and the challenge of keeping it aligned. He calls for stronger safeguards and international coordination.",
-      "evidenceExcerpt": "Jakub Pachocki reflects on increasingly capable AI and the challenge of keeping it aligned. He calls for stronger safeguards and international coordination.",
-      "eventKey": "event-b792e214469e19a2",
-      "contentFingerprint": "4eabf8a9b298fa7b",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜An Alien Mind",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-EFCFB7CC2C96B234",
-      "sourceId": "google-cloud-ai-blog",
-      "sourceName": "AI & Machine Learning",
-      "originalTitle": "Getting started with Mantis, our open-source bug finding-and-fixing harness",
-      "canonicalUrl": "https://cloud.google.com/blog/products/identity-security/getting-started-with-the-mantis-harness-to-find-and-fix-bugs",
-      "publishedAt": "2026-09-02T16:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">AI models have clearly proven their ability to discover and exploit vulnerabilities without much, if any, human assistance. To help defenders gain the advantage with AI, we built the Mantis harness t",
-      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">AI models have clearly proven their ability to discover and exploit vulnerabili",
-      "eventKey": "event-0cd1d1b5571066d0",
-      "contentFingerprint": "842e38b4d8a65fec",
-      "riskLevel": "medium",
-      "riskReasons": [
-        "medium risk requires manual review",
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Getting started with Mantis, our open-source bug finding-and-fixing harness",
-        "summaryZh": "Google Cloud AI & Machine Learning Blog 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
-    },
-    {
-      "candidateId": "ED-FEE1F192A18443F4",
-      "sourceId": "openai-news-rss",
-      "sourceName": "OpenAI News",
-      "originalTitle": "Building standards for the next phase of AI",
-      "canonicalUrl": "https://openai.com/index/building-standards-next-phase-ai",
-      "publishedAt": "2026-09-21T10:00:00.000Z",
-      "fetchedAt": "2026-09-23T01:33:47.303Z",
-      "sourceSummary": "OpenAI outlines a path to shared global AI standards, calling for coordinated evaluation, reporting, and governance to improve safety.",
-      "evidenceExcerpt": "OpenAI outlines a path to shared global AI standards, calling for coordinated evaluation, reporting, and governance to improve safety.",
-      "eventKey": "event-b8af71e01a3f40be",
-      "contentFingerprint": "b816d1ed106c44be",
-      "riskLevel": "low",
-      "riskReasons": [
-        "automatic publishing is disabled",
-        "publishing stop switch is engaged"
-      ],
-      "editorialDraft": {
-        "mode": "deterministic_fallback",
-        "fallbackReason": "ai_not_configured",
-        "titleZh": "官方更新候选｜Building standards for the next phase of AI",
-        "summaryZh": "OpenAI News RSS 发布了这项更新。当前仅保留官方来源元数据，需人工核验原文后补充中文摘要。",
-        "whyItMattersZh": "与目标用户的关联尚待人工判断，不由模型自动下结论。",
-        "salesImplicationZh": "请结合具体客户场景核对其对大客户销售的实际影响。",
-        "roleOrgImplicationZh": "请核对岗位分工、组织采用条件与适用边界。",
-        "nextActionZh": "阅读官方原文并补充第二项独立事实，再决定是否进入公开候选。"
-      },
-      "reviewState": "pending_owner_review",
-      "publicationState": "not_published"
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "chatgpt-financial-services-vertical",
+        "kind": "update",
+        "domains": [
+          "enterprise_sales",
+          "ai_technology"
+        ],
+        "topicSlugs": [
+          "workflow-adoption",
+          "ai-trust-governance",
+          "ai-buying-committee"
+        ],
+        "tags": [
+          "金融服务",
+          "行业方案",
+          "行业数据",
+          "竞争格局"
+        ],
+        "toolIds": [
+          "discovery-interview",
+          "poc-success-canvas"
+        ],
+        "audience": [
+          "ai_ae",
+          "solution",
+          "sales_leader"
+        ],
+        "freshness": "current",
+        "conclusionScope": "cross_organization",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [
+          {
+            "sourceId": "google-cloud-ai-blog",
+            "title": "Google is a Leader in the 2026 Gartner® Magic Quadrant™ for Enterprise AI Assistants",
+            "publisher": "Google Cloud Blog",
+            "url": "https://cloud.google.com/blog/products/ai-machine-learning/google-is-a-leader-in-2026-gartner-magic-quadrant-for-enterprise-ai-assistants",
+            "publishedAt": "2026-09-09T18:00:00.000Z",
+            "level": "official",
+            "language": "en",
+            "dateBasis": "published"
+          }
+        ],
+        "supportingFacts": [
+          {
+            "statement": "OpenAI 称 ChatGPT for Financial Services 结合内置金融数据与 GPT-6 Astra，用于研究、建模与面向客户的材料制作。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "该产品与摩根士丹利、Evercore 合作设计，内置 Daloopa、PitchBook、LSEG News、Crunchbase 等数据，初期聚焦投行与股票研究流程。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "Google Cloud 称其已为 Gemini Enterprise 推出面向法律与金融服务的专门方案，包含预置 Agent、领域技能、安全数据连接器和合作伙伴生态。",
+            "evidenceIndexes": [
+              2
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "行业数据授权与预置工作流构成模型之外的差异化，厂商通过打包降低客户的集成成本，同时提高迁移门槛。",
+          "businessValue": "客户能更快落地高价值行业场景；对销售而言，行业方案缩短 POC 周期，但也提高了与厂商原生能力正面对比的门槛。",
+          "boundary": "合作方、数据源与适用流程来自厂商发布及媒体转述；可用地区、价格与合规认证未核实，中国市场可用性需另行确认。"
+        },
+        "changeWindow": "within_90_days",
+        "factType": "company_claim",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。已直接读取 Google Cloud 原文核对行业方案表述。起草环境无法直接访问 openai.com，产品定位依据 OpenAI RSS 原文摘要；具体数字与日期依据多家媒体对原文的转述交叉核对（Pulse 2.0、Analytics Insight、Technology.org）。批准前请对照 OpenAI 原文逐项核实数字，与原文不符时以原文为准并修改或删除该事实。原候选风险等级为 medium。"
+      }
     }
   ],
   "manualReviewRecords": []
