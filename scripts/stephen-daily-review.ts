@@ -1172,6 +1172,7 @@ function renderPrBody(
     '> 这是 GitHub Draft PR 人工审核队列。AI 只生成候选文案；风险、审核和发布状态不由 AI 决定。',
     '> **公开可见提示：** 本仓库是 public 仓库，候选内容和审核记录即使尚未在网站发布，也会随本 Draft PR 对公众可见。',
     '> SAAS-606 不会修改正式公开集合，也不会触发生产部署。',
+    '> **不要直接合并候选 PR：** 保持 Draft；候选 CI 通过不代表内容获批。逐条终审后，由项目所有者从 `main` 运行 `approve-reviewed-content.yml`，绑定当前完整 SHA。该流程会先移除审核文件、转为正式内容，再合并。',
     ...(context.mode === 'fixture'
       ? ['> **fixture 验收：** 本 PR 只用于流程验收，base 必须是 SAAS-606 功能分支。']
       : []),
@@ -1411,6 +1412,13 @@ export function validateDailyIntakeWorkflow(workflow: string) {
     'git add -- ":(top)$MANIFEST_PATH" ":(top)$LEDGER_PATH"',
   )) {
     throw new Error('workflow must stage candidate files from the repository root');
+  }
+  if (!workflow.includes(
+    'git fetch origin "refs/heads/$TARGET_BASE:refs/remotes/origin/$TARGET_BASE"\n'
+      + '          bash scripts/check-candidate-base.sh "origin/$TARGET_BASE"\n'
+      + '          if git ls-remote',
+  )) {
+    throw new Error('workflow must reject candidate files on the fetched base before reusing or creating a candidate branch');
   }
   if (!workflow.includes(
     'git diff --name-only -z "origin/$TARGET_BASE...origin/$CANDIDATE_BRANCH"',

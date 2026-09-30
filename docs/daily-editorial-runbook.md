@@ -314,6 +314,27 @@ gh workflow run daily-candidate-review.yml \
 
 验收 PR 的 head 为 `codex/stephen-daily-test-2026-08-24`，因此即使误合并也只进入功能分支，不直接影响 `main`、正式公开集合或生产站点。该 Draft PR 在 public 仓库中公开可见。验收完成后停在项目所有者审核门；工作流本身不部署，也不能触发私有生产运维。
 
+### 12.5 候选误合入默认分支后的恢复
+
+**不要直接合并候选 Draft PR。** 候选 CI 全绿只说明这批文件可留在同日期审核分支，不代表人工批准。所有者须按第 13 节运行 `approve-reviewed-content.yml`；该流程先移除 manifest 和 ledger，再转为正式内容并合并。
+
+每日工作流拉取目标 base 后，会在切换候选分支、安装依赖及采集前运行 `scripts/check-candidate-base.sh`。base 含任意 `review-candidates` 路径，或 Git 无法读取 base 时立即停止。检查不会删除、移动或自动批准候选；最终公开审计仍拒绝其他日期的候选和普通分支上的原始候选。
+
+若出现 `target base contains unapproved review candidates`：
+
+1. 确认误合并提交，按完整 SHA 备份 manifest 与 ledger，保留编辑文案、`publicationDraft` 和发现记录。
+2. 单独提交清理 PR，从默认分支当前文件树移除误入的原始候选；不得放宽审计、移动到网站公开集合或伪造批准记录。
+3. 清理 PR 经审核合入后，等待精确 `main` SHA 的完整检查通过。随后等待已有定时任务；手动触发新的 live 运行须另获授权。重跑旧失败运行会使用旧控制版本，不作为修复验收。
+4. 已合并的旧 PR 不能再次作为 open Draft 批准。需继续审核的编辑稿，经授权迁入新的有效候选 Draft，核对全部字段并以新的完整 SHA 重新人工批准。
+
+2026-09-24 的 PR #18 直接合入了 `review-candidates/2026-09-23/` 两文件，导致后续候选任务的公开审计失败。该 manifest 含 9 条已有 `publicationDraft` 的编辑稿，仍为 `pending_owner_review / not_published`。清理仅修复当前文件树，历史提交中的编辑稿继续保留，且已公开的历史不会变为私有。精确恢复源：
+
+- [候选提交 `960c64fc1782fd629b76db3a1bafdc82d4dd2e36`](https://github.com/ZiZ-LG/stephen-knowledge-hub/commit/960c64fc1782fd629b76db3a1bafdc82d4dd2e36)
+- `review-candidates/2026-09-23/review-manifest.json`，SHA-256：`6c0d666f1dade04e99ce08f4b67db71243ec986fa1540b3569016cccf042d8a8`
+- `review-candidates/2026-09-23/discovery-ledger.json`，SHA-256：`1c2616f33c68c9a6438bcf71cf202b1b385cddac0adeb304a09e50f462c38784`
+
+提前检查和 PR 提示不能阻止拥有合并权限的人绕过流程。服务器端强制限制需单独设计，必须兼容候选 CI 全绿和后续批准封印检查，不可直接让全部候选 PR 检查失败。
+
 ## 13. SAAS-608 精确 SHA 批准、合并与不可变 Release
 
 SAAS-608 不改变每日候选的“待审核、未发布”含义，而是在其后增加一个独立的人工作业门：

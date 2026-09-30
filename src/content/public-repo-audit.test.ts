@@ -19,6 +19,16 @@ function file(path: string, text = 'safe public text'): PublicAuditEntry {
   return { path, type: 'file', bytes: encoder.encode(text) };
 }
 
+function candidatePair(date: string) {
+  return [
+    file(`review-candidates/${date}/discovery-ledger.json`, '{"runs":[]}'),
+    file(
+      `review-candidates/${date}/review-manifest.json`,
+      '{"reviewState":"pending_owner_review","publicationState":"not_published"}',
+    ),
+  ];
+}
+
 function findings(entries: readonly PublicAuditEntry[], branchName = 'codex/bootstrap-extraction') {
   return auditPublicEntries(entries, {
     branchName,
@@ -116,29 +126,54 @@ describe('public repository disclosure audit', () => {
       .toContainEqual({ category: 'ci-write-boundary', path: '.github/workflows/checks.yml' });
   });
 
-  it('rejects candidate files outside the same-date daily branch', () => {
-    const candidate = file(
-      'review-candidates/2026-08-26/review-manifest.json',
-      '{"reviewState":"pending_owner_review","publicationState":"not_published"}',
-    );
+  it.each(['main', 'codex/bootstrap-extraction'])
+  ('rejects the historical raw candidate pair on %s', (branchName) => {
+    const historicalCandidates = candidatePair('2026-09-23');
 
-    expect(findings([candidate]))
-      .toContainEqual({ category: 'candidate-branch', path: candidate.path });
-    expect(findings([candidate], 'codex/stephen-daily-2026-08-25'))
-      .toContainEqual({ category: 'candidate-path', path: candidate.path });
+    expect(findings(historicalCandidates, branchName)).toEqual(
+      historicalCandidates.map(({ path }) => ({ category: 'candidate-branch', path })),
+    );
   });
 
-  it('accepts exactly two bounded same-date candidate JSON files on a daily branch', () => {
-    const date = '2026-08-26';
-    const result = findings([
-      file(
-        `review-candidates/${date}/review-manifest.json`,
-        '{"reviewState":"pending_owner_review","publicationState":"not_published"}',
-      ),
-      file(`review-candidates/${date}/discovery-ledger.json`, '{"runs":[]}'),
-    ], `codex/stephen-daily-${date}`);
+  it('rejects inherited historical candidates even when the current daily pair is complete', () => {
+    const historicalCandidates = candidatePair('2026-09-23');
 
-    expect(result).toEqual([]);
+    expect(findings([
+      ...historicalCandidates,
+      ...candidatePair('2026-09-30'),
+    ], 'codex/stephen-daily-2026-09-30')).toEqual(
+      historicalCandidates.map(({ path }) => ({ category: 'candidate-path', path })),
+    );
+  });
+
+  it.each(['codex/stephen-daily-', 'codex/stephen-daily-test-'])
+  ('accepts exactly the bounded same-date pair on %s branches', (branchPrefix) => {
+    const date = '2026-09-30';
+
+    expect(findings(candidatePair(date), `${branchPrefix}${date}`)).toEqual([]);
+  });
+
+  it.each(['discovery-ledger.json', 'review-manifest.json'])
+  ('rejects a daily pair missing %s', (missingFile) => {
+    const date = '2026-09-30';
+    const missingPath = `review-candidates/${date}/${missingFile}`;
+
+    expect(findings(
+      candidatePair(date).filter(({ path }) => path !== missingPath),
+      `codex/stephen-daily-${date}`,
+    )).toEqual([{ category: 'candidate-set', path: missingPath }]);
+  });
+
+  it('rejects an extra candidate path beside a complete same-date pair', () => {
+    const date = '2026-09-30';
+    const extraCandidate = file(`review-candidates/${date}/extra.json`, '{}');
+
+    expect(findings([
+      ...candidatePair(date),
+      extraCandidate,
+    ], `codex/stephen-daily-${date}`)).toEqual([
+      { category: 'candidate-path', path: extraCandidate.path },
+    ]);
   });
 
   it('requires an MIT notice when a vendored Pretext browser bundle is present', () => {

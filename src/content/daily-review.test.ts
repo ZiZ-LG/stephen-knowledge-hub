@@ -512,6 +512,9 @@ describe('SAAS-606 same-day Draft PR review state', () => {
     expect(artifacts.prBody).toContain('`publicationDraft`');
     expect(artifacts.prBody).toContain('`publicationDraft-required`');
     expect(artifacts.prBody).toContain('当前完整 SHA');
+    expect(artifacts.prBody).toContain('不要直接合并候选 PR');
+    expect(artifacts.prBody).toContain('候选 CI 通过不代表内容获批');
+    expect(artifacts.prBody).toContain('`approve-reviewed-content.yml`');
     expect(artifacts.prBody).toContain('不会修改正式公开集合');
     expect(artifacts.prBody).toContain('本仓库是 public 仓库');
     expect(artifacts.prBody).toContain('会随本 Draft PR 对公众可见');
@@ -706,6 +709,11 @@ jobs:
             exit 1
           fi
       - run: |
+          git fetch origin "refs/heads/$TARGET_BASE:refs/remotes/origin/$TARGET_BASE"
+          bash scripts/check-candidate-base.sh "origin/$TARGET_BASE"
+          if git ls-remote --exit-code --heads origin "refs/heads/$CANDIDATE_BRANCH"; then
+            echo "existing candidate branch"
+          fi
           allowed_manifest="review-candidates/$EDITORIAL_DATE/review-manifest.json"
           allowed_ledger="review-candidates/$EDITORIAL_DATE/discovery-ledger.json"
           for saas606_allowed_file in "$allowed_manifest" "$allowed_ledger"; do
@@ -781,6 +789,22 @@ describe('SAAS-606 GitHub workflow safety contract', () => {
       label: 'Release mutation added to the daily writer',
       workflow: `${validWorkflowContract}\n      - run: gh api repos/$GH_REPO/releases\n`,
       error: 'daily candidate workflow must not mutate tags or Releases',
+    },
+    {
+      label: 'candidate base preflight removed',
+      workflow: validWorkflowContract.replace(
+        '          bash scripts/check-candidate-base.sh "origin/$TARGET_BASE"\n',
+        '',
+      ),
+      error: 'workflow must reject candidate files on the fetched base before reusing or creating a candidate branch',
+    },
+    {
+      label: 'candidate base preflight moved after candidate branch reuse',
+      workflow: validWorkflowContract.replace(
+        '          bash scripts/check-candidate-base.sh "origin/$TARGET_BASE"\n',
+        '',
+      ) + '\n      - run: bash scripts/check-candidate-base.sh "origin/$TARGET_BASE"\n',
+      error: 'workflow must reject candidate files on the fetched base before reusing or creating a candidate branch',
     },
     {
       label: 'wrong Beijing schedule',
