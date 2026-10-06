@@ -4,6 +4,8 @@
 
 本仓库包含网站源码、已经项目所有者批准的公开知识内容，以及“AI 只生成候选稿、人工决定是否采用”的编辑工具。项目所有者可把批准绑定到候选 PR 的完整 SHA；候选转正式内容、精确 SHA CI、merge commit 和不可变 GitHub Release 会形成可追溯闭环。生产服务器配置、发布凭据、流量切换和回滚操作不属于本公开仓库。
 
+行业 AI 汇总按[主题讲解型行业 AI 汇总规范](docs/industry-ai-briefing-standard.md)组织内容：用可追溯材料把一个主题讲清楚，解释首次出现的术语，并帮助读者检查理解。生成工具在运行时读取同一规范；证据、版权与人工审核仍遵守[编辑规则](docs/editorial-policy.md)和[编辑运行手册](docs/daily-editorial-runbook.md)。
+
 ## 本地运行
 
 需要 Node.js 22：

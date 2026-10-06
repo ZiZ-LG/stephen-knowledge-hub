@@ -17,5 +17,7 @@ Contributions that improve AI literacy, complex B2B sales practice, AI roles, an
 4. Do not paste full articles, paywalled text, unlicensed images, personal data, or long quotations.
 5. Mark AI-assisted drafts; AI output remains a candidate until the project owner approves it.
 6. By submitting original content, you agree that it may be distributed under CC BY 4.0.
+7. Follow the [industry AI briefing standard](docs/industry-ai-briefing-standard.md) for explanatory briefings. Explain unfamiliar terms on first use, keep facts distinct from interpretation, and use an understanding-check question with a reference explanation when a business action is not warranted.
+8. An RSS excerpt is a discovery lead, not a verified full article. Identify missing information instead of inventing capabilities, results, or supporting sources. Clearly label teaching scenarios as fictional; never present them as customer facts. Provide only public or authorized non-sensitive business context; any historical comparison must identify the approved items actually supplied.
 
 A candidate in a public Draft PR is publicly visible even when its website publication state is `not_published`. Removing a candidate from a PR does not make an already disclosed commit private.

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
 import { approvedKnowledgeItems } from './content/publicItems';
 import { knowledgeTools } from './content/tools';
@@ -34,6 +34,8 @@ const productScope = {
 } as const;
 const approvedItemIds = approvedKnowledgeItems.map((item) => item.id);
 const knowledgeToolIds = knowledgeTools.map((tool) => tool.id);
+// Teaching drafts are local previews. Production keeps the existing approved-only routes.
+const EditorialExample = import.meta.env.DEV ? lazy(() => import('./examples/RagThemeExample')) : null;
 
 function useBrowserLocation() {
   const readLocation = () => ({
@@ -114,6 +116,9 @@ export default function App() {
   }, [language]);
 
   const page = (() => {
+    if (EditorialExample && location.pathname.replace(/\/+$/, '') === '/editorial-example') {
+      return <Suspense fallback={<p>正在加载内容示范…</p>}><EditorialExample /></Suspense>;
+    }
     switch (route.name) {
       case 'today':
         return (
@@ -227,6 +232,7 @@ export default function App() {
           <p>© 2026 AI Sales Fieldcraft</p>
         </div>
         <div className='footer-links'>
+          {import.meta.env.DEV && <InternalLink href='/editorial-example/'>内容规范示范（本地）</InternalLink>}
           <InternalLink href='/policy/#privacy'>{language === 'zh' ? '隐私' : 'Privacy'}</InternalLink>
           <InternalLink href='/policy/#copyright'>{language === 'zh' ? '版权' : 'Copyright'}</InternalLink>
           <InternalLink href='/policy/#correction'>{language === 'zh' ? '纠错与建议' : 'Corrections'}</InternalLink>
