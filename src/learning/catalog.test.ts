@@ -22,13 +22,14 @@ describe('integrated learning catalog', () => {
       }
     }
   });
-  it('does not expose the unapproved learning batch outside local development', async () => {
+  it('exposes the owner-approved learning revision in the production runtime', async () => {
     vi.stubEnv('DEV', false);
     const access = await import('./access');
-    expect(access.LEARNING_RELEASE_APPROVED).toBe(false);
-    expect(access.learningUnits).toEqual([]);
-    expect(access.learningPractices).toEqual([]);
-    expect(access.findLearningUnit('ai-foundations')).toBeNull();
+    expect(access.LEARNING_RELEASE_APPROVED).toBe(true);
+    expect(access.learningPreview).toBe(false);
+    expect(access.learningUnits).toEqual(learningDraftUnits);
+    expect(access.learningPractices).toEqual(learningPracticeDrafts);
+    expect(access.findLearningUnit('ai-foundations')?.id).toBe('LU-001');
   });
   it('finds lessons through a concept rather than requiring their exact title', async () => {
     const { searchLearningUnits } = await import('./access');

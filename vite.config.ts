@@ -2,7 +2,9 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { fileURLToPath } from 'node:url';
 
-const learningReleaseApproved = false; // Await the owner's review of this content revision.
+// Owner approved review b107923 on 2026-10-06 and requested GitHub sync + deployment.
+// This approval applies to the eight lessons and fourteen exercises in that revision.
+const learningReleaseApproved = true;
 
 export default defineConfig(({ command }) => ({
   base: '/',
@@ -33,8 +35,8 @@ export default defineConfig(({ command }) => ({
       return null;
     },
   }],
-  // Owner review is pending. This compile-time gate also excludes draft chunks.
-  // Set true only for the explicitly approved content revision.
+  // Compile-time gate for the explicitly approved content revision.
+  // A future unapproved content batch must return to preview-only status.
   define: { __LEARNING_RELEASE_APPROVED__: JSON.stringify(learningReleaseApproved) },
   build: {
     outDir: 'dist',

@@ -2,7 +2,7 @@ import { learningDraftUnits } from './catalog';
 import { learningPracticeDrafts, type LearningPractice } from './practice';
 import type { LearningUnit } from './types';
 
-// This batch awaits the owner's review; a successful build is not approval.
+// Approval is version-bound in vite.config.ts; a successful build is not approval.
 export const LEARNING_RELEASE_APPROVED = __LEARNING_RELEASE_APPROVED__;
 export const learningPreview = import.meta.env.DEV && !__LEARNING_RELEASE_APPROVED__;
 export const learningUnits: readonly LearningUnit[] = import.meta.env.DEV || __LEARNING_RELEASE_APPROVED__

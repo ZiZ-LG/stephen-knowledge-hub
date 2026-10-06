@@ -6,13 +6,13 @@
 
 行业 AI 汇总按[主题讲解型行业 AI 汇总规范](docs/industry-ai-briefing-standard.md)组织内容：用可追溯材料把一个主题讲清楚，解释首次出现的术语，并帮助读者检查理解。生成工具在运行时读取同一规范；证据、版权与人工审核仍遵守[编辑规则](docs/editorial-policy.md)和[编辑运行手册](docs/daily-editorial-runbook.md)。
 
-## 学习内容整合审核版
+## 已批准的学习内容整合版
 
 本次把旧手册的可复用方法重写为八个学习单元，连接行业专题和原有八个工具。旧 45 项任务、28 道问题不逐条搬运；固定打卡安排、年份预测和招聘快照归档后停止维护。去向、数据保护与验收范围见[整合审核清单](docs/legacy-content-integration-review.md)。
 
 本地开发入口为 `/learn/`；完整 RAG 图解和条件实验在 `/learn/knowledge-answers/`，`/editorial-example/` 仅保留兼容入口。`/fieldbook/` 已改为退役导航；原 HTML 的[只读档案](docs/archive/fieldbook/README.md)不再作为第二套网站维护。旧浏览器记录在 `/library/#legacy-learning` 只读查看与导出，不转换为新课程完成状态。
 
-新学习内容仍待所有者审核。`vite.config.ts` 中 `learningReleaseApproved=false`，新课只在 DEV 审核入口可见，生产构建排除未批准课程内容。只有批准明确对应本次内容版本后，才可调整该开关并进入获准的 GitHub 同步和发布步骤；构建成功不等于审核或部署通过。本次不改变候选扫描、发布或推送机制，日常运营仍限每天最多 30 分钟。
+2026-10-06，所有者在审阅 `b107923` 后明确要求“推送 GitHub 并部署”。本批八课与十四练习已获批准，`vite.config.ts` 中 `learningReleaseApproved=true`，生产构建包含同一批内容。批准记录见[整合审核清单](docs/legacy-content-integration-review.md)；GitHub 检查与线上部署仍须各自验证。以后新增或实质改写的未批准批次不得沿用本次批准。本次不改变候选扫描、发布或推送机制，日常运营仍限每天最多 30 分钟。
 
 ## 本地运行
 
