@@ -87,6 +87,11 @@ async function scanSource(
       sourceName: source.name,
       sourceUrl: record.canonicalUrl,
       sourceExcerpt: record.evidenceExcerpt,
+      sourceExcerptKind: 'rss_excerpt',
+      context: {
+        informationAsOf: fetchedAt,
+        sourcePublishedAt: record.publishedAt,
+      },
     }, { config: aiConfig });
     return { ...record, editorialDraft };
   }));

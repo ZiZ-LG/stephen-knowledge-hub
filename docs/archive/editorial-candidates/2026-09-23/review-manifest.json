@@ -1,0 +1,900 @@
+{
+  "schemaVersion": 1,
+  "task": "SAAS-606",
+  "editorialDate": "2026-09-23",
+  "generatedAt": "2026-09-23T13:46:07.928Z",
+  "reviewState": "pending_owner_review",
+  "publicationState": "not_published",
+  "controls": {
+    "autoPublishingEnabled": false,
+    "stopSwitchEngaged": true
+  },
+  "candidates": [
+    {
+      "candidateId": "ED-24AE129E1332404C",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Introducing Astra for Law",
+      "canonicalUrl": "https://openai.com/index/astra-for-law",
+      "publishedAt": "2026-09-17T00:00:00.000Z",
+      "fetchedAt": "2026-09-23T01:33:47.303Z",
+      "sourceSummary": "OpenAI for Law brings frontier intelligence for law, custom firm workflows, connected legal data sources, and legal-grade controls for confidential client work.",
+      "evidenceExcerpt": "OpenAI for Law brings frontier intelligence for law, custom firm workflows, connected legal data sources, and legal-grade controls for confidential client work.",
+      "eventKey": "event-5b1e0b471f4b12c4",
+      "contentFingerprint": "89783cf8000018f3",
+      "riskLevel": "high",
+      "riskReasons": [
+        "high risk requires manual review",
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "Astra for Law 发布：法律行业 AI 进入“专用检索索引+受控访问”阶段",
+        "summaryZh": "OpenAI 推出面向法律工作的 GPT-6 Astra 配置，结合法律数据源、律所定制工作流与法律级保密控制，目前通过受信访问计划向部分律所开放；Google 也已为 Gemini Enterprise 推出法律行业方案。",
+        "whyItMattersZh": "法律是对准确性和保密要求最高的行业之一，厂商用专用索引、受控访问和数据保留控制来回应顾虑，这套打法会被复制到其他强监管行业。",
+        "salesImplicationZh": "面向专业服务客户时，重点讨论引用可追溯、错误率边界、数据保留与访问控制，而不是只展示生成效果；公开的准确率远未达到可免审核的程度。",
+        "roleOrgImplicationZh": "律所等专业机构需要设立 AI 产出审核责任人，明确哪些产出必须由律师复核；法律 AI 公司既是厂商客户，也是潜在竞争者。",
+        "nextActionZh": "为一个专业服务客户整理“准确率—审核—保密”三项要求，用“干系人与组织采用风险清单”标出谁对 AI 产出负最终责任。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "astra-for-law-legal-vertical",
+        "kind": "update",
+        "domains": [
+          "enterprise_sales",
+          "ai_technology"
+        ],
+        "topicSlugs": [
+          "ai-trust-governance",
+          "workflow-adoption"
+        ],
+        "tags": [
+          "法律行业",
+          "行业方案",
+          "准确率",
+          "数据保密"
+        ],
+        "toolIds": [
+          "stakeholder-adoption-risk",
+          "discovery-interview"
+        ],
+        "audience": [
+          "ai_ae",
+          "solution",
+          "sales_leader"
+        ],
+        "freshness": "current",
+        "conclusionScope": "cross_organization",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [
+          {
+            "sourceId": "google-cloud-ai-blog",
+            "title": "Google is a Leader in the 2026 Gartner® Magic Quadrant™ for Enterprise AI Assistants",
+            "publisher": "Google Cloud Blog",
+            "url": "https://cloud.google.com/blog/products/ai-machine-learning/google-is-a-leader-in-2026-gartner-magic-quadrant-for-enterprise-ai-assistants",
+            "publishedAt": "2026-09-09T18:00:00.000Z",
+            "level": "official",
+            "language": "en",
+            "dateBasis": "published"
+          }
+        ],
+        "supportingFacts": [
+          {
+            "statement": "OpenAI 称 Astra for Law 为法律工作提供前沿智能、律所定制工作流、法律数据源接入，以及用于保密客户工作的法律级控制。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "Astra for Law 在 Vals AI Legal Research Bench 私有验证集 200 题中的整体正确率为 54%，仅用网页搜索的 GPT-6 Astra 为 38.7%；目前通过受信访问计划向选定律所开放。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "Google Cloud 称其已为 Gemini Enterprise 推出面向法律与金融服务的专门方案，并建立在受治理的控制平面之上。",
+            "evidenceIndexes": [
+              2
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "通用模型加上专用法律检索索引、领域指令和访问控制，把“通用能力”转化为可被专业机构接受的受控产品。",
+          "businessValue": "受控访问与数据保留控制降低了律所的采用顾虑，专用索引提升了检索准确率，为高单价专业服务场景打开市场。",
+          "boundary": "54% 的正确率说明仍必须人工复核，不能作为替代律师的证据；覆盖范围以美国法律为主，中国法律场景不适用；受信访问资格与数据保留条款以官方为准。"
+        },
+        "changeWindow": "within_90_days",
+        "factType": "company_claim",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。原候选风险等级为 high，请重点核对。已直接读取 Google Cloud 原文核对行业方案表述。起草环境无法直接访问 openai.com，产品定位依据 OpenAI RSS 原文摘要；具体数字与日期依据多家媒体对原文的转述交叉核对（SiliconANGLE、Artificial Lawyer、PYMNTS）。批准前请对照 OpenAI 原文逐项核实数字，与原文不符时以原文为准并修改或删除该事实。"
+      }
+    },
+    {
+      "candidateId": "ED-52D58E73C9E4B3FB",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "GPT-6 Astra: The next generation in intelligence for work",
+      "canonicalUrl": "https://openai.com/index/gpt-6-astra-next-generation-work",
+      "publishedAt": "2026-09-09T11:00:00.000Z",
+      "fetchedAt": "2026-09-23T01:33:47.303Z",
+      "sourceSummary": "Meet GPT-6 Astra, OpenAI’s most capable model for business, with advanced reasoning, computer use, and stronger writing and design judgment.",
+      "evidenceExcerpt": "Meet GPT-6 Astra, OpenAI’s most capable model for business, with advanced reasoning, computer use, and stronger writing and design judgment.",
+      "eventKey": "event-b9a1cc93e757ba38",
+      "contentFingerprint": "156256d11597d167",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "GPT-6 Astra 进入 ChatGPT Work、Codex 与 API：高价旗舰主打推理与电脑操作",
+        "summaryZh": "OpenAI 将 GPT-6 Astra 定位为其面向企业最强的模型，强调高级推理、电脑操作以及写作与设计判断，并在 ChatGPT Work、Codex 和 API 中提供。",
+        "whyItMattersZh": "Astra 把“让 AI 直接操作软件完成多步骤任务”推进企业主流产品，客户问题将从“能不能用”转向“哪些流程值得交给高价模型”。",
+        "salesImplicationZh": "Astra 单价明显高于 Sol 与 Luna，销售要把它定位到高价值、高复杂度环节，用任务完成时间和人工步骤减少来证明溢价，而不是全量替换。",
+        "roleOrgImplicationZh": "电脑操作类能力涉及权限、审计和人工复核，IT、安全与业务负责人需要在试点前明确哪些系统允许 Agent 操作。",
+        "nextActionZh": "用“POC 成功画布”为一个客户流程定义 Astra 试点边界：允许操作的系统、人工审批节点，以及与 Sol 对比的成本和完成时间指标。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "gpt-6-astra-business-flagship",
+        "kind": "update",
+        "domains": [
+          "ai_technology",
+          "enterprise_sales"
+        ],
+        "topicSlugs": [
+          "agent-business-model",
+          "workflow-adoption"
+        ],
+        "tags": [
+          "GPT-6",
+          "Agent",
+          "电脑操作",
+          "模型分层"
+        ],
+        "toolIds": [
+          "poc-success-canvas",
+          "ai-maturity-scan"
+        ],
+        "audience": [
+          "ai_ae",
+          "solution",
+          "sales_leader"
+        ],
+        "freshness": "current",
+        "conclusionScope": "single_authority",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [
+          {
+            "sourceId": "openai-news-rss",
+            "title": "Introducing GPT-6 Sol and Luna",
+            "publisher": "OpenAI News",
+            "url": "https://openai.com/index/introducing-gpt-6-sol-and-luna",
+            "publishedAt": "2026-09-22T18:00:00.000Z",
+            "level": "official",
+            "language": "en",
+            "dateBasis": "published"
+          }
+        ],
+        "supportingFacts": [
+          {
+            "statement": "OpenAI 称 GPT-6 Astra 是其面向业务的最强模型，具备高级推理、电脑操作以及更强的写作与设计判断能力。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "GPT-6 Astra API 标价为每百万 token 输入 10 美元、输出 50 美元，高于随后发布的同代 Sol 与 Luna。",
+            "evidenceIndexes": [
+              1,
+              2
+            ]
+          },
+          {
+            "statement": "OpenAI 于 9 月 22 日发布 GPT-6 Sol 与 Luna，作为在能力与成本之间做不同平衡的日常工作模型。",
+            "evidenceIndexes": [
+              2
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "厂商用旗舰模型承载最难的任务并维持高价，同时用低价层级扩大用量，形成同代内的价格分层。",
+          "businessValue": "高价模型只有在减少人工步骤或缩短周期时才划算；分层让方案可以采用“少量旗舰+大量低价”的组合来平衡效果与成本。",
+          "boundary": "基准成绩与定价来自厂商发布及媒体转述，需以官方页面为准；电脑操作在客户真实系统中的稳定性与权限风险尚未经独立验证。"
+        },
+        "changeWindow": "within_90_days",
+        "factType": "company_claim",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。起草环境无法直接访问 openai.com，产品定位依据 OpenAI RSS 原文摘要；具体数字与日期依据多家媒体对原文的转述交叉核对（DataCamp、OpenRouter、Artificial Analysis）。批准前请对照 OpenAI 原文逐项核实数字，与原文不符时以原文为准并修改或删除该事实。"
+      }
+    },
+    {
+      "candidateId": "ED-596C9D1E4AFF89E9",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Introducing GPT-6 Sol and Luna",
+      "canonicalUrl": "https://openai.com/index/introducing-gpt-6-sol-and-luna",
+      "publishedAt": "2026-09-22T18:00:00.000Z",
+      "fetchedAt": "2026-09-23T01:33:47.303Z",
+      "sourceSummary": "Meet GPT-6 Sol and Luna, two models that bring frontier intelligence to everyday work with different balances of capability and cost.",
+      "evidenceExcerpt": "Meet GPT-6 Sol and Luna, two models that bring frontier intelligence to everyday work with different balances of capability and cost.",
+      "eventKey": "event-34873ef7c66832b3",
+      "contentFingerprint": "7ce0046ba9fab98b",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "GPT-6 Sol 与 Luna 发布：API 价格较上一代减半，模型分层选型成为方案标配",
+        "summaryZh": "OpenAI 于 9 月 22 日发布 GPT-6 Sol 与 Luna 两款模型，在能力与成本之间提供不同平衡；据发布信息，两者 API 单价均为上一代 GPT-5.6 同级模型的一半，并配合提示缓存改进进一步降低重复调用成本。",
+        "whyItMattersZh": "同一厂商内部已形成“旗舰 Astra—主力 Sol—轻量 Luna”的分层，客户方案不再是选一个模型，而是按任务组合不同层级。",
+        "salesImplicationZh": "报价与 ROI 测算要按任务拆分模型层级：高价值推理用 Astra 或 Sol，大批量分类与抽取用 Luna；单价减半会让此前因成本搁置的场景重新值得评估。",
+        "roleOrgImplicationZh": "解决方案与 FinOps 需要共同维护“任务—模型—成本”对照表，销售在 POC 阶段就把模型切换与单价变动写进假设。",
+        "nextActionZh": "选一个在跟的客户场景，用“价值假设一页纸”分别按 Sol 和 Luna 估算单次任务成本，确认降价能否让 POC 的 ROI 过线。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "gpt-6-sol-luna-price-tiering",
+        "kind": "update",
+        "domains": [
+          "ai_technology",
+          "enterprise_sales"
+        ],
+        "topicSlugs": [
+          "agent-business-model",
+          "ai-poc-scale"
+        ],
+        "tags": [
+          "GPT-6",
+          "模型分层",
+          "API定价",
+          "TCO"
+        ],
+        "toolIds": [
+          "value-hypothesis-one-pager",
+          "poc-success-canvas"
+        ],
+        "audience": [
+          "ai_ae",
+          "solution",
+          "transitioning_seller"
+        ],
+        "freshness": "current",
+        "conclusionScope": "single_authority",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [
+          {
+            "sourceId": "openai-news-rss",
+            "title": "Better prompt caching for GPT-6",
+            "publisher": "OpenAI News",
+            "url": "https://openai.com/index/better-prompt-caching-for-gpt-6",
+            "publishedAt": "2026-09-22T21:00:00.000Z",
+            "level": "official",
+            "language": "en",
+            "dateBasis": "published"
+          }
+        ],
+        "supportingFacts": [
+          {
+            "statement": "OpenAI 于 2026-09-22 发布 GPT-6 Sol 与 Luna，定位为以不同能力与成本平衡把前沿智能带入日常工作的两款模型。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "发布口径为：GPT-6 Sol 每百万 token 输入 2 美元、输出 10 美元，GPT-6 Luna 输入 0.10 美元、输出 0.50 美元，均为 GPT-5.6 同级模型价格的一半。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "OpenAI 同日说明 GPT-6 通过更高缓存命中率、诊断工具和显式断点等控制降低延迟与成本。",
+            "evidenceIndexes": [
+              2
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "推理效率与缓存改进降低了单位服务成本，厂商把部分降幅让渡为标价，并用分层模型覆盖不同价位的任务。",
+          "businessValue": "单位成本下降扩大了“算得过账”的场景范围，尤其是大批量、低单价任务；分层也让客户无需更换厂商即可优化 TCO。",
+          "boundary": "价格以 OpenAI 官方定价页为准且可能调整；单价减半不等于总成本减半，实际成本取决于 token 用量、缓存命中率与所选层级；能力对比未经客户任务实测，不应直接用于承诺效果。"
+        },
+        "changeWindow": "within_30_days",
+        "factType": "company_claim",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。起草环境无法直接访问 openai.com，产品定位依据 OpenAI RSS 原文摘要；具体数字与日期依据多家媒体对原文的转述交叉核对（VentureBeat、TechCrunch、The New Stack）。批准前请对照 OpenAI 原文逐项核实数字，与原文不符时以原文为准并修改或删除该事实。"
+      }
+    },
+    {
+      "candidateId": "ED-793763BC44CE901A",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Introducing the Agents API",
+      "canonicalUrl": "https://openai.com/index/introducing-the-agents-api",
+      "publishedAt": "2026-09-10T00:00:00.000Z",
+      "fetchedAt": "2026-09-23T01:33:47.303Z",
+      "sourceSummary": "Build and launch cloud agents with the Agents API, a managed service powered by the Codex harness for orchestration, long-running sessions, and tool use.",
+      "evidenceExcerpt": "Build and launch cloud agents with the Agents API, a managed service powered by the Codex harness for orchestration, long-running sessions, and tool use.",
+      "eventKey": "event-aa21d1e7442da264",
+      "contentFingerprint": "2e46c11b2f7869d7",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "OpenAI 推出 Agents API：Codex 运行框架变成托管服务，长时 Agent 进入平台化阶段",
+        "summaryZh": "OpenAI 以公测形式发布 Agents API，以 Codex harness 托管编排、长时会话和工具调用；企业可以选择 OpenAI 托管沙箱、自有基础设施或合作伙伴环境来运行 Agent。",
+        "whyItMattersZh": "长时 Agent 的难点（上下文管理、中断恢复、工具编排）正被平台吸收，客户自建框架的必要性下降，竞争焦点转向工具接入、数据权限与运行环境。",
+        "salesImplicationZh": "讨论 Agent 项目时要问清运行在哪里（厂商托管还是自有环境）、开放哪些工具和数据、失败如何恢复，这些决定安全评审与采购路径。",
+        "roleOrgImplicationZh": "平台工程的工作从“自建编排框架”转向“定义工具、权限与沙箱”，解决方案岗位需要讲清托管与自托管的取舍。",
+        "nextActionZh": "用“干系人与组织采用风险清单”列出客户对托管沙箱与自有基础设施的安全、合规要求，确定 POC 采用哪种运行方式。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "openai-agents-api-managed-harness",
+        "kind": "update",
+        "domains": [
+          "ai_technology",
+          "enterprise_sales"
+        ],
+        "topicSlugs": [
+          "agent-business-model",
+          "ai-trust-governance"
+        ],
+        "tags": [
+          "Agent",
+          "Agents API",
+          "托管运行",
+          "平台化"
+        ],
+        "toolIds": [
+          "poc-success-canvas",
+          "stakeholder-adoption-risk"
+        ],
+        "audience": [
+          "solution",
+          "ai_ae"
+        ],
+        "freshness": "current",
+        "conclusionScope": "single_authority",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [],
+        "supportingFacts": [
+          {
+            "statement": "OpenAI 称 Agents API 是由 Codex harness 驱动的托管服务，负责编排、长时会话与工具调用，用于构建和上线云端 Agent。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "Agents API 于 2026-09-10 以公测形式推出，支持在 OpenAI 托管沙箱、自托管或合作伙伴沙箱中运行，且不额外收取平台费用。",
+            "evidenceIndexes": [
+              1
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "厂商把原本由客户自建的 Agent 运行框架产品化，客户只需提供工具与运行环境，编排与上下文管理由平台负责。",
+          "businessValue": "降低长时 Agent 的工程门槛与上线周期，让客户把资源投入到业务工具接入和权限设计上。",
+          "boundary": "公测阶段功能与条款可能变化；托管运行意味着更深的厂商绑定，自托管与合作伙伴沙箱的能力差异、数据驻留与合规要求需按客户逐一核实。"
+        },
+        "changeWindow": "within_90_days",
+        "factType": "company_claim",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。起草环境无法直接访问 openai.com，产品定位依据 OpenAI RSS 原文摘要；具体数字与日期依据多家媒体对原文的转述交叉核对（Neomanex、Flowtivity、The Robotics Media）。批准前请对照 OpenAI 原文逐项核实数字，与原文不符时以原文为准并修改或删除该事实。"
+      }
+    },
+    {
+      "candidateId": "ED-9037F00381069F0E",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "Google is a Leader in the 2026 Gartner® Magic Quadrant™ for Enterprise AI Assistants",
+      "canonicalUrl": "https://cloud.google.com/blog/products/ai-machine-learning/google-is-a-leader-in-2026-gartner-magic-quadrant-for-enterprise-ai-assistants",
+      "publishedAt": "2026-09-09T18:00:00.000Z",
+      "fetchedAt": "2026-09-23T01:33:47.303Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">We are excited to share that Gartner has named Google a Leader in its inaugural </span><a href=\"https://cloud.google.com/resources/content/2026-gartner-magic-quadrant-enterprise-ai-assistants\"><span",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">We are excited to share that Gartner has named Google a Leader in its inaugural",
+      "eventKey": "event-0523cb2946c3cdf6",
+      "contentFingerprint": "62656043cd163a60",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "Gartner 首份企业 AI 助手魔力象限发布：Google 列为领导者，采购评估走向标准化",
+        "summaryZh": "Google 宣布在 Gartner 首份 2026 企业 AI 助手魔力象限中被列为领导者，并把 Gemini Enterprise 的优势归纳为统一入口、开放连接、简单定价、内置治理与全栈能力。",
+        "whyItMattersZh": "首份魔力象限意味着“企业 AI 助手”成为独立采购品类，客户的采购委员会会开始用分析师框架做横向对比。",
+        "salesImplicationZh": "预计客户会拿魔力象限做短名单；销售需要准备统一入口、第三方连接（如 Microsoft 365）、定价模式与 Agent 治理的对比材料，而不只强调模型能力。",
+        "roleOrgImplicationZh": "采购、IT 与安全会更早介入评估；销售需要识别谁在用分析师报告作为决策依据。",
+        "nextActionZh": "用“客户发现访谈”确认目标客户是否参考 Gartner 报告、在意哪些评估维度，并据此调整演示重点。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "gartner-mq-enterprise-ai-assistants-2026",
+        "kind": "event",
+        "domains": [
+          "enterprise_sales",
+          "ai_technology"
+        ],
+        "topicSlugs": [
+          "ai-buying-committee",
+          "ai-trust-governance"
+        ],
+        "tags": [
+          "Gartner",
+          "竞争格局",
+          "采购评估",
+          "Agent治理"
+        ],
+        "toolIds": [
+          "discovery-interview"
+        ],
+        "audience": [
+          "ai_ae",
+          "sales_leader",
+          "solution"
+        ],
+        "freshness": "current",
+        "conclusionScope": "single_authority",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [],
+        "supportingFacts": [
+          {
+            "statement": "Google 称 Gartner 在首份 2026 企业 AI 助手魔力象限中，基于愿景完整性与执行能力两个维度将其列为领导者。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "Google 列举的 Gemini Enterprise 优势包括统一的 AI 入口、延伸到 Microsoft 365 等第三方的开放连接、含聊天与搜索的基础订阅及按量付费选项，以及不额外收费的 Agent 治理。",
+            "evidenceIndexes": [
+              1
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "分析师报告把分散的产品归入统一品类并给出评估维度，采购方据此建立短名单和比较框架。",
+          "businessValue": "对卖方而言，理解评估维度可以提前准备对比证据；对买方而言，统一框架降低了评估成本。",
+          "boundary": "以上为 Google 对报告的自述解读，未阅读 Gartner 报告原文；其他厂商的定位未在本条核实；魔力象限反映分析师评估，不代表客户实际效果。"
+        },
+        "changeWindow": "within_90_days",
+        "factType": "company_claim",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。已直接读取 Google Cloud 原文，核对“首份”“愿景完整性与执行能力”及五项优势表述；未访问 Gartner 报告原文。"
+      }
+    },
+    {
+      "candidateId": "ED-91E4D4E60615C320",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Better prompt caching for GPT-6",
+      "canonicalUrl": "https://openai.com/index/better-prompt-caching-for-gpt-6",
+      "publishedAt": "2026-09-22T21:00:00.000Z",
+      "fetchedAt": "2026-09-23T01:33:47.303Z",
+      "sourceSummary": "Learn how GPT-6 improves prompt caching with higher cache hit rates, new diagnostics, explicit breakpoints, and controls that reduce latency and costs.",
+      "evidenceExcerpt": "Learn how GPT-6 improves prompt caching with higher cache hit rates, new diagnostics, explicit breakpoints, and controls that reduce latency and costs.",
+      "eventKey": "event-dad3e4b5c5ad8198",
+      "contentFingerprint": "fb46ac3f8d6a71b5",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "GPT-6 提示缓存升级：命中率、诊断工具与显式断点成为 Agent 成本优化的关键杠杆",
+        "summaryZh": "OpenAI 说明 GPT-6 提升了默认缓存命中率，并新增缓存诊断、显式断点等控制，帮助开发者降低延迟与成本；缓存改进也是其下调 GPT-6 API 价格的依据之一。",
+        "whyItMattersZh": "Agent 类任务反复携带大量相同上下文，缓存命中率直接决定实际账单，是比单价更容易被忽视、影响却更大的成本变量。",
+        "salesImplicationZh": "在 TCO 测算中单独列出“缓存命中率”假设，并提醒客户：提示结构（稳定内容在前、变化内容在后）会显著影响成本。",
+        "roleOrgImplicationZh": "工程团队需要把缓存命中率纳入监控指标，由 FinOps 与开发共同对账，而不是只看模型单价。",
+        "nextActionZh": "为一个长上下文客户场景估算有缓存与无缓存两种情况下的月成本差异，写入“价值假设一页纸”的成本部分。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "gpt-6-prompt-caching-tco",
+        "kind": "update",
+        "domains": [
+          "ai_technology",
+          "enterprise_sales"
+        ],
+        "topicSlugs": [
+          "ai-poc-scale",
+          "agent-business-model"
+        ],
+        "tags": [
+          "提示缓存",
+          "TCO",
+          "成本优化",
+          "GPT-6"
+        ],
+        "toolIds": [
+          "value-hypothesis-one-pager"
+        ],
+        "audience": [
+          "solution",
+          "ai_ae"
+        ],
+        "freshness": "current",
+        "conclusionScope": "single_authority",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [
+          {
+            "sourceId": "openai-news-rss",
+            "title": "Introducing GPT-6 Sol and Luna",
+            "publisher": "OpenAI News",
+            "url": "https://openai.com/index/introducing-gpt-6-sol-and-luna",
+            "publishedAt": "2026-09-22T18:00:00.000Z",
+            "level": "official",
+            "language": "en",
+            "dateBasis": "published"
+          }
+        ],
+        "supportingFacts": [
+          {
+            "statement": "OpenAI 称 GPT-6 通过更高的缓存命中率、新的诊断工具、显式断点和相关控制来降低延迟与成本。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "OpenAI 披露其评估中的缓存命中率在一周内从 83% 提升至 91%，缓存输入 token 折扣最高可达 90%。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "OpenAI 同日发布 GPT-6 Sol 与 Luna，强调在能力与成本之间提供不同平衡。",
+            "evidenceIndexes": [
+              2
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "重复出现的提示前缀被缓存后无需重新计算，命中率越高，输入 token 的有效单价与响应延迟越低；诊断工具让开发者能定位未命中的原因。",
+          "businessValue": "对长上下文、多轮调用的 Agent 场景，缓存优化可能比更换模型更快地降低成本，并让成本可解释、可优化。",
+          "boundary": "83% 到 91% 为 OpenAI 自有评估口径，客户实际命中率取决于提示结构与调用模式；折扣比例、缓存有效时长以官方文档为准。"
+        },
+        "changeWindow": "within_30_days",
+        "factType": "company_claim",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。起草环境无法直接访问 openai.com，产品定位依据 OpenAI RSS 原文摘要；具体数字与日期依据多家媒体对原文的转述交叉核对（AlphaSignal、Crypto Briefing，并参考 OpenAI 开发者文档搜索摘要）。批准前请对照 OpenAI 原文逐项核实数字，与原文不符时以原文为准并修改或删除该事实。"
+      }
+    },
+    {
+      "candidateId": "ED-BA8B5946D84F966B",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "How Orange built FinOps accountability, and why agents are next",
+      "canonicalUrl": "https://cloud.google.com/blog/topics/telecommunications/how-orange-uses-agents-to-make-finops-everyones-responsibility",
+      "publishedAt": "2026-09-16T16:00:00.000Z",
+      "fetchedAt": "2026-09-23T01:33:47.303Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">At </span><a href=\"https://cloud.google.com/customers/orange\"><span style=\"text-decoration: underline; vertical-align: baseline;\">Orange</span></a><span style=\"vertical-align: baseline;\">, the leadin",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">At </span><a href=\"https://cloud.google.com/customers/orange\"><span style=\"text",
+      "eventKey": "event-38f4b2397985c40b",
+      "contentFingerprint": "57a97e52705682fe",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "Orange 的 FinOps 实践：成本责任靠组织机制落地，Agent 负责扩展到更多团队",
+        "summaryZh": "Google Cloud 记录了 Orange 如何通过 100 多人的 FinOps 社区、FinOps Clean Days 与游戏化活动，把云与 AI 成本变成各团队共担的责任，并探索用 AI Agent 触达中心团队覆盖不到的工程师。",
+        "whyItMattersZh": "AI 支出增长快且分散在各团队，谁对成本负责往往不清楚；这个案例说明成本治理首先是组织变革问题，其次才是工具问题。",
+        "salesImplicationZh": "当客户担心 AI 成本失控时，可以把“成本透明+责任共担机制”作为扩容方案的一部分，而不是只承诺降价。",
+        "roleOrgImplicationZh": "FinOps 从中心团队的专项工作变成跨团队实践；Agent 可以承担分析与提醒等重复工作，但需要明确责任人。",
+        "nextActionZh": "用“干系人与组织采用风险清单”为一个扩容中的客户识别谁对 AI 花费负责、有无定期复盘机制，以及能否引入类似的集中清理日。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "orange-finops-shared-accountability-agents",
+        "kind": "case",
+        "domains": [
+          "role_org",
+          "enterprise_sales"
+        ],
+        "topicSlugs": [
+          "workflow-adoption",
+          "ai-poc-scale"
+        ],
+        "tags": [
+          "FinOps",
+          "成本治理",
+          "组织变革",
+          "Agent"
+        ],
+        "toolIds": [
+          "stakeholder-adoption-risk"
+        ],
+        "audience": [
+          "sales_leader",
+          "customer_success",
+          "solution"
+        ],
+        "freshness": "current",
+        "conclusionScope": "cross_organization",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [
+          {
+            "sourceId": "openai-news-rss",
+            "title": "How to connect AI usage to business value",
+            "publisher": "OpenAI News",
+            "url": "https://openai.com/index/how-to-connect-ai-usage-to-business-value",
+            "publishedAt": "2026-09-16T12:00:00.000Z",
+            "level": "official",
+            "language": "en",
+            "dateBasis": "published"
+          }
+        ],
+        "supportingFacts": [
+          {
+            "statement": "Google Cloud 介绍，Orange 的 FinOps 社区超过 100 人，通过 FinOps Clean Days 与游戏化黑客松推动工程团队清理云支出，该社区在内部的 NPS 超过 70。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "文章指出，中心 FinOps 团队无法直接触达数千名工程师，AI Agent 可承担耗时的复杂分析，并降低个人参与 FinOps 的摩擦。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "OpenAI 介绍的管理分析能力可汇总 ChatGPT Work 与 Codex 的用量与花费，并通过 Admin API 与业务系统数据结合。",
+            "evidenceIndexes": [
+              2
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "受保护的集中时间、社区带教与可见的激励，把成本优化从“与交付争时间”的额外工作变成团队共同行为；Agent 则把中心团队的分析能力复制给更多人。",
+          "businessValue": "成本透明与责任共担让 AI 扩容更容易获得预算批准，也降低了因成本失控而缩减项目的风险。",
+          "boundary": "单一客户案例，由厂商顾问撰写；NPS 为企业内部口径；Agent 扩展部分是方向性建议，尚无效果数据。"
+        },
+        "changeWindow": "within_90_days",
+        "factType": "company_claim",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。已直接读取 Google Cloud 原文核对 100 多人社区、Clean Days、NPS 超过 70 与 Agent 扩展表述。起草环境无法直接访问 openai.com，产品定位依据 OpenAI RSS 原文摘要；具体数字与日期依据多家媒体对原文的转述交叉核对（.NET Ramblings 转载及搜索摘要）。批准前请对照 OpenAI 原文逐项核实数字，与原文不符时以原文为准并修改或删除该事实。"
+      }
+    },
+    {
+      "candidateId": "ED-D68287D73E57B1DB",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "How to connect AI usage to business value",
+      "canonicalUrl": "https://openai.com/index/how-to-connect-ai-usage-to-business-value",
+      "publishedAt": "2026-09-16T12:00:00.000Z",
+      "fetchedAt": "2026-09-23T01:33:47.303Z",
+      "sourceSummary": "Learn how ChatGPT Work and Codex analytics help teams understand AI usage and spend, identify training needs, and connect adoption to business outcomes.",
+      "evidenceExcerpt": "Learn how ChatGPT Work and Codex analytics help teams understand AI usage and spend, identify training needs, and connect adoption to business outcomes.",
+      "eventKey": "event-8d38a0c4edf327d1",
+      "contentFingerprint": "31835c108ed2955d",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "把 AI 使用量连到业务价值：用量分析只是起点，价值要由业务负责人共同认定",
+        "summaryZh": "OpenAI 介绍 ChatGPT Work 与 Codex 的管理分析能力，可汇总用量、花费、任务与部分产出指标；Google Cloud 记录的 Orange 案例则说明，成本与价值的责任需要通过社区、机制和激励落实到每个团队。",
+        "whyItMattersZh": "企业 AI 的续约和扩容越来越取决于能否证明价值；只报告活跃用户和 token 消耗，回答不了预算方的问题。",
+        "salesImplicationZh": "在销售与客户成功阶段，提前与客户约定“用量—流程—业务结果”三层口径，并确定由哪位业务负责人确认价值，避免续约时只有用量数据。",
+        "roleOrgImplicationZh": "客户成功岗位需要从“推动使用”升级为“与业务方共同认定价值”，管理员报表要与业务系统数据（如工单解决时长）结合。",
+        "nextActionZh": "为一个已上线客户列出三层指标表：用量（活跃用户、花费）、流程（任务类型、完成时间）、结果（业务 KPI），并标注每层的数据来源与确认人。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "connect-ai-usage-to-business-value",
+        "kind": "method",
+        "domains": [
+          "enterprise_sales",
+          "role_org"
+        ],
+        "topicSlugs": [
+          "ai-poc-scale",
+          "workflow-adoption",
+          "ai-buying-committee"
+        ],
+        "tags": [
+          "价值证明",
+          "续约扩容",
+          "用量分析",
+          "客户成功"
+        ],
+        "toolIds": [
+          "value-hypothesis-one-pager",
+          "ai-maturity-scan"
+        ],
+        "audience": [
+          "ai_ae",
+          "sales_leader",
+          "customer_success",
+          "transitioning_seller"
+        ],
+        "freshness": "current",
+        "conclusionScope": "cross_organization",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [
+          {
+            "sourceId": "google-cloud-ai-blog",
+            "title": "How Orange built FinOps accountability, and why agents are next",
+            "publisher": "Google Cloud Blog",
+            "url": "https://cloud.google.com/blog/topics/telecommunications/how-orange-uses-agents-to-make-finops-everyones-responsibility",
+            "publishedAt": "2026-09-16T16:00:00.000Z",
+            "level": "official",
+            "language": "en",
+            "dateBasis": "published"
+          }
+        ],
+        "supportingFacts": [
+          {
+            "statement": "OpenAI 称 ChatGPT Admin Console 的分析功能汇总 ChatGPT Work 与 Codex 的用量与花费、任务洞察和产出指标，并可通过 Admin API 与业务系统数据结合。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "OpenAI 指出，用量与任务数据只是起点，需要业务负责人补充流程变化、结果是否改善及改善价值等背景才能评估价值。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "Google Cloud 介绍，Orange 通过 100 多人的 FinOps 社区、FinOps Clean Days 和游戏化活动推动成本责任共担，并探索用 AI Agent 扩展到中心团队覆盖不到的工程师。",
+            "evidenceIndexes": [
+              2
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "用量数据只说明“用了多少”；只有与流程和业务结果结合、并由业务方确认，才形成可用于预算决策的价值证据，而组织机制决定这些数据是否有人采取行动。",
+          "businessValue": "为续约、扩容和预算争取提供可审计的证据链，也帮助销售与客户成功识别低采用团队和培训需求。",
+          "boundary": "OpenAI 的分析能力只覆盖其自有产品内的数据；Orange 是厂商博客记录的单一客户实践，相关数字为企业自述，不能推广为普遍效果。"
+        },
+        "changeWindow": "within_90_days",
+        "factType": "editorial_inference",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。已直接读取 Google Cloud 关于 Orange 的原文并核对 100 多人社区、Clean Days 与 Agent 扩展的表述。起草环境无法直接访问 openai.com，产品定位依据 OpenAI RSS 原文摘要；具体数字与日期依据多家媒体对原文的转述交叉核对（.NET Ramblings 转载及搜索摘要）。批准前请对照 OpenAI 原文逐项核实数字，与原文不符时以原文为准并修改或删除该事实。"
+      }
+    },
+    {
+      "candidateId": "ED-E7025780767CE943",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Introducing ChatGPT for Financial Services",
+      "canonicalUrl": "https://openai.com/index/introducing-chatgpt-financial-services",
+      "publishedAt": "2026-09-10T07:00:00.000Z",
+      "fetchedAt": "2026-09-23T01:33:47.303Z",
+      "sourceSummary": "Introducing ChatGPT for Financial Services, combining built-in financial data and GPT-6 Astra for research, modeling, and client-ready materials.",
+      "evidenceExcerpt": "Introducing ChatGPT for Financial Services, combining built-in financial data and GPT-6 Astra for research, modeling, and client-ready materials.",
+      "eventKey": "event-194dc54f37f9b312",
+      "contentFingerprint": "b0ca4459caf878b8",
+      "riskLevel": "medium",
+      "riskReasons": [
+        "medium risk requires manual review",
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "ChatGPT for Financial Services 发布：通用模型厂商开始打包“模型+行业数据+工作流”",
+        "summaryZh": "OpenAI 推出面向金融服务的 ChatGPT Work 定制版本，结合内置金融数据与 GPT-6 Astra，用于研究、建模与客户材料；Google 也已为 Gemini Enterprise 推出法律和金融服务行业方案。",
+        "whyItMattersZh": "两大厂商同时切入金融等强监管行业，竞争从模型能力转向行业数据、预置工作流与治理控制，行业 ISV 和集成商会直接感受到压力。",
+        "salesImplicationZh": "面向金融客户时，要准备与“厂商行业版”的对比：数据源覆盖、引用可追溯、合规控制、与现有系统的集成，以及客户自有数据如何接入。",
+        "roleOrgImplicationZh": "售前需要懂行业工作流（研究、估值、建模、路演材料）的人，而不仅是懂模型的人；合规与风控应在发现阶段就参与。",
+        "nextActionZh": "用“客户发现访谈”问清目标金融客户的三个高频分析流程与数据来源，判断厂商行业版能覆盖多少、缺口在哪里。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published",
+      "publicationDraft": {
+        "slug": "chatgpt-financial-services-vertical",
+        "kind": "update",
+        "domains": [
+          "enterprise_sales",
+          "ai_technology"
+        ],
+        "topicSlugs": [
+          "workflow-adoption",
+          "ai-trust-governance",
+          "ai-buying-committee"
+        ],
+        "tags": [
+          "金融服务",
+          "行业方案",
+          "行业数据",
+          "竞争格局"
+        ],
+        "toolIds": [
+          "discovery-interview",
+          "poc-success-canvas"
+        ],
+        "audience": [
+          "ai_ae",
+          "solution",
+          "sales_leader"
+        ],
+        "freshness": "current",
+        "conclusionScope": "cross_organization",
+        "primaryEvidenceLevel": "official",
+        "primaryEvidenceLanguage": "en",
+        "primaryEvidenceDateBasis": "published",
+        "additionalEvidence": [
+          {
+            "sourceId": "google-cloud-ai-blog",
+            "title": "Google is a Leader in the 2026 Gartner® Magic Quadrant™ for Enterprise AI Assistants",
+            "publisher": "Google Cloud Blog",
+            "url": "https://cloud.google.com/blog/products/ai-machine-learning/google-is-a-leader-in-2026-gartner-magic-quadrant-for-enterprise-ai-assistants",
+            "publishedAt": "2026-09-09T18:00:00.000Z",
+            "level": "official",
+            "language": "en",
+            "dateBasis": "published"
+          }
+        ],
+        "supportingFacts": [
+          {
+            "statement": "OpenAI 称 ChatGPT for Financial Services 结合内置金融数据与 GPT-6 Astra，用于研究、建模与面向客户的材料制作。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "该产品与摩根士丹利、Evercore 合作设计，内置 Daloopa、PitchBook、LSEG News、Crunchbase 等数据，初期聚焦投行与股票研究流程。",
+            "evidenceIndexes": [
+              1
+            ]
+          },
+          {
+            "statement": "Google Cloud 称其已为 Gemini Enterprise 推出面向法律与金融服务的专门方案，包含预置 Agent、领域技能、安全数据连接器和合作伙伴生态。",
+            "evidenceIndexes": [
+              2
+            ]
+          }
+        ],
+        "deeperAnalysis": {
+          "mechanism": "行业数据授权与预置工作流构成模型之外的差异化，厂商通过打包降低客户的集成成本，同时提高迁移门槛。",
+          "businessValue": "客户能更快落地高价值行业场景；对销售而言，行业方案缩短 POC 周期，但也提高了与厂商原生能力正面对比的门槛。",
+          "boundary": "合作方、数据源与适用流程来自厂商发布及媒体转述；可用地区、价格与合规认证未核实，中国市场可用性需另行确认。"
+        },
+        "changeWindow": "within_90_days",
+        "factType": "company_claim",
+        "verificationNotes": "2026-09-24 AI 辅助起草，待项目所有者终审。已直接读取 Google Cloud 原文核对行业方案表述。起草环境无法直接访问 openai.com，产品定位依据 OpenAI RSS 原文摘要；具体数字与日期依据多家媒体对原文的转述交叉核对（Pulse 2.0、Analytics Insight、Technology.org）。批准前请对照 OpenAI 原文逐项核实数字，与原文不符时以原文为准并修改或删除该事实。原候选风险等级为 medium。"
+      }
+    }
+  ],
+  "manualReviewRecords": []
+}

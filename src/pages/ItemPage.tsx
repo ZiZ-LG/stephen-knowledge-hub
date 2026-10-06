@@ -5,6 +5,7 @@ import { domainLabels, isChineseFallback, localize, type Language } from '../i18
 import { useLibrary } from '../state/LibraryContext';
 import EvidenceBadge from '../components/EvidenceBadge';
 import InternalLink from '../components/InternalLink';
+import LearningLinks from '../components/LearningLinks';
 
 const factTypeLabels = {
   official_fact: { zh: '官方事实', en: 'Official fact' },
@@ -61,6 +62,12 @@ export default function ItemPage({
       {isChineseFallback(item.title, language) && <span className='language-fallback'>Chinese content</span>}
       {item.originalTitle && <p className='original-title'>{item.originalTitle}</p>}
       <p className='lead'>{localize(item.summary, language)}</p>
+      <p className='verification-note'>
+        {language === 'zh' ? '信息核对截至：' : 'Information checked as of: '}
+        <time dateTime={item.review.verifiedAt}>{item.review.verifiedAt.slice(0, 10)}</time>
+        {' · '}{language === 'zh' ? '内容更新：' : 'Content updated: '}
+        <time dateTime={item.updatedAt}>{item.updatedAt.slice(0, 10)}</time>
+      </p>
       <button
         className='bookmark-detail'
         type='button'
@@ -89,21 +96,33 @@ export default function ItemPage({
           <p>{localize(item.roleOrgImplication, language)}</p>
         </section>
         <section className='next-action-panel'>
-          <p className='section-index'>ACTION</p>
-          <h2>{language === 'zh' ? '下一步行动' : 'Next action'}</h2>
+          <p className='section-index'>UNDERSTAND & APPLY</p>
+          <h2>{language === 'zh' ? '理解与应用' : 'Understand and apply'}</h2>
           <p>{localize(item.nextAction, language)}</p>
         </section>
       </div>
 
       <section className='analysis-evidence' aria-labelledby='analysis-evidence-title'>
         <div className='supporting-facts'>
-          <p className='section-index'>TWO-FACT CHECK</p>
+          <p className='section-index'>FACTS & SOURCES</p>
           <h2 id='analysis-evidence-title'>
-            {language === 'zh' ? '至少两项事实支撑' : 'At least two supporting facts'}
+            {language === 'zh' ? '事实与依据' : 'Facts and sources'}
           </h2>
           <ol>
             {item.supportingFacts.map((fact) => (
-              <li key={fact.id}>{fact.statement}</li>
+              <li key={fact.id}>
+                {fact.statement}
+                {fact.evidenceIds.map((id) => {
+                  const index = item.evidence.findIndex((source) => source.id === id);
+                  const source = item.evidence[index];
+                  return source ? (
+                    <a className='inline-evidence' href={source.url} target='_blank' rel='noopener noreferrer'
+                      aria-label={`${language === 'zh' ? '依据' : 'Source'} ${index + 1}: ${source.title}`} key={id}>
+                      [{index + 1}]
+                    </a>
+                  ) : null;
+                })}
+              </li>
             ))}
           </ol>
         </div>
@@ -137,10 +156,13 @@ export default function ItemPage({
         </div>
         <div className='evidence-list'>
           {item.evidence.map((evidence) => (
-            <a href={evidence.url} target='_blank' rel='noreferrer' key={evidence.id}>
+            <a href={evidence.url} target='_blank' rel='noopener noreferrer' key={evidence.id}>
               <EvidenceBadge level={evidence.level} language={language} />
               <strong>{evidence.title}</strong>
-              <span>{evidence.publisher} · {evidence.publishedAt.slice(0, 10)}</span>
+              <span>{evidence.publisher} · {language === 'zh'
+                ? ({ published: '资料发布', last_updated: '文档更新', observed: '核对日期' }[evidence.dateBasis ?? 'published'])
+                : ({ published: 'Source published', last_updated: 'Document updated', observed: 'Observed' }[evidence.dateBasis ?? 'published'])}
+                {' '}{evidence.publishedAt.slice(0, 10)}</span>
             </a>
           ))}
         </div>
@@ -150,6 +172,7 @@ export default function ItemPage({
         </p>
       </section>
 
+      <LearningLinks topicSlugs={item.topicSlugs} language={language} />
       <section className='related-grid'>
         <div>
           <h2>{language === 'zh' ? '相关专题' : 'Related topics'}</h2>

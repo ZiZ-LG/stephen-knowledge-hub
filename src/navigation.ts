@@ -14,6 +14,7 @@ export type AppRoute =
   | { readonly name: 'tools' }
   | { readonly name: 'roles' }
   | { readonly name: 'learn' }
+  | { readonly name: 'lesson'; readonly slug: string }
   | { readonly name: 'library' }
   | { readonly name: 'digest' }
   | { readonly name: 'policy' }
@@ -27,8 +28,9 @@ export interface NavigationItem {
 }
 
 export const desktopNavigation: readonly NavigationItem[] = [
-  { href: '/', label: { zh: '今日必读', en: 'Today' }, shortLabel: { zh: '今日', en: 'Today' } },
-  { href: '/radar/', label: { zh: '雷达专题', en: 'Radar' }, shortLabel: { zh: '专题', en: 'Radar' } },
+  { href: '/', label: { zh: '首页', en: 'Home' }, shortLabel: { zh: '首页', en: 'Home' } },
+  { href: '/radar/', label: { zh: '行业观察', en: 'Radar' }, shortLabel: { zh: '观察', en: 'Radar' } },
+  { href: '/learn/', label: { zh: '学习地图', en: 'Learn' }, shortLabel: { zh: '学习', en: 'Learn' } },
   { href: '/tools/', label: { zh: '方法工具', en: 'Tools' }, shortLabel: { zh: '工具', en: 'Tools' } },
   { href: '/library/', label: { zh: '我的收藏', en: 'Library' }, shortLabel: { zh: '我的', en: 'Mine' } },
 ];
@@ -63,6 +65,8 @@ export function parseRoute(pathname: string): AppRoute {
   if (path === '/tools/') return { name: 'tools' };
   if (path === '/roles/') return { name: 'roles' };
   if (path === '/learn/') return { name: 'learn' };
+  const lesson = path.match(/^\/learn\/([^/]+)\/$/);
+  if (lesson) return { name: 'lesson', slug: decodeSlug(lesson[1]) };
   if (path === '/library/') return { name: 'library' };
   if (path === '/digest/') return { name: 'digest' };
   if (path === '/policy/') return { name: 'policy' };

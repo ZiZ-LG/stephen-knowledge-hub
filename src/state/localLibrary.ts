@@ -61,33 +61,60 @@ export function createEmptyLibraryState(now = new Date().toISOString()): LocalLi
   };
 }
 
-export function loadLibraryState(
-  storage: StorageLike,
-  { itemIds, toolIds, now }: LibraryScope,
-): LocalLibraryState {
-  const raw = storage.getItem(LIBRARY_STORAGE_KEY);
-  if (raw === null) return createEmptyLibraryState(now);
+function parseStoredLibrary(raw: string): Omit<LocalLibraryState, 'version'> & { readonly version: 0 | 1 } {
+  const parsed: unknown = JSON.parse(raw);
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('invalid local library');
+  const value = parsed as Record<string, unknown>;
+  const ids = (input: unknown) => Array.isArray(input) && input.every((id) => typeof id === 'string');
+  const materialIsValid = (input: unknown) => {
+    if (!input || typeof input !== 'object' || Array.isArray(input)) return false;
+    const material = input as Record<string, unknown>;
+    return typeof material.toolId === 'string' && typeof material.title === 'string'
+      && typeof material.bodyMarkdown === 'string' && typeof material.updatedAt === 'string'
+      && validStatus(material.status);
+  };
+  if ((value.version !== 0 && value.version !== 1)
+    || !ids(value.bookmarkedIds) || !ids(value.readIds)
+    || !Array.isArray(value.toolMaterials) || !value.toolMaterials.every(materialIsValid)
+    || typeof value.updatedAt !== 'string') throw new Error('unsupported or damaged local library');
+  return value as unknown as Omit<LocalLibraryState, 'version'> & { readonly version: 0 | 1 };
+}
 
+export function readLibraryState(
+  storage: Pick<StorageLike, 'getItem'>,
+  { itemIds, toolIds, now }: LibraryScope,
+): { readonly state: LocalLibraryState; readonly writable: boolean } {
   try {
-    const parsed = JSON.parse(raw) as Partial<LocalLibraryState> | null;
-    if (!parsed || typeof parsed !== 'object') throw new Error('invalid local library');
+    const raw = storage.getItem(LIBRARY_STORAGE_KEY);
+    if (raw === null) return { state: createEmptyLibraryState(now), writable: true };
+    const parsed = parseStoredLibrary(raw);
     const validItemIds = new Set(itemIds);
     const validToolIds = new Set(toolIds);
     return {
-      version: 1,
-      bookmarkedIds: uniqueValidIds(parsed.bookmarkedIds, validItemIds),
-      readIds: uniqueValidIds(parsed.readIds, validItemIds),
-      toolMaterials: normalizeToolMaterials(parsed.toolMaterials, validToolIds),
-      updatedAt: typeof parsed.updatedAt === 'string' ? parsed.updatedAt : now,
+      state: {
+        version: 1,
+        bookmarkedIds: uniqueValidIds(parsed.bookmarkedIds, validItemIds),
+        readIds: uniqueValidIds(parsed.readIds, validItemIds),
+        toolMaterials: normalizeToolMaterials(parsed.toolMaterials, validToolIds),
+        updatedAt: parsed.updatedAt,
+      },
+      writable: true,
     };
   } catch {
-    storage.removeItem(LIBRARY_STORAGE_KEY);
-    return createEmptyLibraryState(now);
+    // Reading must never repair, erase or replace unavailable, damaged or newer data.
+    return { state: createEmptyLibraryState(now), writable: false };
   }
+}
+
+export function loadLibraryState(storage: Pick<StorageLike, 'getItem'>, scope: LibraryScope): LocalLibraryState {
+  return readLibraryState(storage, scope).state;
 }
 
 export function saveLibraryState(storage: StorageLike, state: LocalLibraryState) {
   try {
+    // A record may have become unreadable since the page opened. Do not replace it.
+    const existing = storage.getItem(LIBRARY_STORAGE_KEY);
+    if (existing !== null) parseStoredLibrary(existing);
     storage.setItem(LIBRARY_STORAGE_KEY, JSON.stringify(state));
     return true;
   } catch {
@@ -96,7 +123,12 @@ export function saveLibraryState(storage: StorageLike, state: LocalLibraryState)
 }
 
 export function clearLibraryState(storage: StorageLike) {
-  storage.removeItem(LIBRARY_STORAGE_KEY);
+  try {
+    storage.removeItem(LIBRARY_STORAGE_KEY);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export function setBookmark(

@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 
 import type { KnowledgeTool, ReviewedKnowledgeItem } from '../domain';
-import { createDailyDigest, createWeeklyDigest, type DigestEntry } from '../content/digests';
+import { createDailyDigest, createWeeklyDigest, type DigestEntry, type DigestTheme } from '../content/digests';
+import { knowledgeTopics } from '../content/topics';
 import { localize, type Language } from '../i18n';
 import InternalLink from '../components/InternalLink';
-import KnowledgeCard from '../components/KnowledgeCard';
 
 function shanghaiDateOnly(now: Date) {
   const parts = new Intl.DateTimeFormat('en-US', {
@@ -43,10 +43,12 @@ function EntryLinks({
   entries,
   language,
   emptyText,
+  showSummary = false,
 }: {
   readonly entries: readonly DigestEntry<ReviewedKnowledgeItem>[];
   readonly language: Language;
   readonly emptyText: string;
+  readonly showSummary?: boolean;
 }) {
   if (entries.length === 0) return <p className='digest-empty-line'>{emptyText}</p>;
   return (
@@ -54,11 +56,69 @@ function EntryLinks({
       {entries.map((entry) => (
         <InternalLink href={`/items/${entry.item.slug}/`} key={entry.item.id}>
           <strong>{localize(entry.item.title, language)}</strong>
-          <span>{entry.estimatedReadMinutes} min · {entry.sourceCount} {language === 'zh' ? '个信源' : 'sources'}</span>
+          {showSummary && <span>{localize(entry.item.summary, language)}</span>}
+          <span>
+            {displayDate(entry.item.publishedAt.slice(0, 10), language)} · {entry.sourceCount} {language === 'zh' ? '个来源' : 'sources'}
+            {entry.item.updatedAt.slice(0, 10) !== entry.item.publishedAt.slice(0, 10)
+              && ` · ${language === 'zh' ? '记录更新' : 'Record updated'} ${displayDate(entry.item.updatedAt.slice(0, 10), language)}`}
+          </span>
         </InternalLink>
       ))}
     </div>
   );
+}
+
+function ThemePanels({ themes, language }: {
+  readonly themes: readonly DigestTheme<ReviewedKnowledgeItem>[];
+  readonly language: Language;
+}) {
+  return <div className='digest-panel-grid'>
+    {themes.map((theme) => {
+      const otherReports = theme.entries.flatMap((entry) => entry.reports
+        .filter((report) => report.id !== entry.item.id));
+      return <article className='digest-panel' key={theme.key}>
+        <p className='section-index'>{language === 'zh' ? '值得理解的主题' : 'A TOPIC TO UNDERSTAND'}</p>
+        <h3>{theme.topicSlug && knowledgeTopics.some((topic) => topic.slug === theme.topicSlug)
+          ? <InternalLink href={`/topics/${theme.topicSlug}/`}>{localize(theme.title, language)}</InternalLink>
+          : localize(theme.title, language)}</h3>
+        <p className='digest-empty-line'>
+          {language === 'zh' ? '先读这条主要变化，再按需展开同主题材料。'
+            : 'Start with this development, then explore the related material as needed.'}
+        </p>
+        <InternalLink href={`/items/${theme.lead.item.slug}/`}>
+          <strong>{localize(theme.lead.item.title, language)}</strong>
+        </InternalLink>
+        <p>{localize(theme.lead.item.summary, language)}</p>
+        <p>{localize(theme.lead.item.whyItMatters, language)}</p>
+        <p className='digest-empty-line'>
+          {displayDate(theme.lead.item.publishedAt.slice(0, 10), language)}
+          {theme.lead.item.updatedAt.slice(0, 10) !== theme.lead.item.publishedAt.slice(0, 10)
+            && ` · ${language === 'zh' ? '记录更新' : 'Record updated'} ${displayDate(theme.lead.item.updatedAt.slice(0, 10), language)}`}
+        </p>
+        {theme.entries.length > 1 && <details>
+          <summary>{language === 'zh' ? `展开同主题的其他变化（${theme.entries.length - 1}）` : `Other developments (${theme.entries.length - 1})`}</summary>
+          <EntryLinks entries={theme.entries.slice(1)} language={language} emptyText='' showSummary />
+        </details>}
+        {otherReports.length > 0 && <details>
+          <summary>{language === 'zh' ? `同来源的其他已审记录（${otherReports.length}）` : `Other reviewed records for these sources (${otherReports.length})`}</summary>
+          <div className='digest-link-list'>{otherReports.map((report) =>
+            <InternalLink href={`/items/${report.slug}/`} key={report.id}>
+              <strong>{localize(report.title, language)}</strong>
+              <span>{localize(report.summary, language)}</span>
+              <span>{displayDate(report.publishedAt.slice(0, 10), language)} · {language === 'zh' ? '核对各自的证据与适用边界' : 'Check the evidence and scope of each record'}</span>
+            </InternalLink>)}</div>
+        </details>}
+        {theme.additionalEntries.length > 0 && <details>
+          <summary>{language === 'zh' ? `更多同主题材料（${theme.additionalEntries.length}，扩展阅读）` : `More on this topic (${theme.additionalEntries.length}, optional)`}</summary>
+          <EntryLinks entries={theme.additionalEntries} language={language} emptyText='' showSummary />
+        </details>}
+        {theme.relatedHistory.length > 0 && <details>
+          <summary>{language === 'zh' ? '回看相关背景' : 'Related background'}</summary>
+          <EntryLinks entries={theme.relatedHistory} language={language} emptyText='' />
+        </details>}
+      </article>;
+    })}
+  </div>;
 }
 
 export default function DigestPage({
@@ -70,18 +130,23 @@ export default function DigestPage({
   readonly tools: readonly KnowledgeTool[];
   readonly language: Language;
 }) {
-  const asOfDate = shanghaiDateOnly(new Date());
+  const now = new Date();
+  const asOfDate = shanghaiDateOnly(now);
+  const asOfTimestamp = now.toISOString();
   const range = weekRange(asOfDate);
   const daily = useMemo(
-    () => createDailyDigest(items, { digestDate: asOfDate }),
-    [asOfDate, items],
+    () => createDailyDigest(items, { digestDate: asOfDate, asOfTimestamp, topics: knowledgeTopics }),
+    [asOfDate, asOfTimestamp, items],
   );
   const weekly = useMemo(
     () => createWeeklyDigest(items, {
       ...range,
+      asOfDate,
+      asOfTimestamp,
+      topics: knowledgeTopics,
       validToolIds: tools.map((tool) => tool.id),
     }),
-    [items, range.weekEnd, range.weekStart, tools],
+    [asOfDate, asOfTimestamp, items, range.weekEnd, range.weekStart, tools],
   );
   const recommendedTools = weekly.recommendedToolIds
     .map((id) => tools.find((tool) => tool.id === id))
@@ -91,11 +156,11 @@ export default function DigestPage({
     <>
       <section className='page-intro digest-intro'>
         <p className='eyebrow'>REVIEWED DIGESTS</p>
-        <h1>{language === 'zh' ? '把一周的变化压缩成今天能做的事。' : 'Compress the week into something you can do today.'}</h1>
+        <h1>{language === 'zh' ? '按值得理解的主题，读懂行业 AI。' : 'Understand AI in business, one topic at a time.'}</h1>
         <p>
           {language === 'zh'
-            ? '日报和周报只投影已经批准的公开内容。同一事件合并，内容不足时少发，不用候选或低价值条目凑数。'
-            : 'Daily and weekly digests only project approved public content. Events are deduplicated, and short editions never pad with candidates.'}
+            ? '先读少量主题，按所选条目的完整内容估算 5–8 分钟阅读量；短报可以更短。其他变化、来源记录与历史可按需展开。'
+            : 'Start with a few topics selected for an estimated 5–8 minutes of full-item reading. Short editions stay short; supporting records and history are optional.'}
         </p>
       </section>
 
@@ -103,27 +168,23 @@ export default function DigestPage({
         <div className='section-heading section-heading-row'>
           <div>
             <p className='section-index'>DAILY DIGEST</p>
-            <h2 id='daily-digest-title'>{language === 'zh' ? '今日简报' : 'Daily digest'}</h2>
+            <h2 id='daily-digest-title'>{language === 'zh' ? '主题简报' : 'Topic digest'}</h2>
           </div>
-          <span className='result-count'>{displayDate(daily.digestDate, language)}</span>
+          <span className='result-count'>{language === 'zh' ? '选编截至 ' : 'Selected as of '}{displayDate(daily.digestDate, language)}</span>
         </div>
 
         <div className='digest-metrics' aria-label={language === 'zh' ? '今日简报指标' : 'Daily digest metrics'}>
-          <article><strong>{daily.entries.length}</strong><span>{language === 'zh' ? '条内容' : 'items'}</span></article>
-          <article><strong>{daily.estimatedReadMinutes}</strong><span>{language === 'zh' ? '分钟' : 'minutes'}</span></article>
+          <article><strong>{daily.themes.length}</strong><span>{language === 'zh' ? '个主题' : 'topics'}</span></article>
+          <article><strong>{daily.estimatedReadMinutes}</strong><span>{language === 'zh' ? '分钟所选条目阅读估计' : 'estimated selected-item minutes'}</span></article>
           <article><strong>{daily.sourceCount}</strong><span>{language === 'zh' ? '个信源' : 'sources'}</span></article>
           <article><strong>{daily.coveredDomains.length}/3</strong><span>{language === 'zh' ? '知识域' : 'domains'}</span></article>
         </div>
 
         {daily.entries.length > 0 ? (
           <>
-            <div className='knowledge-grid digest-card-grid'>
-              {daily.entries.map((entry) => (
-                <KnowledgeCard item={entry.item} language={language} key={entry.item.id} />
-              ))}
-            </div>
+            <ThemePanels themes={daily.themes} language={language} />
             <div className='digest-action-callout'>
-              <p className='section-index'>TODAY'S ACTION</p>
+              <p className='section-index'>{language === 'zh' ? '理解与应用' : 'UNDERSTAND & APPLY'}</p>
               <strong>{daily.todayAction ? localize(daily.todayAction, language) : ''}</strong>
             </div>
           </>
@@ -151,10 +212,17 @@ export default function DigestPage({
         </div>
 
         {weekly.entries.length > 0 ? (
-          <div className='digest-panel-grid'>
+          <details>
+            <summary>{language === 'zh'
+              ? `展开本周 ${weekly.themes.length} 个主题 · 主阅读约 ${weekly.estimatedReadMinutes} 分钟（扩展资料另计）`
+              : `Explore ${weekly.themes.length} weekly topics · about ${weekly.estimatedReadMinutes} minutes, plus optional material`}</summary>
+            <ThemePanels themes={weekly.themes} language={language} />
+            <details>
+            <summary>{language === 'zh' ? '按用途查阅本周条目与工具（扩展阅读）' : 'Browse weekly items and tools by purpose (optional)'}</summary>
+            <div className='digest-panel-grid'>
             <article className='digest-panel digest-main-thread'>
               <p className='section-index'>MAIN THREAD</p>
-              <h3>{language === 'zh' ? '本周主线' : 'Main thread'}</h3>
+              <h3>{language === 'zh' ? '本周主条目' : 'This week’s lead item'}</h3>
               {weekly.mainThread && (
                 <>
                   <InternalLink href={`/items/${weekly.mainThread.item.slug}/`}>
@@ -165,12 +233,12 @@ export default function DigestPage({
               )}
             </article>
             <article className='digest-panel'>
-              <p className='section-index'>CONTINUING EVENTS</p>
-              <h3>{language === 'zh' ? '持续事件' : 'Continuing events'}</h3>
+              <p className='section-index'>RELATED HISTORY</p>
+              <h3>{language === 'zh' ? '有关联历史的主题' : 'Topics with related history'}</h3>
               <EntryLinks
                 entries={weekly.continuingEvents}
                 language={language}
-                emptyText={language === 'zh' ? '本周没有已批准的持续事件更新。' : 'No approved continuing event this week.'}
+                emptyText={language === 'zh' ? '本周条目暂无可核对的关联历史。' : 'No related history is available for this week’s entries.'}
               />
             </article>
             <article className='digest-panel'>
@@ -200,14 +268,16 @@ export default function DigestPage({
                 </p>
               )}
             </article>
-          </div>
+            </div>
+            </details>
+          </details>
         ) : (
           <div className='empty-state'>
             <strong>{language === 'zh' ? '本周暂无已批准更新' : 'No approved update this week'}</strong>
             <p>
               {language === 'zh'
-                ? '周报只包含本周新增或实质更新的公开内容；没有时保持空报。'
-                : 'The weekly review only includes newly published or substantively updated public items.'}
+                ? '周报按公开条目的发布时间或记录更新时间选取；日期不说明修订原因，没有足够元数据时不称为实质新增或纠错。'
+                : 'The weekly review uses publication or record-update dates. Dates alone do not establish a substantive change or correction.'}
             </p>
           </div>
         )}

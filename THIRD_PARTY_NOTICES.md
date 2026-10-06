@@ -16,10 +16,13 @@ Files under `scripts/fixtures/` contain bounded RSS/XML metadata used only to te
 
 ## Vendored browser component
 
-`public/fieldbook/index.html` embeds a browser bundle derived from
+The retired fieldbook archived at
+`docs/archive/fieldbook/fieldbook-before-integration.html` embeds a browser bundle derived from
 [`@chenglou/pretext`](https://github.com/chenglou/pretext), a JavaScript/TypeScript
 text measurement and layout library. This bundled portion remains under its MIT
 License and is not covered by this project's Apache-2.0 or CC BY 4.0 grants.
+The archive is not included in the website build. The replacement
+`public/fieldbook/index.html` is a navigation page and does not contain this bundle.
 
 ```text
 MIT License

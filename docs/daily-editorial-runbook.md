@@ -6,12 +6,16 @@
 
 ## 1. 目标与边界
 
-每日编辑流程的目标不是追逐全网热点，而是从 6–10 个已登记公开信源中找出少量、可信、能促成行动的变化，并回答：
+行业 AI 汇总以[主题讲解型行业 AI 汇总规范](industry-ai-briefing-standard.md)为唯一正式正文。本手册负责说明现有采集、候选和审核流程如何使用该规范；本次不改变扫描频率、工作流或发布机制。
+
+学习地图整合版在本地 DEV 的 `/learn/` 审核；完整 RAG 课程为 `/learn/knowledge-answers/`，`/editorial-example/` 仅保留兼容入口。旧手册原文移入 `docs/archive/fieldbook/`，在线 `/fieldbook/` 改为退役导航；旧本机记录只读保留。方法去向和审核范围见[整合审核清单](legacy-content-integration-review.md)。`vite.config.ts` 中 `learningReleaseApproved=false`，生产构建排除未批准课程；本地检查不构成 GitHub 同步或部署授权。所有者每天最多 30 分钟的运营限制继续适用。
+
+编辑流程从已登记公开信源中选取少量可信材料，帮助有客户、业务和销售经验、AI 基础不同的大客户销售理解一个主题。覆盖在岗转型与转向 AI 业务的读者。讲解按需组织成连续解释，回答：
 
 1. 发生了什么；
-2. 为什么与传统 To B 销售转向 AI 业务有关；
+2. 相关能力怎样工作，为什么可能影响客户业务；
 3. 对大客户销售、AI 岗位或组织转型有什么影响；
-4. 用户今天可以做什么；
+4. 读者应当形成什么理解，能否通过一个问题检验；
 5. 证据在哪里，事实、企业自述和编辑判断分别是什么。
 
 禁止事项：
@@ -33,6 +37,7 @@
 - RSS 读取边界：`scripts/stephen-rss.ts`
 - 发现记录与候选模型：`src/content/intake.ts`
 - 可选 AI 文案边界：`scripts/stephen-editorial-ai.ts`
+- 生成和人工编辑共用规范：`docs/industry-ai-briefing-standard.md`
 - 只读执行入口：`scripts/stephen-editorial-intake.ts`
 - 每日审核契约：`scripts/stephen-daily-review.ts`
 - 每日审核 CLI：`scripts/stephen-daily-review-cli.ts`
@@ -79,9 +84,15 @@ SAAS-606 的机器节奏固定为自然周的周一、周三、周五，北京�
 
 - 事实层：标题、短摘要、内容类型、发布时间、证据和来源属性；
 - 解释层：为什么重要、销售影响、岗位与组织影响；
-- 行动层：目标用户下一步能执行的一个动作，以及关联专题/工具。
+- 理解层：一个理解自测问题及参考解释，可沿用 `nextActionZh` 字段；只有证据和主题适合时，才提供可选业务行动或关联工具。
 
 AI 可生成摘要初稿、翻译建议、标签建议和影响分析草稿，但编辑必须核对原文；AI 产出的风险等级、信源 ID、事实类型和发布状态一律不采信。无 AI Key、请求失败、限流、超时或返回结构异常时，保留来源元数据并使用明确写着“需人工核验”的确定性回退文案，不编造摘要。
+
+`scripts/stephen-editorial-ai.ts` 在每次已配置的模型请求前，从自身脚本相对路径读取正式规范，注入 system prompt。规范缺失、读取失败、空白或超过 12,000 字符时不调用模型，以 `deterministic_fallback / ai_unavailable` 保留待核实说明。输出仍只有 `titleZh`、`summaryZh`、`whyItMattersZh`、`salesImplicationZh`、`roleOrgImplicationZh`、`nextActionZh` 六个文案字段；具体写法及字段映射见正式规范。
+
+采集入口自动传入信息截至时间 `informationAsOf`（本次扫描时间）和来源发布时间 `sourcePublishedAt`，并将至多 160 字 RSS 摘录标为 `rss_excerpt`。扫描时间不代表原文已经核验；RSS 摘录不等于正文，也不保证足以写出完整讲解。材料不足时保留“待核实”及缺失信息，由人工回到原文核对后完善 `publicationDraft`，不靠补写客户场景或效果数字填满结构。
+
+生成函数另支持显式可选的 `industry`、`customerBusinessContext` 和 `approvedHistorySummaries` 上下文。只可提供公开或获准使用的非敏感业务背景；历史摘要须来自现存已批准条目，逐条给出 `id`、`topic`、`publishedAt`、`summary`。当前机器扫描没有自动读取客户背景或装载历史摘要；未提供即为未知，不能宣称已与全部历史对齐。来源文本和上下文只作为参考数据，不能指挥模型绕过正式规范或审批边界。
 
 ### 3.3 去重与事件归组
 
@@ -97,7 +108,7 @@ AI 可生成摘要初稿、翻译建议、标签建议和影响分析草稿，�
 
 进入风险判断前必须通过：
 
-- 完整中文标题、摘要、用户意义、销售影响、岗位组织影响和下一步行动；
+- 完整中文标题、摘要、用户意义、销售影响、岗位组织影响和 `nextAction` 文案；主题讲解可用理解自测及参考解释填充最后一项；
 - 至少一个知识域和一条证据；
 - HTTPS 规范 URL、合法 ISO 时间、合法候选状态；
 - 主信源出现在证据中；
@@ -150,7 +161,7 @@ AI 可生成摘要初稿、翻译建议、标签建议和影响分析草稿，�
 - 效果数字保留样本、时间、口径和“企业自述”属性；
 - 法律监管内容没有被写成面向用户的法律意见；
 - 三域标签与内容真实相关，没有为了覆盖率强行打标；
-- “下一步行动”可执行，不要求用户上传客户敏感数据；
+- 专业术语首次出现有简短中文解释，理解自测有准确参考解释；如提供可选行动，应有依据且可执行，不要求用户上传客户敏感数据；
 - 相关工具和专题链接正确；
 - 重复事件已经合并；
 - 最终决定、审核人、时间、规则版本和备注已记录。
@@ -159,12 +170,12 @@ AI 可生成摘要初稿、翻译建议、标签建议和影响分析草稿，�
 
 日报只从公开 `approved` 集合投影：
 
-- 优先 3–5 条；高价值内容不足时允许 1–2 条或明确空报；
-- 尽量覆盖三个知识域，不用低价值条目凑覆盖率；
-- 同一事件只出现一次；
-- 展示预计阅读时长、独立来源数和“今天该做什么”。
+- 按正式规范组织为少量主题，以所选内容的阅读预算控制数量；材料不足时允许短报或空报；
+- 知识域只用于真实归类和覆盖统计，不为覆盖率加入条目；
+- 同来源记录归组但保留各自证据，不把相关的不同事件删除；
+- 展示预计阅读时长、来源标识数和本次值得理解的主题；来源标识不同不代表相互独立的佐证，不为日报强造业务任务。
 
-周报选取当周 3–5 条新增或实质更新，组织为：本周主线、持续事件、岗位变化和推荐工具。日报、周报都不是新的事实来源，只是对同一批准集合的确定性投影。
+周报从当周新增或更新的批准记录中按主题选取；主条目、岗位变化和推荐工具作为可展开的补充入口。系统能识别记录更新时间，不能据此自动断言一次事实修正或行业趋势。日报、周报都不是新的事实来源，只是对同一批准集合的确定性投影。
 
 ## 8. 抽样、停止与异常处理
 
@@ -191,7 +202,7 @@ AI 可生成摘要初稿、翻译建议、标签建议和影响分析草稿，�
 2. 指定上一稳定 release version；
 3. 记录操作者、时间和回滚来源版本；
 4. 恢复上一稳定静态构建；
-5. 验证首页、详情、备案、旧手册和 `/api/` 隔离；
+5. 验证首页、详情、备案、学习入口、旧手册退役导航和 `/api/` 隔离；
 6. 保留 `published → withdrawn → rolled_back` 或 `published → rolled_back` 审计链。
 
 `createPublicationRecord`、`withdrawPublication` 和 `rollbackRelease` 只生成不可丢失的生命周期记录，不执行服务器部署。实际回滚属于独立私有运维边界，必须另行授权；本公开手册不记录主机、身份、命令或恢复拓扑。
@@ -323,15 +334,19 @@ gh workflow run daily-candidate-review.yml \
 若出现 `target base contains unapproved review candidates`：
 
 1. 确认误合并提交，按完整 SHA 备份 manifest 与 ledger，保留编辑文案、`publicationDraft` 和发现记录。
-2. 单独提交清理 PR，从默认分支当前文件树移除误入的原始候选；不得放宽审计、移动到网站公开集合或伪造批准记录。
+2. 单独提交清理 PR，从默认分支的活动 `review-candidates/` 目录移除误入的原始候选；需要保留的稿件可按原字节归档至不进入网站构建的 `docs/archive/`，并记录来源 SHA、校验和及未批准状态。不得放宽审计、移动到网站公开集合或伪造批准记录。
 3. 清理 PR 经审核合入后，等待精确 `main` SHA 的完整检查通过。随后等待已有定时任务；手动触发新的 live 运行须另获授权。重跑旧失败运行会使用旧控制版本，不作为修复验收。
 4. 已合并的旧 PR 不能再次作为 open Draft 批准。需继续审核的编辑稿，经授权迁入新的有效候选 Draft，核对全部字段并以新的完整 SHA 重新人工批准。
 
-2026-09-24 的 PR #18 直接合入了 `review-candidates/2026-09-23/` 两文件，导致后续候选任务的公开审计失败。该 manifest 含 9 条已有 `publicationDraft` 的编辑稿，仍为 `pending_owner_review / not_published`。清理仅修复当前文件树，历史提交中的编辑稿继续保留，且已公开的历史不会变为私有。精确恢复源：
+2026-09-24 的 PR #18 直接合入了 `review-candidates/2026-09-23/` 两文件，导致后续候选任务的公开审计失败。该 manifest 含 9 条已有 `publicationDraft` 的编辑稿，仍为 `pending_owner_review / not_published`。
+
+2026-10-06 的 [PR #20](https://github.com/ZiZ-LG/stephen-knowledge-hub/pull/20) 已在 `main` 提交 `e4455640a9393e4d05102eb5beb905ddae654084` 中将两文件原字节移入[只读候选档案](archive/editorial-candidates/2026-09-23/README.md)，清除了活动目录中的旧阻塞；该提交的[完整检查](https://github.com/ZiZ-LG/stephen-knowledge-hub/actions/runs/37427858271)已通过。后续整合预检修复时必须保留这两份档案，不再重复历史删除。归档不是内容批准或发布，已公开的历史也不会变为私有。
+
+本节的 base 预检、候选 PR 提示与回归测试用于防止同类误合入再次造成隐蔽阻塞。主分支检查通过不等于定时候选生成已经恢复，仍须确认基于清理后版本的新定时运行完成采集、审计和候选 Draft PR 创建或更新；没有审核记录时，应核实运行摘要中的空结果。历史稿件若继续采用，仍须按上述第 4 步重新审核并绑定新的完整 SHA。精确恢复源：
 
 - [候选提交 `960c64fc1782fd629b76db3a1bafdc82d4dd2e36`](https://github.com/ZiZ-LG/stephen-knowledge-hub/commit/960c64fc1782fd629b76db3a1bafdc82d4dd2e36)
-- `review-candidates/2026-09-23/review-manifest.json`，SHA-256：`6c0d666f1dade04e99ce08f4b67db71243ec986fa1540b3569016cccf042d8a8`
-- `review-candidates/2026-09-23/discovery-ledger.json`，SHA-256：`1c2616f33c68c9a6438bcf71cf202b1b385cddac0adeb304a09e50f462c38784`
+- 当前档案 `docs/archive/editorial-candidates/2026-09-23/review-manifest.json`；历史路径 `review-candidates/2026-09-23/review-manifest.json`；SHA-256：`6c0d666f1dade04e99ce08f4b67db71243ec986fa1540b3569016cccf042d8a8`
+- 当前档案 `docs/archive/editorial-candidates/2026-09-23/discovery-ledger.json`；历史路径 `review-candidates/2026-09-23/discovery-ledger.json`；SHA-256：`1c2616f33c68c9a6438bcf71cf202b1b385cddac0adeb304a09e50f462c38784`
 
 提前检查和 PR 提示不能阻止拥有合并权限的人绕过流程。服务器端强制限制需单独设计，必须兼容候选 CI 全绿和后续批准封印检查，不可直接让全部候选 PR 检查失败。
 
