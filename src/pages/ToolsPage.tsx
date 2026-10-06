@@ -5,6 +5,7 @@ import { localize, type Language } from '../i18n';
 import { useLibrary } from '../state/LibraryContext';
 import { sanitizeMarkdownFilename } from '../state/search';
 import InternalLink from '../components/InternalLink';
+import LearningLinks from '../components/LearningLinks';
 
 async function copyMarkdown(value: string) {
   if (navigator.clipboard?.writeText) {
@@ -92,6 +93,7 @@ function ToolWorkspace({
           <span>{tool.estimatedMinutes} min · Markdown</span>
         </div>
         <p className='lead'>{localize(tool.scenario, language)}</p>
+        <LearningLinks toolId={tool.id} language={language} />
         <div className='tool-columns'>
           <section>
             <h3>{language === 'zh' ? '开始前回答' : 'Prompts'}</h3>
@@ -204,14 +206,15 @@ export default function ToolsPage({
         </p>
         <div className='hero-actions'>
           <InternalLink className='primary-action' href='/learn/'>
-            {language === 'zh' ? '选择 1 / 7 / 30 / 90 天路径' : 'Choose a 1 / 7 / 30 / 90 day path'}
+            {language === 'zh' ? '先理解相关原理' : 'Understand the foundations'}
           </InternalLink>
-          <a className='secondary-action' href='/fieldbook/'>
-            {language === 'zh' ? '完整旧手册' : 'Complete fieldbook'}
-          </a>
+          <InternalLink className='secondary-action' href='/library/'>
+            {language === 'zh' ? '继续我的材料' : 'Continue my work'}
+          </InternalLink>
         </div>
       </section>
 
+      <nav className='tool-directory' aria-label={language === 'zh' ? '选择工具' : 'Choose a tool'}>{tools.map((tool) => <InternalLink key={tool.id} href={`/tools/#${tool.id}`}>{localize(tool.title, language)}</InternalLink>)}</nav>
       <section className='tool-list' aria-label={language === 'zh' ? '行动工具' : 'Action tools'}>
         {tools.map((tool, index) => (
           <ToolWorkspace tool={tool} index={index} language={language} key={tool.id} />

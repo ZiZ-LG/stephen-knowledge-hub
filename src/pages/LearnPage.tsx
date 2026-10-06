@@ -1,84 +1,53 @@
+import { useState } from 'react';
 import type { Language } from '../i18n';
 import InternalLink from '../components/InternalLink';
+import { learningUnits, searchLearningUnits } from '../learning/access';
+import { useLearning } from '../learning/LearningContext';
 
-const paths = [
-  {
-    days: 1,
-    zh: '建立三域地图',
-    en: 'Map the three domains',
-    zhBody: '读今日精选，完成一份 AI 公司与目标岗位研究画布。',
-    enBody: 'Read today’s selection and complete one company and role research canvas.',
-    toolId: 'company-role-research',
-  },
-  {
-    days: 7,
-    zh: '从变化走到价值假设',
-    en: 'Move from change to value',
-    zhBody: '围绕一个客户问题，完成发现访谈、成熟度扫描和价值假设。',
-    enBody: 'Work one customer problem through discovery, maturity and value hypothesis.',
-    toolId: 'value-hypothesis-one-pager',
-  },
-  {
-    days: 30,
-    zh: '形成 AI 商业岗位能力证据',
-    en: 'Build evidence for an AI commercial role',
-    zhBody: '对照岗位原页补齐能力差距，并完成 POC 与组织采用材料。',
-    enBody: 'Close role gaps and build POC and adoption artifacts against original job evidence.',
-    toolId: 'transition-evidence',
-  },
-  {
-    days: 90,
-    zh: '建立持续更新的个人作业系统',
-    en: 'Build a durable personal operating system',
-    zhBody: '持续更新专题、复盘工具材料，并把证据用于求职、客户研究或业务推进。',
-    enBody: 'Refresh topics and artifacts for job transition, account research or opportunity work.',
-    toolId: 'stakeholder-adoption-risk',
-  },
+const groups = [
+  { id: 'all', title: '全部单元' }, { id: 'principles', title: '理解能力' },
+  { id: 'customer', title: '判断客户问题' }, { id: 'practice', title: '验证与协作' },
 ] as const;
-
 export default function LearnPage({ language }: { readonly language: Language }) {
-  return (
-    <>
-      <section className='page-intro'>
-        <p className='eyebrow'>LEARNING PATHS</p>
-        <h1>{language === 'zh' ? '按你现在要完成的工作选择路径。' : 'Choose a path by the work you need to finish.'}</h1>
-        <p>
-          {language === 'zh'
-            ? '新知识库使用 1 / 7 / 30 / 90 天路径；完整旧手册中的 3 / 7 / 14 / 30 天任务保持原样。'
-            : 'The new hub uses 1 / 7 / 30 / 90 days. The fieldbook keeps its original 3 / 7 / 14 / 30 day tasks.'}
-        </p>
-      </section>
-
-      <section className='path-grid' aria-label={language === 'zh' ? '学习路径' : 'Learning paths'}>
-        {paths.map((path) => (
-          <article className='path-card' key={path.days}>
-            <span className='path-days'>{path.days}</span>
-            <small>{language === 'zh' ? '天' : path.days === 1 ? 'day' : 'days'}</small>
-            <h2>{language === 'zh' ? path.zh : path.en}</h2>
-            <p>{language === 'zh' ? path.zhBody : path.enBody}</p>
-            <InternalLink href={`/tools/#${path.toolId}`}>
-              {language === 'zh' ? '从第一个工具开始 →' : 'Start with the first tool →'}
-            </InternalLink>
-          </article>
-        ))}
-      </section>
-
-      <section className='section-block split-block'>
-        <div>
-          <p className='section-index'>FIELD­BOOK</p>
-          <h2>{language === 'zh' ? '需要系统准备 AI 销售面试？' : 'Preparing systematically for an AI sales interview?'}</h2>
-          <p>
-            {language === 'zh'
-              ? '旧手册完整保留 8 个模块、32 个术语、45 项任务和 28 道问题，不被新路径改写。'
-              : 'The fieldbook preserves 8 modules, 32 terms, 45 tasks and 28 questions unchanged.'}
-          </p>
-        </div>
-        <a className='fieldbook-card' href='/fieldbook/'>
-          <span>AI SALES FIELD­BOOK</span>
-          <strong>{language === 'zh' ? '进入完整手册' : 'Open the complete fieldbook'}</strong>
-          <small>8 modules · 32 terms · 45 tasks</small>
-        </a>
-      </section>
-    </>
-  );
+  const [group, setGroup] = useState<string>('all');
+  const [query, setQuery] = useState('');
+  const { state, saveError } = useLearning();
+  const units = searchLearningUnits(learningUnits, query).filter((unit) => group === 'all' || unit.group === group);
+  const last = learningUnits.find((unit) => unit.slug === state.lastSlug);
+  const completed = learningUnits.filter((unit) => state.completedIds.includes(unit.id)).length;
+  const terms = [...new Map(learningUnits.flatMap((unit) => unit.concepts.map((term) => [term.term, { ...term, slug: unit.slug }] as const))).values()];
+  return <>
+    <section className='page-intro'>
+      <p className='eyebrow'>LEARNING MAP</p>
+      <h1>{language === 'zh' ? '把零散信息，变成能解释的判断。' : 'Turn scattered information into sound judgment.'}</h1>
+      <p>从你正在遇到的问题开始。每个单元用原理、业务场景与自测讲清一个判断，再连接到行业观察和可编辑工具。</p>
+      <div className='hero-actions'>
+        {last && <InternalLink className='primary-action' href={`/learn/${last.slug}/`}>继续阅读：{last.title}</InternalLink>}
+        <InternalLink className='secondary-action' href='/digest/'>先看主题简报 →</InternalLink>
+      </div>
+      <p className='learning-progress-note'>已标记完成自测 {completed} / {learningUnits.length} 个单元 · 进度仅保存在当前浏览器</p>
+      {saveError && <p role='status'>学习进度暂时无法保存；原有记录没有被覆盖，本页仍可阅读。</p>}
+    </section>
+    {learningUnits.length > 0 && <section className='learning-starts' aria-label='按当前问题选择起点'>
+      <InternalLink href='/learn/ai-foundations/'><span>01 · 听懂技术讨论</span><strong>模型到底能做什么？</strong><p>先理解模型、知识库和工具调用。</p></InternalLink>
+      <InternalLink href='/learn/customer-discovery/'><span>02 · 准备客户会谈</span><strong>客户的流程卡在哪里？</strong><p>把模糊的 AI 兴趣变成可核实的问题。</p></InternalLink>
+      <InternalLink href='/learn/pilot-evaluation/'><span>03 · 推进试点与协作</span><strong>怎样判断值得继续？</strong><p>连接效果验证、责任与采用条件。</p></InternalLink>
+    </section>}
+    <section className='section-block' aria-labelledby='learning-units-title'>
+      <div className='section-heading'><p className='section-index'>BUILD YOUR UNDERSTANDING</p><h2 id='learning-units-title'>选择一个值得弄懂的问题</h2></div>
+      <div className='learning-filter'>
+        <div className='learning-tabs' aria-label='学习方向'>{groups.map((entry) => <button type='button' key={entry.id} aria-pressed={group === entry.id} onClick={() => setGroup(entry.id)}>{entry.title}</button>)}</div>
+        <label>搜索概念或问题<input type='search' value={query} onChange={(event) => setQuery(event.target.value)} placeholder='例如：RAG、客户问题、评测' /></label>
+      </div>
+      <div className='learning-grid'>{units.map((unit) => <InternalLink className='learning-card' href={`/learn/${unit.slug}/`} key={unit.id}>
+        <span className='section-index'>{groups.find((entry) => entry.id === unit.group)?.title} · 约 {unit.minutes} 分钟</span>
+        <h3>{unit.title}</h3><p>{unit.summary}</p><span className='learning-card-footer'>{state.completedIds.includes(unit.id) ? '✓ 已标记完成自测' : '阅读、理解与自测'} →</span>
+      </InternalLink>)}</div>
+      {units.length === 0 && <p className='empty-state'>{learningUnits.length ? '没有匹配的单元，试试更短的关键词或切回全部。' : '新的学习内容正在审核。你仍可浏览已有主题与方法工具。'}</p>}
+    </section>
+    {terms.length > 0 && <section className='section-block' id='concepts'><div className='section-heading'><p className='section-index'>CONCEPTS IN CONTEXT</p><h2>碰到术语，回到它解决的问题</h2></div>
+      <details className='learning-glossary'><summary>展开 {terms.length} 个概念的简短解释</summary><dl>{terms.map((term) => <div key={term.term}><dt><InternalLink href={`/learn/${term.slug}/`}>{term.term}</InternalLink></dt><dd>{term.meaning}</dd></div>)}</dl></details>
+    </section>}
+    <section className='section-block learning-origin'><h2>一套学习内容，连接日常工作</h2><p>原手册中可复用的概念、客户发现、价值判断、试点和职业证据，已按问题重新组织。旧岗位样本、未来年份预测与倒计时任务不再作为当前学习依据。</p><InternalLink href='/library/#legacy-learning'>查阅或导出旧版学习记录 →</InternalLink></section>
+  </>;
 }

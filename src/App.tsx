@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
 import { approvedKnowledgeItems } from './content/publicItems';
 import { knowledgeTools } from './content/tools';
@@ -18,6 +18,9 @@ import {
 import ItemPage from './pages/ItemPage';
 import DigestPage from './pages/DigestPage';
 import LearnPage from './pages/LearnPage';
+import LessonPage from './pages/LessonPage';
+import { findLearningUnit, learningPreview } from './learning/access';
+import { LearningProvider } from './learning/LearningContext';
 import LibraryPage from './pages/LibraryPage';
 import PolicyPage from './pages/PolicyPage';
 import RadarPage from './pages/RadarPage';
@@ -34,6 +37,8 @@ const productScope = {
 } as const;
 const approvedItemIds = approvedKnowledgeItems.map((item) => item.id);
 const knowledgeToolIds = knowledgeTools.map((tool) => tool.id);
+// Teaching drafts are local previews. Production keeps the existing approved-only routes.
+const EditorialExample = import.meta.env.DEV ? lazy(() => import('./examples/RagThemeExample')) : null;
 
 function useBrowserLocation() {
   const readLocation = () => ({
@@ -57,7 +62,8 @@ function routeBelongsToPrimary(route: AppRoute, href: string) {
   if (href === '/radar/') {
     return ['radar', 'topics', 'topic', 'roles', 'item'].includes(route.name);
   }
-  if (href === '/tools/') return route.name === 'tools' || route.name === 'learn';
+  if (href === '/learn/') return route.name === 'learn' || route.name === 'lesson';
+  if (href === '/tools/') return route.name === 'tools';
   if (href === '/library/') return route.name === 'library';
   return false;
 }
@@ -114,6 +120,9 @@ export default function App() {
   }, [language]);
 
   const page = (() => {
+    if (EditorialExample && location.pathname.replace(/\/+$/, '') === '/editorial-example') {
+      return <Suspense fallback={<p>正在加载内容示范…</p>}><EditorialExample /></Suspense>;
+    }
     switch (route.name) {
       case 'today':
         return (
@@ -153,6 +162,10 @@ export default function App() {
         return <RolesPage items={approvedKnowledgeItems} language={language} />;
       case 'learn':
         return <LearnPage language={language} />;
+      case 'lesson': {
+        const unit = findLearningUnit(route.slug);
+        return unit ? <LessonPage key={unit.id} unit={unit} language={language} /> : <NotFoundPage language={language} />;
+      }
       case 'library':
         return (
           <LibraryPage
@@ -183,7 +196,7 @@ export default function App() {
   })();
 
   return (
-    <LibraryProvider itemIds={approvedItemIds} toolIds={knowledgeToolIds}>
+    <LearningProvider><LibraryProvider itemIds={approvedItemIds} toolIds={knowledgeToolIds}>
       <div className='site-shell'>
       <a className='skip-link' href='#main'>
         {language === 'zh' ? '跳到正文' : 'Skip to content'}
@@ -218,7 +231,10 @@ export default function App() {
         </button>
       </header>
 
-      <main id='main' tabIndex={-1}>{page}</main>
+      <main id='main' tabIndex={-1}>
+        {learningPreview && <aside className='content-review-strip' role='status'><strong>整合审核版</strong><span>学习内容与新入口待你审核；线上网站尚未更新。</span><InternalLink href='/learn/'>查看学习地图 →</InternalLink></aside>}
+        {page}
+      </main>
 
       <footer className='site-footer'>
         <div>
@@ -227,6 +243,7 @@ export default function App() {
           <p>© 2026 AI Sales Fieldcraft</p>
         </div>
         <div className='footer-links'>
+          <InternalLink href='/learn/'>{language === 'zh' ? '学习地图' : 'Learning map'}</InternalLink>
           <InternalLink href='/policy/#privacy'>{language === 'zh' ? '隐私' : 'Privacy'}</InternalLink>
           <InternalLink href='/policy/#copyright'>{language === 'zh' ? '版权' : 'Copyright'}</InternalLink>
           <InternalLink href='/policy/#correction'>{language === 'zh' ? '纠错与建议' : 'Corrections'}</InternalLink>
@@ -257,6 +274,6 @@ export default function App() {
         ))}
       </nav>
       </div>
-    </LibraryProvider>
+    </LibraryProvider></LearningProvider>
   );
 }

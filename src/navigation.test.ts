@@ -37,6 +37,7 @@ describe('SAAS-602 Stephen navigation and selection', () => {
     expect(parseRoute('/tools/')).toEqual({ name: 'tools' });
     expect(parseRoute('/roles/')).toEqual({ name: 'roles' });
     expect(parseRoute('/learn/')).toEqual({ name: 'learn' });
+    expect(parseRoute('/learn/knowledge-answers/')).toEqual({ name: 'lesson', slug: 'knowledge-answers' });
     expect(parseRoute('/library/')).toEqual({ name: 'library' });
     expect(parseRoute('/digest/')).toEqual({ name: 'digest' });
     expect(parseRoute('/policy/')).toEqual({ name: 'policy' });
@@ -53,12 +54,12 @@ describe('SAAS-602 Stephen navigation and selection', () => {
     expect(decodeHashTarget('')).toBe('');
   });
 
-  it('keeps four primary destinations on both desktop and mobile', () => {
+  it('keeps learning discoverable alongside observations, tools and the library', () => {
     expect(desktopNavigation.map((item) => item.href)).toEqual([
-      '/', '/radar/', '/tools/', '/library/',
+      '/', '/radar/', '/learn/', '/tools/', '/library/',
     ]);
     expect(mobileNavigation.map((item) => item.href)).toEqual([
-      '/', '/radar/', '/tools/', '/library/',
+      '/', '/radar/', '/learn/', '/tools/', '/library/',
     ]);
   });
 

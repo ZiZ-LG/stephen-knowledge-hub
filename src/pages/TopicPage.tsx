@@ -3,6 +3,7 @@ import { domainLabels, localize, type Language } from '../i18n';
 import { selectTopicItems } from '../navigation';
 import InternalLink from '../components/InternalLink';
 import KnowledgeCard from '../components/KnowledgeCard';
+import LearningLinks from '../components/LearningLinks';
 
 export default function TopicPage({
   topic,
@@ -57,6 +58,7 @@ export default function TopicPage({
         </div>
       </article>
 
+      <LearningLinks topicSlugs={[topic.slug]} language={language} />
       <section className='section-block' aria-labelledby='topic-tools-title'>
         <div className='section-heading'>
           <p className='section-index'>TOOLS</p>

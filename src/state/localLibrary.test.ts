@@ -1,4 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { createElement } from 'react';
+import { renderToString } from 'react-dom/server';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { approvedSeedItems } from '../content/items';
 import { knowledgeTools } from '../content/tools';
@@ -7,12 +9,16 @@ import {
   clearLibraryState,
   createEmptyLibraryState,
   loadLibraryState,
+  readLibraryState,
   markRead,
   saveLibraryState,
   setBookmark,
   upsertToolMaterial,
 } from './localLibrary';
 import { sanitizeMarkdownFilename, searchKnowledge } from './search';
+import { LibraryProvider, useLibrary } from './LibraryContext';
+
+afterEach(() => vi.unstubAllGlobals());
 
 class MemoryStorage {
   private readonly values = new Map<string, string>();
@@ -61,13 +67,76 @@ describe('SAAS-603 local Stephen library', () => {
     expect(orResult.length).toBeGreaterThanOrEqual(andResult.length);
   });
 
-  it('recovers from corrupt storage and removes the unreadable payload', () => {
+  it('keeps corrupt storage intact and refuses to overwrite it with an empty fallback', () => {
     const storage = new MemoryStorage();
     storage.setItem(LIBRARY_STORAGE_KEY, '{broken json');
 
     const state = loadLibraryState(storage, { itemIds, toolIds, now });
     expect(state).toEqual(createEmptyLibraryState(now));
-    expect(storage.getItem(LIBRARY_STORAGE_KEY)).toBeNull();
+    expect(readLibraryState(storage, { itemIds, toolIds, now }).writable).toBe(false);
+    expect(saveLibraryState(storage, state)).toBe(false);
+    expect(storage.getItem(LIBRARY_STORAGE_KEY)).toBe('{broken json');
+  });
+
+  it.each(['', 'null', '[]', '{"version":2}', '{"version":1,"bookmarkedIds":{}}'])(
+    'preserves damaged or unsupported records without repair: %j', (raw) => {
+      const storage = new MemoryStorage();
+      storage.setItem(LIBRARY_STORAGE_KEY, raw);
+      expect(readLibraryState(storage, { itemIds, toolIds, now })).toEqual({
+        state: createEmptyLibraryState(now), writable: false,
+      });
+      expect(saveLibraryState(storage, createEmptyLibraryState(now))).toBe(false);
+      expect(storage.getItem(LIBRARY_STORAGE_KEY)).toBe(raw);
+    },
+  );
+
+  it('keeps reading available when the storage API denies access, without attempting writes', () => {
+    const storage = {
+      getItem: vi.fn(() => { throw new Error('storage denied'); }),
+      setItem: vi.fn(), removeItem: vi.fn(),
+    };
+    expect(readLibraryState(storage, { itemIds, toolIds, now })).toEqual({
+      state: createEmptyLibraryState(now), writable: false,
+    });
+    expect(saveLibraryState(storage, createEmptyLibraryState(now))).toBe(false);
+    expect(storage.setItem).not.toHaveBeenCalled();
+    expect(storage.removeItem).not.toHaveBeenCalled();
+  });
+
+  it('renders provider children when the localStorage property itself throws', () => {
+    const browser = Object.defineProperty({}, 'localStorage', {
+      get() { throw new Error('localStorage property denied'); },
+    });
+    vi.stubGlobal('window', browser);
+    function ReadableChild() {
+      const { saveStatus } = useLibrary();
+      return createElement('p', null, `Still readable; storage: ${saveStatus}`);
+    }
+    expect(renderToString(createElement(LibraryProvider, {
+      itemIds, toolIds, children: createElement(ReadableChild),
+    }))).toContain('Still readable; storage: error');
+  });
+
+  it('reports write and deletion failures while preserving the saved payload', () => {
+    const raw = JSON.stringify(createEmptyLibraryState(now));
+    const storage = {
+      getItem: () => raw,
+      setItem: () => { throw new Error('quota exceeded'); },
+      removeItem: () => { throw new Error('deletion denied'); },
+    };
+    expect(saveLibraryState(storage, setBookmark(createEmptyLibraryState(now), 'ST-001', true, itemIds))).toBe(false);
+    expect(clearLibraryState(storage)).toBe(false);
+    expect(storage.getItem()).toBe(raw);
+  });
+
+  it('does not touch legacy fieldbook or learning-progress keys when saving or explicitly clearing the library', () => {
+    const storage = new MemoryStorage();
+    storage.setItem('ai-sales-interview-fieldbook-v2', 'original legacy record');
+    storage.setItem('stephen-learning-progress-v1', 'original learning record');
+    expect(saveLibraryState(storage, createEmptyLibraryState(now))).toBe(true);
+    expect(clearLibraryState(storage)).toBe(true);
+    expect(storage.getItem('ai-sales-interview-fieldbook-v2')).toBe('original legacy record');
+    expect(storage.getItem('stephen-learning-progress-v1')).toBe('original learning record');
   });
 
   it('keeps still-valid bookmarks across schema versions and drops removed ids', () => {
