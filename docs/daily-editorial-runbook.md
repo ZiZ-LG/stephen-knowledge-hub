@@ -8,6 +8,8 @@
 
 行业 AI 汇总以[主题讲解型行业 AI 汇总规范](industry-ai-briefing-standard.md)为唯一正式正文。本手册负责说明现有采集、候选和审核流程如何使用该规范；本次不改变扫描频率、工作流或发布机制。
 
+学习地图整合版在本地 DEV 的 `/learn/` 审核；完整 RAG 课程为 `/learn/knowledge-answers/`，`/editorial-example/` 仅保留兼容入口。旧手册原文移入 `docs/archive/fieldbook/`，在线 `/fieldbook/` 改为退役导航；旧本机记录只读保留。方法去向和审核范围见[整合审核清单](legacy-content-integration-review.md)。`vite.config.ts` 中 `learningReleaseApproved=false`，生产构建排除未批准课程；本地检查不构成 GitHub 同步或部署授权。所有者每天最多 30 分钟的运营限制继续适用。
+
 编辑流程从已登记公开信源中选取少量可信材料，帮助有客户、业务和销售经验、AI 基础不同的大客户销售理解一个主题。覆盖在岗转型与转向 AI 业务的读者。讲解按需组织成连续解释，回答：
 
 1. 发生了什么；
@@ -200,7 +202,7 @@ AI 可生成摘要初稿、翻译建议、标签建议和影响分析草稿，�
 2. 指定上一稳定 release version；
 3. 记录操作者、时间和回滚来源版本；
 4. 恢复上一稳定静态构建；
-5. 验证首页、详情、备案、旧手册和 `/api/` 隔离；
+5. 验证首页、详情、备案、学习入口、旧手册退役导航和 `/api/` 隔离；
 6. 保留 `published → withdrawn → rolled_back` 或 `published → rolled_back` 审计链。
 
 `createPublicationRecord`、`withdrawPublication` 和 `rollbackRelease` 只生成不可丢失的生命周期记录，不执行服务器部署。实际回滚属于独立私有运维边界，必须另行授权；本公开手册不记录主机、身份、命令或恢复拓扑。

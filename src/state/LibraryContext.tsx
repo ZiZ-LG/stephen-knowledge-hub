@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
@@ -12,12 +13,13 @@ import type { LocalLibraryState, ToolMaterial } from '../domain';
 import {
   clearLibraryState,
   createEmptyLibraryState,
-  loadLibraryState,
+  readLibraryState,
   markRead as markReadState,
   removeToolMaterial as removeToolMaterialState,
   saveLibraryState,
   toggleBookmark as toggleBookmarkState,
   upsertToolMaterial,
+  type StorageLike,
 } from './localLibrary';
 
 interface LibraryContextValue {
@@ -43,6 +45,13 @@ const LibraryContext = createContext<LibraryContextValue>({
   clearAll: () => undefined,
 });
 
+// Access the browser property only inside the guarded storage operations.
+const browserStorage: StorageLike = {
+  getItem: (key) => window.localStorage.getItem(key),
+  setItem: (key, value) => window.localStorage.setItem(key, value),
+  removeItem: (key) => window.localStorage.removeItem(key),
+};
+
 export function LibraryProvider({
   itemIds,
   toolIds,
@@ -52,19 +61,27 @@ export function LibraryProvider({
   readonly toolIds: readonly string[];
   readonly children: ReactNode;
 }) {
-  const [state, setState] = useState<LocalLibraryState>(() => {
-    if (typeof window === 'undefined') return createEmptyLibraryState();
-    return loadLibraryState(window.localStorage, {
+  const [initial] = useState(() => {
+    if (typeof window === 'undefined') return { state: createEmptyLibraryState(), writable: true };
+    return readLibraryState(browserStorage, {
       itemIds,
       toolIds,
       now: new Date().toISOString(),
     });
   });
-  const [saveStatus, setSaveStatus] = useState<'saved' | 'error'>('saved');
+  const [state, setState] = useState<LocalLibraryState>(initial.state);
+  const writable = useRef(initial.writable);
+  const lastSavedState = useRef(initial.state);
+  const [saveStatus, setSaveStatus] = useState<'saved' | 'error'>(initial.writable ? 'saved' : 'error');
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    setSaveStatus(saveLibraryState(window.localStorage, state) ? 'saved' : 'error');
+    if (!writable.current) { setSaveStatus('error'); return; }
+    // Merely opening the site must not normalize and rewrite saved work.
+    if (state === lastSavedState.current) return;
+    const saved = saveLibraryState(browserStorage, state);
+    if (saved) lastSavedState.current = state;
+    setSaveStatus(saved ? 'saved' : 'error');
   }, [state]);
 
   const toggleBookmark = useCallback((itemId: string) => {
@@ -84,8 +101,15 @@ export function LibraryProvider({
   }, []);
 
   const clearAll = useCallback(() => {
-    if (typeof window !== 'undefined') clearLibraryState(window.localStorage);
-    setState(createEmptyLibraryState());
+    if (typeof window !== 'undefined' && !clearLibraryState(browserStorage)) {
+      setSaveStatus('error');
+      return;
+    }
+    writable.current = true;
+    const empty = createEmptyLibraryState();
+    lastSavedState.current = empty;
+    setState(empty);
+    setSaveStatus('saved');
   }, []);
 
   const value = useMemo<LibraryContextValue>(() => ({

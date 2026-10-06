@@ -17,7 +17,7 @@ function Ref({ id }: { readonly id: typeof sources[number]['id'] }) {
 export default function RagThemeExample() {
   return (
     <>
-      <aside className='review-warning' role='status'><strong>内容示范 · 本地预览</strong><p>这份完整讲解用于审核新规范。尚未加入正式公开集合，不代表今天发生了一次产品发布。</p></aside>
+      <aside className='review-warning'><strong>教学场景</strong><p>本篇将研究原理与产品文档合在一个虚构售后问题中解释，不代表今天发生了一次产品发布。</p></aside>
       <ThemeExplainer
         title='企业知识库能帮你找依据，但不能替你承诺免费换新'
         summary='面对同一个售后问题，身份、资料版本和审批责任不同，AI 应给出的回答也不同。理解这些条件，比只看回答是否流畅更能帮助销售判断项目范围。'

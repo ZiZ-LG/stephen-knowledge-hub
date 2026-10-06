@@ -2,6 +2,9 @@ import type { KnowledgeTool, ReviewedKnowledgeItem } from '../domain';
 import { localize, type Language } from '../i18n';
 import { useLibrary } from '../state/LibraryContext';
 import InternalLink from '../components/InternalLink';
+import LegacyLearningArchive from '../components/LegacyLearningArchive';
+import { learningUnits } from '../learning/access';
+import { useLearning } from '../learning/LearningContext';
 
 export default function LibraryPage({
   items,
@@ -13,6 +16,9 @@ export default function LibraryPage({
   readonly language: Language;
 }) {
   const { state, saveStatus, clearAll } = useLibrary();
+  const learning = useLearning();
+  const savedLessons = learningUnits.filter((unit) => learning.state.bookmarkedIds.includes(unit.id));
+  const completedLessons = learningUnits.filter((unit) => learning.state.completedIds.includes(unit.id));
   const bookmarkedItems = state.bookmarkedIds
     .map((id) => items.find((item) => item.id === id))
     .filter((item): item is ReviewedKnowledgeItem => item !== undefined);
@@ -77,6 +83,7 @@ export default function LibraryPage({
         </p>
       </section>
 
+      {learningUnits.length > 0 && <section className='section-block' aria-labelledby='saved-learning-title'><div className='section-heading'><p className='section-index'>MY LEARNING</p><h2 id='saved-learning-title'>学习收藏与自测进度</h2></div><p>已标记完成自测 {completedLessons.length} / {learningUnits.length} 个单元。学习记录与下方资讯、工具材料分别保存。</p><div className='link-stack'>{savedLessons.map((unit) => <InternalLink key={unit.id} href={`/learn/${unit.slug}/`}><strong>{unit.title}</strong><span>{learning.state.completedIds.includes(unit.id) ? '已标记完成自测' : '继续阅读与自测'}</span></InternalLink>)}</div>{savedLessons.length === 0 && <p>还没有收藏学习单元。<InternalLink href='/learn/'>打开学习地图 →</InternalLink></p>}</section>}
       <section className='library-grid'>
         <article>
           <span>{unreadBookmarks.length}</span>
@@ -120,9 +127,9 @@ export default function LibraryPage({
             <InternalLink className='primary-action' href='/tools/'>
               {language === 'zh' ? '选择方法工具' : 'Choose a tool'}
             </InternalLink>
-            <a className='secondary-action' href='/fieldbook/'>
-              {language === 'zh' ? '进入完整手册' : 'Open the fieldbook'}
-            </a>
+            <InternalLink className='secondary-action' href='/learn/'>
+              {language === 'zh' ? '选择学习单元' : 'Choose a learning unit'}
+            </InternalLink>
           </div>
         </section>
       )}
@@ -141,15 +148,16 @@ export default function LibraryPage({
             className='danger-action'
             type='button'
             onClick={() => {
-              if (window.confirm(language === 'zh' ? '清除全部本机收藏、已读和工具材料？' : 'Clear all local bookmarks, reading state and tool artifacts?')) {
+              if (window.confirm(language === 'zh' ? '清除本机资讯收藏、已读和工具材料？学习进度与旧手册记录保留。' : 'Clear local article bookmarks, reading state and tool artifacts? Learning and legacy records stay.')) {
                 clearAll();
               }
             }}
           >
-            {language === 'zh' ? '清除全部本机数据' : 'Clear all local data'}
+            {language === 'zh' ? '清除资讯与工具材料' : 'Clear articles and tool artifacts'}
           </button>
         </section>
       )}
+      <LegacyLearningArchive language={language} />
     </>
   );
 }

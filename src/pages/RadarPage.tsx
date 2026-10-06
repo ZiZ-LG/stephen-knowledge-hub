@@ -13,6 +13,8 @@ import Filters from '../components/Filters';
 import InternalLink from '../components/InternalLink';
 import KnowledgeCard from '../components/KnowledgeCard';
 import TopicGrid from '../components/TopicGrid';
+import { learningUnits, searchLearningUnits } from '../learning/access';
+import { knowledgeTools } from '../content/tools';
 
 export default function RadarPage({
   items,
@@ -27,6 +29,8 @@ export default function RadarPage({
 }) {
   const [selectedDomains, setSelectedDomains] = useState<KnowledgeDomain[]>([]);
   const [mode, setMode] = useState<'and' | 'or'>('and');
+  const lessonResults = query ? searchLearningUnits(learningUnits, query) : [];
+  const toolResults = query ? knowledgeTools.filter((tool) => query.normalize('NFKC').toLocaleLowerCase().trim().split(/\s+/).every((word) => `${tool.title.zh} ${tool.scenario.zh}`.normalize('NFKC').toLocaleLowerCase().includes(word))) : [];
   const searchedItems = useMemo(
     () => searchKnowledge(items, query),
     [items, query],
@@ -84,6 +88,7 @@ export default function RadarPage({
         </p>
       )}
 
+      {query && (lessonResults.length > 0 || toolResults.length > 0) && <section className='section-block' aria-labelledby='learning-search-title'><div className='section-heading'><p className='section-index'>LEARN & APPLY</p><h2 id='learning-search-title'>相关学习与工具</h2></div><p>以下结果按关键词匹配；下方的领域筛选仅用于行业观察。</p><div className='link-stack'>{lessonResults.map((unit) => <InternalLink key={unit.id} href={`/learn/${unit.slug}/`}><strong>学习 · {unit.title}</strong><span>{unit.summary}</span></InternalLink>)}{toolResults.map((tool) => <InternalLink key={tool.id} href={`/tools/#${tool.id}`}><strong>工具 · {tool.title.zh}</strong><span>{tool.scenario.zh}</span></InternalLink>)}</div></section>}
       <section className='section-block' aria-labelledby='radar-result-title'>
         <div className='section-heading section-heading-row'>
           <div>
@@ -102,7 +107,7 @@ export default function RadarPage({
           </div>
         ) : (
           <div className='empty-state'>
-            <strong>{language === 'zh' ? '当前没有可公开内容' : 'No public item matches yet'}</strong>
+            <strong>{language === 'zh' ? '没有匹配的行业观察' : 'No industry observation matches'}</strong>
             <p>
               {query
                 ? (language === 'zh' ? '尝试更短的关键词、原文岗位标题，或清除搜索。' : 'Try a shorter keyword, an original job title, or clear search.')

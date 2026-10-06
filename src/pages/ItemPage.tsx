@@ -5,6 +5,7 @@ import { domainLabels, isChineseFallback, localize, type Language } from '../i18
 import { useLibrary } from '../state/LibraryContext';
 import EvidenceBadge from '../components/EvidenceBadge';
 import InternalLink from '../components/InternalLink';
+import LearningLinks from '../components/LearningLinks';
 
 const factTypeLabels = {
   official_fact: { zh: '官方事实', en: 'Official fact' },
@@ -171,6 +172,7 @@ export default function ItemPage({
         </p>
       </section>
 
+      <LearningLinks topicSlugs={item.topicSlugs} language={language} />
       <section className='related-grid'>
         <div>
           <h2>{language === 'zh' ? '相关专题' : 'Related topics'}</h2>

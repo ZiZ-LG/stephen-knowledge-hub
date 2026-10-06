@@ -8,7 +8,7 @@ export interface ExplainerSection {
 
 /** Present reviewed teaching material; this component does not publish or generate facts. */
 export default function ThemeExplainer({
-  title, summary, asOfDate, context, sections, takeaway, question, answer, sources, history,
+  title, summary, asOfDate, context, sections, takeaway, question, answer, sources, history, readingMinutes,
 }: {
   readonly title: string;
   readonly summary: string;
@@ -20,6 +20,7 @@ export default function ThemeExplainer({
   readonly answer: ReactNode;
   readonly sources: ReactNode;
   readonly history: ReactNode;
+  readonly readingMinutes?: number;
 }) {
   return (
     <article className='theme-explainer'>
@@ -27,7 +28,7 @@ export default function ThemeExplainer({
         <p className='eyebrow'>行业 AI · 把一个问题讲清楚</p>
         <h1>{title}</h1>
         <p className='lead'>{summary}</p>
-        <p className='theme-reading-note'>信息截至 <time dateTime={asOfDate}>{asOfDate}</time> · 主文与演示约 5–8 分钟（估计）</p>
+        <p className='theme-reading-note'>信息截至 <time dateTime={asOfDate}>{asOfDate}</time> · {readingMinutes ? `主文与自测约 ${readingMinutes} 分钟（估计）` : '主文与演示约 5–8 分钟（估计）'}</p>
         <p>{context}</p>
         <nav className='theme-outline' aria-label='本篇内容'>
           {sections.map((section) => <a href={`#${section.id}`} key={section.id}>{section.title}</a>)}
