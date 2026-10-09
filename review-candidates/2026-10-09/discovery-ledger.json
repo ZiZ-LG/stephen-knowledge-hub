@@ -20,6 +20,7 @@
     "ED-4A5542312240DF8A",
     "ED-4B1C7436527BA583",
     "ED-4E335CFA725D76CA",
+    "ED-532E0041EC8DA492",
     "ED-58762C965BCA6A78",
     "ED-592F7E81622F5733",
     "ED-61F702A0E4D56B76",
@@ -76,6 +77,19 @@
         "rejected": 0,
         "manualReview": 60,
         "proposed": 60
+      }
+    },
+    {
+      "fetchedAt": "2026-10-09T15:26:23.813Z",
+      "summary": {
+        "sourcesConfigured": 2,
+        "sourcesScanned": 2,
+        "sourcesFailed": 0,
+        "newDiscoveries": 1,
+        "duplicates": 0,
+        "rejected": 0,
+        "manualReview": 60,
+        "proposed": 61
       }
     }
   ]
