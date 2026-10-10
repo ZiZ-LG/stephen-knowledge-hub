@@ -102,6 +102,7 @@ jobs:
         run: |
           set -euo pipefail
           git fetch origin "refs/heads/$TARGET_BASE:refs/remotes/origin/$TARGET_BASE"
+          bash scripts/check-candidate-base.sh "origin/$TARGET_BASE"
           if git ls-remote --exit-code --heads origin "refs/heads/$CANDIDATE_BRANCH" >/dev/null 2>&1; then
             git fetch origin "refs/heads/$CANDIDATE_BRANCH:refs/remotes/origin/$CANDIDATE_BRANCH"
             git merge-base "origin/$TARGET_BASE" "origin/$CANDIDATE_BRANCH" >/dev/null
