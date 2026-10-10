@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { spawnSync } from 'node:child_process';
 import {
   mkdir,
   mkdtemp,
@@ -70,6 +71,17 @@ function validArtifact(): StephenArtifactEntry[] {
   ];
 }
 
+function mixedCaseArtifact(): StephenArtifactEntry[] {
+  return [
+    ...validArtifact(),
+    ...['assets/RagThemeExample.js', 'assets/index-A.js', 'assets/index_a.js'].map((path) => ({
+      path,
+      type: 'file' as const,
+      bytes: new TextEncoder().encode(`export const asset = ${JSON.stringify(path)};`),
+    })),
+  ];
+}
+
 function publishedItemLocationsFromSitemap(sitemap: string) {
   const locations: string[] = [];
   for (const match of sitemap.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/g)) {
@@ -116,6 +128,32 @@ describe('SAAS-607 exact-SHA artifact contract', () => {
 
     expect(reversed).toBe(forward);
     expect(buildStephenReleaseMetadata(changed, SOURCE_SHA).contentChecksum).not.toBe(forward);
+  });
+
+  it('matches the Python helper checksum for mixed-case ASCII paths from raw bytes', () => {
+    const entries = mixedCaseArtifact();
+    const metadata = buildStephenReleaseMetadata(entries, SOURCE_SHA);
+    const oracle = spawnSync('python3', ['-I', '-c', [
+      'import hashlib, json, sys',
+      "entries = {entry['path']: bytes(entry['bytes']) for entry in json.load(sys.stdin)}",
+      "files = [{'path': path, 'size': len(data), 'sha256': hashlib.sha256(data).hexdigest()}",
+      '         for path, data in sorted(entries.items())]',
+      'checksum_input = "".join(f"{file[\'path\']}\\0{file[\'size\']}\\0{file[\'sha256\']}\\n" for file in files)',
+      "print(json.dumps({'files': files, 'contentChecksum': hashlib.sha256(checksum_input.encode('utf-8')).hexdigest()}))",
+    ].join('\n')], {
+      encoding: 'utf8',
+      input: new TextEncoder().encode(JSON.stringify(entries.map((entry) => ({
+        path: entry.path, bytes: Array.from(entry.bytes),
+      })))),
+    });
+
+    expect(oracle.status, oracle.stderr).toBe(0);
+    const expected = JSON.parse(oracle.stdout);
+    expect(metadata.files.filter((file) => file.path.startsWith('assets/')).map((file) => file.path))
+      .toEqual(['assets/RagThemeExample.js', 'assets/index-A.js', 'assets/index.js', 'assets/index_a.js']);
+    expect(metadata.files).toEqual(expected.files);
+    expect(metadata.contentChecksum).toBe(expected.contentChecksum);
+    expect(buildStephenReleaseMetadata([...entries].reverse(), SOURCE_SHA)).toEqual(metadata);
   });
 
   it('bounds file count, path depth, individual files, and total artifact bytes', () => {
