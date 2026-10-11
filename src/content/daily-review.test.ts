@@ -225,8 +225,7 @@ describe('public repository daily workflow boundary', () => {
     expect(actionReferences).toHaveLength(2);
     expect(actionReferences.every((reference) => /@[0-9a-f]{40}$/.test(reference))).toBe(true);
     expect(contract.schedules).toEqual([
-      '30 23 * * 0,2,4',
-      '30 8 * * 1,3,5',
+      '30 23 * * 0',
     ]);
     expect(workflow).toContain("vars.STEPHEN_DAILY_SCHEDULE_ENABLED == '1'");
     expect(workflow).not.toContain('pull_request_target');
@@ -687,8 +686,7 @@ name: Stephen daily candidate review
 # Public repository notice: review candidates are publicly visible even before website publication.
 on:
   schedule:
-    - cron: '30 23 * * 0,2,4'
-    - cron: '30 8 * * 1,3,5'
+    - cron: '30 23 * * 0'
   workflow_dispatch:
 permissions:
   contents: write
@@ -773,7 +771,7 @@ jobs:
 describe('SAAS-606 GitHub workflow safety contract', () => {
   it('accepts the approved schedules, runner, permissions and review commands', () => {
     expect(validateDailyIntakeWorkflow(validWorkflowContract)).toEqual({
-      schedules: ['30 23 * * 0,2,4', '30 8 * * 1,3,5'],
+      schedules: ['30 23 * * 0'],
       runner: 'ubuntu-latest',
       permissions: ['contents: write', 'pull-requests: write'],
     });
@@ -808,8 +806,24 @@ describe('SAAS-606 GitHub workflow safety contract', () => {
     },
     {
       label: 'wrong Beijing schedule',
-      workflow: validWorkflowContract.replace("'30 23 * * 0,2,4'", "'30 7 * * 0,2,4'"),
-      error: 'workflow schedules must represent Monday-Wednesday-Friday Beijing 07:30 and 16:30',
+      workflow: validWorkflowContract.replace("'30 23 * * 0'", "'30 7 * * 0'"),
+      error: 'workflow schedules must represent Monday Beijing 07:30 once weekly',
+    },
+    {
+      label: 'legacy six-times-weekly schedule',
+      workflow: validWorkflowContract.replace(
+        "    - cron: '30 23 * * 0'",
+        "    - cron: '30 23 * * 0,2,4'\n    - cron: '30 8 * * 1,3,5'",
+      ),
+      error: 'workflow schedules must represent Monday Beijing 07:30 once weekly',
+    },
+    {
+      label: 'extra weekly run',
+      workflow: validWorkflowContract.replace(
+        "    - cron: '30 23 * * 0'",
+        "    - cron: '30 23 * * 0'\n    - cron: '30 8 * * 1'",
+      ),
+      error: 'workflow schedules must represent Monday Beijing 07:30 once weekly',
     },
     {
       label: 'scheduled production runs enabled by default',
