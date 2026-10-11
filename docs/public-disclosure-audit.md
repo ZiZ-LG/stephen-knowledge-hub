@@ -1,7 +1,7 @@
 # Public disclosure audit
 
-Date: 2026-08-31
-Status: public `main` baseline and immutable Release controls established; Monday-Wednesday-Friday candidate schedule gated by explicit repository variable
+Date: 2026-10-11
+Status: public `main` baseline and immutable Release controls established; weekly Monday candidate schedule gated by explicit repository variable
 
 ## Intended public scope
 
@@ -37,7 +37,7 @@ Status: public `main` baseline and immutable Release controls established; Monda
 - The owner-approval workflow is manual-only, pins its trusted controls to the dispatch SHA, requires both actor identities to equal the repository owner, validates an open same-repository Draft PR and exact head/base SHAs, and uses the seal SHA as the merge API compare-and-swap guard.
 - The Release workflow's `GITHUB_TOKEN` has only `contents: write`, `actions: read`, and `pull-requests: read`, and job-level permission overrides are rejected. Reviewed workflows are limited to their exact top-level keys, one expected `ubuntu-latest` job, and the approved step sequence, so inherited defaults, job environments, containers, services, or unexpected steps fail closed. A separate fine-grained `STEPHEN_RELEASE_GOVERNANCE_TOKEN`, limited to this repository with only `Administration: read`, is structurally bound to `env.GH_TOKEN` in exactly two named governance steps whose complete command bodies are restricted to the expected read-only GitHub API queries and local processing. Those steps use an absolute non-profile Bash shell, a fixed system path, and cleared shell-loader variables; other secrets-context access, YAML alias relocation, secret inheritance, command injection, or execution-context substitution is rejected. The workflow consumes the exact private handoff artifact from the successful approval run, verifies artifact digest and trusted approval-step order, rebuilds the exact seal, requires a single-owner collaborator boundary, active no-bypass update/deletion protection for `stephen-content-*` tags with an empty exclude list, and native Immutable Releases, then publishes only after an immediate current-main, immutable-setting, ruleset, Draft and asset-digest recheck. Both optional tag reads accept only an explicit REST `404` as absence and fail closed on authorization, server, malformed-success, or transport errors. GitHub creates the protected tag when the Draft is published, so no mutable tag exists beforehand.
 - Neither reviewed-release workflow contains a GitHub Environment, self-hosted runner, server identity, network route, or production credential.
-- Scheduled candidate creation uses Beijing Monday-Wednesday-Friday `07:30` and `16:30` only, with no Chinese holiday or adjusted-workday calendar. It remains fail-closed unless the repository owner sets `STEPHEN_DAILY_SCHEDULE_ENABLED` to `1` after the schedule PR and exact-main CI pass; that value enables only the existing candidate Draft-PR job and cannot approve, publish, Release, or deploy content.
+- Scheduled candidate creation uses Beijing Monday `07:30` once weekly (UTC cron `30 23 * * 0`), with no Chinese holiday or adjusted-workday calendar. GitHub schedule may start late; each source remains capped at 40 returned RSS entries, so weekly execution does not guarantee full-week coverage. It remains fail-closed unless the repository owner sets `STEPHEN_DAILY_SCHEDULE_ENABLED` to `1` after the schedule PR and exact-main CI pass; that value enables only the existing candidate Draft-PR job and cannot approve, publish, Release, or deploy content.
 - A Draft PR in a public repository is publicly visible. `not_published` means “not published on the website,” not “private.”
 - AI may draft candidate copy but cannot approve content, change the review state, or publish an item. The workflow contract rejects automated `gh pr ready`, `gh pr merge`, and `gh pr review` commands.
 
@@ -65,7 +65,7 @@ Latest pre-push run:
 3. Confirm the public-security filing emblem remains appropriate for the live filing link.
 4. Confirm CODEOWNERS resolves to a user or team with write access after the GitHub repository exists.
 5. Enable GitHub private vulnerability reporting before inviting external contributors.
-6. Set `STEPHEN_DAILY_SCHEDULE_ENABLED` to string `1` only after the approved Monday-Wednesday-Friday schedule PR is merged and every workflow for the exact new `main` SHA succeeds; do not dispatch a real candidate run for activation testing.
+6. Set `STEPHEN_DAILY_SCHEDULE_ENABLED` to string `1` only after the approved weekly Monday schedule PR is merged and every workflow for the exact new `main` SHA succeeds; do not dispatch a real candidate run for activation testing.
 7. Keep the merged SAAS-608 baseline and immutable Release controls intact; the candidate schedule must not add Release, deployment, Environment, server, DNS, Nginx, SSH, or traffic operations.
 8. Enable native Immutable Releases only after the workflow code is present on `main`; verify the API reports `enabled: true` and do not add an Environment or server secret.
 9. Create and verify the active no-bypass tag ruleset named `Protect Stephen immutable Release tags`, targeting only `refs/tags/stephen-content-*`, with an empty exclude list plus update and deletion restrictions.

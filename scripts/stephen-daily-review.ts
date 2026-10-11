@@ -1315,10 +1315,10 @@ export function validateDailyIntakeWorkflow(workflow: string) {
   const schedules = [...workflow.matchAll(
     /^\s*-\s*cron:\s*['"]([^'"]+)['"]\s*$/gm,
   )].map((match) => match[1]);
-  const expectedSchedules = ['30 23 * * 0,2,4', '30 8 * * 1,3,5'];
+  const expectedSchedules = ['30 23 * * 0'];
   if (schedules.length !== expectedSchedules.length
     || expectedSchedules.some((schedule) => !schedules.includes(schedule))) {
-    throw new Error('workflow schedules must represent Monday-Wednesday-Friday Beijing 07:30 and 16:30');
+    throw new Error('workflow schedules must represent Monday Beijing 07:30 once weekly');
   }
   if (!/^\s{2}review:\s*\n\s{4}if:\s*github\.event_name != 'schedule' \|\| vars\.STEPHEN_DAILY_SCHEDULE_ENABLED == '1'\s*\n\s{4}runs-on:/m
     .test(workflow)) {
