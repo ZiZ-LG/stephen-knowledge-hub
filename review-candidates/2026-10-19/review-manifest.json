@@ -1,0 +1,1828 @@
+{
+  "schemaVersion": 1,
+  "task": "SAAS-606",
+  "editorialDate": "2026-10-19",
+  "generatedAt": "2026-10-19T01:31:11.479Z",
+  "reviewState": "pending_owner_review",
+  "publicationState": "not_published",
+  "controls": {
+    "autoPublishingEnabled": false,
+    "stopSwitchEngaged": true
+  },
+  "candidates": [
+    {
+      "candidateId": "ED-001BE87AC5D57397",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "How Itaú is building generative AI for its entire customer base",
+      "canonicalUrl": "https://openai.com/index/itau-generative-ai",
+      "publishedAt": "2026-10-16T19:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "With ia.i, a conversational interface, and the IARA governance platform, Itaú is applying its AI First strategy to customers and employees — in one of Brazil’s most regulated sectors.",
+      "evidenceExcerpt": "With ia.i, a conversational interface, and the IARA governance platform, Itaú is applying its AI First strategy to customers and employees — in one of Brazil’s",
+      "eventKey": "event-d5882b024afe5aad",
+      "contentFingerprint": "0f56873f368bf64d",
+      "riskLevel": "medium",
+      "riskReasons": [
+        "medium risk requires manual review",
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜How Itaú is building generative AI for its entire customer base",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-0A6A90B5F4A278B6",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Building advertising for the way people use AI",
+      "canonicalUrl": "https://openai.com/index/new-chatgpt-ads-format-and-measurement",
+      "publishedAt": "2026-10-05T10:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "OpenAI introduces a new visual ad format in ChatGPT and expands measurement tools, attribution partnerships, and brand suitability for advertisers.",
+      "evidenceExcerpt": "OpenAI introduces a new visual ad format in ChatGPT and expands measurement tools, attribution partnerships, and brand suitability for advertisers.",
+      "eventKey": "event-e77e139ef8dddcd2",
+      "contentFingerprint": "c21dfe8b1ce31cc7",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Building advertising for the way people use AI",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-12B9EA4EFAE5323F",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Stack Overflow for Agents triples signups with ChatGPT plugin",
+      "canonicalUrl": "https://openai.com/index/stack-overflow-chatgpt-plugin",
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Two engineers shipped Stack Overflow for Agents in a few weeks with Codex, and its ChatGPT plugin helped drive up to 10× growth in agent creation.",
+      "evidenceExcerpt": "Two engineers shipped Stack Overflow for Agents in a few weeks with Codex, and its ChatGPT plugin helped drive up to 10× growth in agent creation.",
+      "eventKey": "event-7b640b6331f9b54c",
+      "contentFingerprint": "8e33b6c2c1c1b97e",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Stack Overflow for Agents triples signups with ChatGPT plugin",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-17D3F1D9984301D0",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "The three things today's hottest startups are looking for in their AI stack",
+      "canonicalUrl": "https://cloud.google.com/blog/topics/startups/the-three-things-todays-hottest-startups-are-looking-for-in-their-ai-stack",
+      "publishedAt": "2026-09-24T13:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Google Cloud has become </span><a href=\"https://cloud.google.com/blog/topics/startups/startup-news-from-io-and-what-it-means-to-founders?e=48754805\"><span style=\"text-decoration: underline; vertical-",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Google Cloud has become </span><a href=\"https://cloud.google.com/blog/topics/st",
+      "eventKey": "event-56819066aa1bf579",
+      "contentFingerprint": "0ef65dc1b7e9c747",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜The three things today's hottest startups are looking for in their AI stack",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-1AE27C9EEBB74F00",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Helping teens learn, plan, and shape the future of AI",
+      "canonicalUrl": "https://openai.com/index/teens-learn-and-plan",
+      "publishedAt": "2026-10-07T12:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "College Planner is coming to ChatGPT for Teens to help students manage college applications, alongside new flashcards, quizzes, and a teen AI council.",
+      "evidenceExcerpt": "College Planner is coming to ChatGPT for Teens to help students manage college applications, alongside new flashcards, quizzes, and a teen AI council.",
+      "eventKey": "event-802aaee24388c545",
+      "contentFingerprint": "0f160e77f0f46c2a",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Helping teens learn, plan, and shape the future of AI",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-1C4427791C3586A3",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Disrupting AI-enabled “false front” operations",
+      "canonicalUrl": "https://openai.com/index/disrupting-ai-enabled-false-front-operations",
+      "publishedAt": "2026-10-08T00:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "OpenAI disrupted two AI-enabled influence operations that used false-front journalists and a think tank to spread geopolitical messaging.",
+      "evidenceExcerpt": "OpenAI disrupted two AI-enabled influence operations that used false-front journalists and a think tank to spread geopolitical messaging.",
+      "eventKey": "event-ab34d1ac9f90476a",
+      "contentFingerprint": "87d3d4bd07378fb2",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Disrupting AI-enabled “false front” operations",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-1E236D7503810BDA",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "How Visko streams real-time world models on Google Cloud TPUs",
+      "canonicalUrl": "https://cloud.google.com/blog/products/media-entertainment/how-visko-streams-real-time-world-models-on-google-cloud-tpus",
+      "publishedAt": "2026-10-15T16:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"font-style: italic; vertical-align: baseline;\">Editor's note: Generative AI startups are moving rapidly beyond static clip generation to build interactive, real-time worlds. In this technical deep dive, we explore how AI start",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"font-style: italic; vertical-align: baseline;\">Editor's note: Generative AI startups are moving rapidly be",
+      "eventKey": "event-777869cf06f762d4",
+      "contentFingerprint": "95a281649853c2ee",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜How Visko streams real-time world models on Google Cloud TPUs",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-1F889335B3C2E4F4",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "The eternal complement",
+      "canonicalUrl": "https://openai.com/index/the-eternal-complement",
+      "publishedAt": "2026-10-01T17:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Advanced AI may matter most for the routine work behind breakthrough ideas. Explore why execution could shape the next economy and the pace of progress.",
+      "evidenceExcerpt": "Advanced AI may matter most for the routine work behind breakthrough ideas. Explore why execution could shape the next economy and the pace of progress.",
+      "eventKey": "event-05012c1fa9c54ae5",
+      "contentFingerprint": "4f13f5d61081932f",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜The eternal complement",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-201FC7CD9426E2EB",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Helping small businesses put AI to work",
+      "canonicalUrl": "https://openai.com/index/helping-small-businesses-put-ai-to-work",
+      "publishedAt": "2026-09-30T10:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "OpenAI is partnering with America’s SBDC to expand hands-on AI training and local support for small businesses, alongside a new report on how small teams are using AI.",
+      "evidenceExcerpt": "OpenAI is partnering with America’s SBDC to expand hands-on AI training and local support for small businesses, alongside a new report on how small teams are us",
+      "eventKey": "event-8a40f8983ab11642",
+      "contentFingerprint": "94d0b3d9c9fb1da2",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Helping small businesses put AI to work",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-2575B8EEAB421F0C",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Chatham scales its capital markets expertise with OpenAI",
+      "canonicalUrl": "https://openai.com/index/chatham-financial",
+      "publishedAt": "2026-10-02T00:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Chatham Financial uses Codex and GPT-5.6 to build technology and redesign workflows, cutting trade validation from 30 minutes to under 4.",
+      "evidenceExcerpt": "Chatham Financial uses Codex and GPT-5.6 to build technology and redesign workflows, cutting trade validation from 30 minutes to under 4.",
+      "eventKey": "event-cbe0ca9336af91e9",
+      "contentFingerprint": "3b34b147a888e5ba",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Chatham scales its capital markets expertise with OpenAI",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-2A62C5A39511C06E",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "Changing the game: Using agentic AI to secure infrastructure code",
+      "canonicalUrl": "https://cloud.google.com/blog/topics/systems/using-ai-agents-to-secure-google-infrastructure",
+      "publishedAt": "2026-09-19T01:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p>Blog authors: <em>Andrés Lagar-Cavilla, Distinguished Engineer; Stella Voutsina, Sr. Technical Program Manager; Parthasarathy Ranganathan, VP, Engineering Fellow</em></p> <p><span style=\"vertical-align: baseline;\">AI is accelerating softwa",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p>Blog authors: <em>Andrés Lagar-Cavilla, Distinguished Engineer; Stella Voutsina, Sr. Technical Program Manager; Parthas",
+      "eventKey": "event-255756917e3ec453",
+      "contentFingerprint": "9df9f1d9a76f1925",
+      "riskLevel": "high",
+      "riskReasons": [
+        "high risk requires manual review",
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Changing the game: Using agentic AI to secure infrastructure code",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-2E92C83551BE638E",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "Cloud CISO Perspectives: How Google monitors AI threats and advances AI defenses",
+      "canonicalUrl": "https://cloud.google.com/blog/products/identity-security/cloud-ciso-perspectives-how-google-monitors-ai-threats-advances-ai-defenses",
+      "publishedAt": "2026-09-16T16:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph\"><p data-block-key=\"eucpw\">Welcome to the first Cloud CISO Perspectives for September 2026. Today, Sandra Joyce shares the latest details on Google’s visibility into how attackers are using AI, and how we’re using AI to stop them.</p><p data-block-key=",
+      "evidenceExcerpt": "<div class=\"block-paragraph\"><p data-block-key=\"eucpw\">Welcome to the first Cloud CISO Perspectives for September 2026. Today, Sandra Joyce shares the latest de",
+      "eventKey": "event-576b768bcc645401",
+      "contentFingerprint": "a2a8c72a5e0dd8db",
+      "riskLevel": "high",
+      "riskReasons": [
+        "high risk requires manual review",
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Cloud CISO Perspectives: How Google monitors AI threats and advances AI defenses",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-2F2C9A31305AACB1",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Benefit Street Partners answers questions faster with Codex",
+      "canonicalUrl": "https://openai.com/index/benefit-street-partners",
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Anant Kumar builds tools to compare loan valuations and analyze credit agreements, using Codex for code review and faster follow-ups.",
+      "evidenceExcerpt": "Anant Kumar builds tools to compare loan valuations and analyze credit agreements, using Codex for code review and faster follow-ups.",
+      "eventKey": "event-9fa278f479d7db20",
+      "contentFingerprint": "60a4007fedba04d2",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Benefit Street Partners answers questions faster with Codex",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-3A48FB0800286CA7",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "Why your startup needs open models alongside frontier APIs",
+      "canonicalUrl": "https://cloud.google.com/blog/topics/startups/why-your-startup-needs-open-models-alongside-frontier-apis",
+      "publishedAt": "2026-09-28T16:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Every week, I talk with founders who are building at an unbelievable pace. Teams are moving from inception to product-market fit faster than ever, with foundation models wired deeply into their core",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Every week, I talk with founders who are building at an unbelievable pace. Team",
+      "eventKey": "event-b17fdce4f9061165",
+      "contentFingerprint": "2520f604cc91d9fa",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Why your startup needs open models alongside frontier APIs",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-3AB26618B95A29F4",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "Four evaluation engineering lessons learned from building agent plugins",
+      "canonicalUrl": "https://cloud.google.com/blog/topics/developers-practitioners/four-eval-engineering-lessons",
+      "publishedAt": "2026-10-16T16:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">The real challenge of building an agentic system isn't the construction, it's the measurement.</span><strong style=\"vertical-align: baseline;\"> </strong></p> <p><span style=\"vertical-align: baseline;",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">The real challenge of building an agentic system isn't the construction, it's t",
+      "eventKey": "event-ce63815771a78403",
+      "contentFingerprint": "6238f7dfcbb017e5",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Four evaluation engineering lessons learned from building agent plugins",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-4A9E774AC34EB235",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Asana cuts model costs 76x in browser tests with GPT-6.1 Sol",
+      "canonicalUrl": "https://openai.com/index/asana-browser-agent",
+      "publishedAt": "2026-10-09T07:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Using GPT-6 Astra in Codex, Asana made its browser agent 76x cheaper and 5x faster in tests to offer customers more capable models.",
+      "evidenceExcerpt": "Using GPT-6 Astra in Codex, Asana made its browser agent 76x cheaper and 5x faster in tests to offer customers more capable models.",
+      "eventKey": "event-b447272ef0c74a4f",
+      "contentFingerprint": "aaff121ab96bf9ce",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Asana cuts model costs 76x in browser tests with GPT-6.1 Sol",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-4B1C7436527BA583",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Introducing dots",
+      "canonicalUrl": "https://openai.com/index/introducing-dots",
+      "publishedAt": "2026-09-29T00:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Dots by OpenAI are proactive assistants that can keep working across complex projects and everyday tasks. Learn how dots help you stay in control while work moves forward.",
+      "evidenceExcerpt": "Dots by OpenAI are proactive assistants that can keep working across complex projects and everyday tasks. Learn how dots help you stay in control while work mov",
+      "eventKey": "event-40dc208e6777f9f9",
+      "contentFingerprint": "342ad6b31a62b746",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Introducing dots",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-4E335CFA725D76CA",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "The Den frees up 10-15 hours a week to grow with ChatGPT Work",
+      "canonicalUrl": "https://openai.com/index/the-den-family-social",
+      "publishedAt": "2026-10-01T00:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "As it opens a new location, the social club prepares grant applications in 2 hours instead of 3 days and liquor-license materials in 3 hours instead of 4 days.",
+      "evidenceExcerpt": "As it opens a new location, the social club prepares grant applications in 2 hours instead of 3 days and liquor-license materials in 3 hours instead of 4 days.",
+      "eventKey": "event-d9ef773268f039ef",
+      "contentFingerprint": "df313e8d26ea4325",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜The Den frees up 10-15 hours a week to grow with ChatGPT Work",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-52425CE62A3C71E5",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Amp puts AI agents to work beyond code with OpenAI models",
+      "canonicalUrl": "https://openai.com/index/amp-beyond-coding",
+      "publishedAt": "2026-10-14T12:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "See how Amp pushes the frontier of what agents can do with GPT-6 Astra, Ultrafast, GPT-Live-1, and Sign in with ChatGPT.",
+      "evidenceExcerpt": "See how Amp pushes the frontier of what agents can do with GPT-6 Astra, Ultrafast, GPT-Live-1, and Sign in with ChatGPT.",
+      "eventKey": "event-b7744257c6820129",
+      "contentFingerprint": "804f5d62d7db2802",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Amp puts AI agents to work beyond code with OpenAI models",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-532E0041EC8DA492",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Sophos cuts threat investigation time by 96% with OpenAI Daybreak",
+      "canonicalUrl": "https://openai.com/index/sophos",
+      "publishedAt": "2026-10-09T07:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Discover how Sophos uses OpenAI’s Daybreak to cut cyber-threat investigation time by 96% and automate 52% of MDR cases while preserving human oversight.",
+      "evidenceExcerpt": "Discover how Sophos uses OpenAI’s Daybreak to cut cyber-threat investigation time by 96% and automate 52% of MDR cases while preserving human oversight.",
+      "eventKey": "event-f3ab9758366e6461",
+      "contentFingerprint": "1f598ff3d580dcdf",
+      "riskLevel": "high",
+      "riskReasons": [
+        "high risk requires manual review",
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Sophos cuts threat investigation time by 96% with OpenAI Daybreak",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-61F702A0E4D56B76",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "Power your agents: Gemini 3.8 Live with Live Avatar is now generally available",
+      "canonicalUrl": "https://cloud.google.com/blog/products/ai-machine-learning/gemini-3-8-live-with-live-avatar-is-now-generally-available",
+      "publishedAt": "2026-09-24T15:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Following our </span><a href=\"https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-8-live-gemini-3-8-live-extended-thinking/\" rel=\"noopener\" target=\"_blank\"><span style=\"t",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Following our </span><a href=\"https://blog.google/innovation-and-ai/models-and-",
+      "eventKey": "event-c00eeed1cd5e3815",
+      "contentFingerprint": "5a879b14ae005d5d",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Power your agents: Gemini 3.8 Live with Live Avatar is now generally available",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-64C8CA9F455B3519",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Pollo AI turns creative ideas into campaigns with OpenAI",
+      "canonicalUrl": "https://openai.com/index/pollo-ai",
+      "publishedAt": "2026-10-08T12:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "With GPT-5.6, GPT-6 Astra, and GPT‑Image‑2.5, Pollo AI helps creators turn bold ideas into detailed images and cinematic video ads.",
+      "evidenceExcerpt": "With GPT-5.6, GPT-6 Astra, and GPT‑Image‑2.5, Pollo AI helps creators turn bold ideas into detailed images and cinematic video ads.",
+      "eventKey": "event-d701dbf9be7dcfb8",
+      "contentFingerprint": "bda235a6ccd0ddff",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Pollo AI turns creative ideas into campaigns with OpenAI",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-6C6B502972E8D8F0",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "A model guide for the GPT-6 family",
+      "canonicalUrl": "https://openai.com/index/practical-guide-building-gpt-6",
+      "publishedAt": "2026-10-02T16:15:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Learn how startups can choose GPT-6 models, tune reasoning effort, improve prompts and skills, coordinate tools, and prepare workflows for production.",
+      "evidenceExcerpt": "Learn how startups can choose GPT-6 models, tune reasoning effort, improve prompts and skills, coordinate tools, and prepare workflows for production.",
+      "eventKey": "event-a2f76e7126b88d9a",
+      "contentFingerprint": "cd1aca2ab7738233",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜A model guide for the GPT-6 family",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-7251FEA8DF946CF8",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "Welcome to Gemini at Work 2026: Introducing the Gemini agent",
+      "canonicalUrl": "https://cloud.google.com/blog/products/ai-machine-learning/welcome-to-gemini-at-work-2026",
+      "publishedAt": "2026-10-08T12:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"font-style: italic; vertical-align: baseline;\">Editor’s note: This article is adapted from Thomas Kurian’s keynote address at Gemini at Work 2026. It includes a number of announcements:</span></p> <ul> <li aria-level=\"1\" style",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"font-style: italic; vertical-align: baseline;\">Editor’s note: This article is adapted from Thomas Kurian’s",
+      "eventKey": "event-be4d7fae0f75785d",
+      "contentFingerprint": "9e316dd6c248488d",
+      "riskLevel": "medium",
+      "riskReasons": [
+        "medium risk requires manual review",
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Welcome to Gemini at Work 2026: Introducing the Gemini agent",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-740B8CCC147E5BB3",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Atlassian and OpenAI expand partnership to turn enterprise knowledge into action",
+      "canonicalUrl": "https://openai.com/index/atlassian-partnership",
+      "publishedAt": "2026-10-06T16:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Atlassian and OpenAI are expanding their partnership to connect frontier models with enterprise knowledge and help teams plan, build, and deliver work.",
+      "evidenceExcerpt": "Atlassian and OpenAI are expanding their partnership to connect frontier models with enterprise knowledge and help teams plan, build, and deliver work.",
+      "eventKey": "event-cb2d514122910bb0",
+      "contentFingerprint": "f073235c0ee68df1",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Atlassian and OpenAI expand partnership to turn enterprise knowledge into action",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-74FB427A936BCDBC",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "How Oracle turns days of work into minutes with ChatGPT and Codex",
+      "canonicalUrl": "https://openai.com/index/oracle",
+      "publishedAt": "2026-10-08T16:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Across recruiting, engineering, and operations, Oracle turns specialist knowledge into fast, repeatable workflows with ChatGPT Work and Codex.",
+      "evidenceExcerpt": "Across recruiting, engineering, and operations, Oracle turns specialist knowledge into fast, repeatable workflows with ChatGPT Work and Codex.",
+      "eventKey": "event-c420c4bc862e989d",
+      "contentFingerprint": "449ee487632bb481",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜How Oracle turns days of work into minutes with ChatGPT and Codex",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-78F4C0DFF1CA98EA",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Higgsfield takes AI video from 1 minute to over 10",
+      "canonicalUrl": "https://openai.com/index/higgsfield-longer-videos-voice",
+      "publishedAt": "2026-10-13T12:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Higgsfield brings creators longer videos with GPT-6 Astra, precise visuals with GPT-Image-2.5, and a path to voice filmmaking with GPT-Live.",
+      "evidenceExcerpt": "Higgsfield brings creators longer videos with GPT-6 Astra, precise visuals with GPT-Image-2.5, and a path to voice filmmaking with GPT-Live.",
+      "eventKey": "event-9bde2b5f9b0f384c",
+      "contentFingerprint": "6513d40e4e7d79b9",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Higgsfield takes AI video from 1 minute to over 10",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-83750C7BC5831303",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "Best practices guide for customizing Gemini models via Reinforcement Learning (RL)",
+      "canonicalUrl": "https://cloud.google.com/blog/topics/developers-practitioners/best-practices-guide-for-customizing-gemini-models",
+      "publishedAt": "2026-09-25T16:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Reinforcement learning (RL) has been a keystone of modern LLM post-training, but it demands large training clusters and access to model internals that external customers can't have with proprietary m",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Reinforcement learning (RL) has been a keystone of modern LLM post-training, bu",
+      "eventKey": "event-48413ba584993fa9",
+      "contentFingerprint": "b8ccc24853a3c12b",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Best practices guide for customizing Gemini models via Reinforcement Learning (RL)",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-88383E409AD0F42C",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "How Third Moment Research runs 10,000 agents for 36+ hours",
+      "canonicalUrl": "https://openai.com/index/third-moment-research",
+      "publishedAt": "2026-10-14T07:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "With GPT-6 Astra and GPT-6.1 Sol, Codex, and Daybreak for cybersecurity, this AI lab builds agents that focus for days and improve with use.",
+      "evidenceExcerpt": "With GPT-6 Astra and GPT-6.1 Sol, Codex, and Daybreak for cybersecurity, this AI lab builds agents that focus for days and improve with use.",
+      "eventKey": "event-407be7e0574d2de0",
+      "contentFingerprint": "afb039b6d637aba6",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜How Third Moment Research runs 10,000 agents for 36+ hours",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-895CF8191420BFE1",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "LegalOn halves Codex costs while maintaining development speed",
+      "canonicalUrl": "https://openai.com/index/legalon-halves-codex-costs",
+      "publishedAt": "2026-10-08T12:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "LegalOn cut estimated daily Codex costs by 65% while maintaining development speed. It matched Astra, Sol, and Luna to tasks and managed budgets strategically.",
+      "evidenceExcerpt": "LegalOn cut estimated daily Codex costs by 65% while maintaining development speed. It matched Astra, Sol, and Luna to tasks and managed budgets strategically.",
+      "eventKey": "event-4f4c1f0c91652fc0",
+      "contentFingerprint": "8015544d8bf826ae",
+      "riskLevel": "medium",
+      "riskReasons": [
+        "medium risk requires manual review",
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜LegalOn halves Codex costs while maintaining development speed",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-8C82EC9A3FF63AA2",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Introducing GPT-6.1 Sol",
+      "canonicalUrl": "https://openai.com/index/introducing-gpt-6-1-sol",
+      "publishedAt": "2026-09-29T10:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Meet GPT-6.1 Sol: near-Astra intelligence for coding, computer use, and professional work at one-fifth of Astra’s standard API input and output token prices.",
+      "evidenceExcerpt": "Meet GPT-6.1 Sol: near-Astra intelligence for coding, computer use, and professional work at one-fifth of Astra’s standard API input and output token prices.",
+      "eventKey": "event-92c85cc2e339361c",
+      "contentFingerprint": "6e12a1966328a3bd",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Introducing GPT-6.1 Sol",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-9037F00381069F0E",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "Google is a Leader in the 2026 Gartner® Magic Quadrant™ for Enterprise AI Assistants",
+      "canonicalUrl": "https://cloud.google.com/blog/products/ai-machine-learning/google-is-a-leader-in-2026-gartner-magic-quadrant-for-enterprise-ai-assistants",
+      "publishedAt": "2026-09-09T18:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">We are excited to share that Gartner has named Google a Leader in its inaugural </span><a href=\"https://cloud.google.com/resources/content/2026-gartner-magic-quadrant-enterprise-ai-assistants\"><span",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">We are excited to share that Gartner has named Google a Leader in its inaugural",
+      "eventKey": "event-0523cb2946c3cdf6",
+      "contentFingerprint": "62656043cd163a60",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Google is a Leader in the 2026 Gartner® Magic Quadrant™ for Enterprise AI Assistants",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-972F84F11777C0A9",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "Gemini 4 Argon available on Google Cloud, built to help solve your business’ hardest problems",
+      "canonicalUrl": "https://cloud.google.com/blog/products/ai-machine-learning/gemini-4-argon-available-on-google-cloud",
+      "publishedAt": "2026-10-13T16:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Last week we announced that Gemini Enterprise has evolved to make it even simpler to get work done, and introduced the </span><a href=\"https://cloud.google.com/blog/products/ai-machine-learning/welco",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Last week we announced that Gemini Enterprise has evolved to make it even simpl",
+      "eventKey": "event-fa670d994d1ce018",
+      "contentFingerprint": "180a6800025df986",
+      "riskLevel": "medium",
+      "riskReasons": [
+        "medium risk requires manual review",
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Gemini 4 Argon available on Google Cloud, built to help solve your business’ hardest problems",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-A61A09E35B8E3108",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Teaching students to think and learn through questions",
+      "canonicalUrl": "https://openai.com/index/teaching-students-to-think-and-learn-through-questions",
+      "publishedAt": "2026-10-15T13:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Celebrate Teachers’ Day with AI for Educators in Brazilian Portuguese and see how Study Mode can help teachers support active, step-by-step learning.",
+      "evidenceExcerpt": "Celebrate Teachers’ Day with AI for Educators in Brazilian Portuguese and see how Study Mode can help teachers support active, step-by-step learning.",
+      "eventKey": "event-ebe03385699c98d9",
+      "contentFingerprint": "07f7b31aeb764ac1",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Teaching students to think and learn through questions",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-A82CB7754DF79A6B",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Bringing GPT-Rosalind to academic research labs",
+      "canonicalUrl": "https://openai.com/index/introducing-the-rosalind-academic-plan",
+      "publishedAt": "2026-10-15T19:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Introducing the Rosalind Academic Plan, offering eligible academic labs sponsored access to GPT-Rosalind and tools to advance life sciences research.",
+      "evidenceExcerpt": "Introducing the Rosalind Academic Plan, offering eligible academic labs sponsored access to GPT-Rosalind and tools to advance life sciences research.",
+      "eventKey": "event-12300fbf2edb451b",
+      "contentFingerprint": "3cd80fc0ea8e3941",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Bringing GPT-Rosalind to academic research labs",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-A988BB4732E158D8",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Sharing AI progress in mathematics",
+      "canonicalUrl": "https://openai.com/index/sharing-ai-progress-in-mathematics",
+      "publishedAt": "2026-10-06T12:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "OpenAI publishes new results on open problems in mathematics from an internal frontier model and shares Lean proof formalizations and research details on GitHub.",
+      "evidenceExcerpt": "OpenAI publishes new results on open problems in mathematics from an internal frontier model and shares Lean proof formalizations and research details on GitHub",
+      "eventKey": "event-860f20181f2c3f14",
+      "contentFingerprint": "34e642214833ba8d",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Sharing AI progress in mathematics",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-AD7F47E1C37724B5",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "Predictable AI spend in BigQuery: Introducing cost management for generative AI functions",
+      "canonicalUrl": "https://cloud.google.com/blog/products/data-analytics/using-bigquerys-generative-ai-cost-management-features",
+      "publishedAt": "2026-10-14T16:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">The </span><a href=\"https://docs.cloud.google.com/bigquery/docs/generative-ai-overview\"><span style=\"text-decoration: underline; vertical-align: baseline;\">generative AI functions in BigQuery</span><",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">The </span><a href=\"https://docs.cloud.google.com/bigquery/docs/generative-ai-o",
+      "eventKey": "event-cbf65d5c6edf8117",
+      "contentFingerprint": "61800c87e2fbb4a0",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Predictable AI spend in BigQuery: Introducing cost management for generative AI functions",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-AFF8511B091CA4F1",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "What’s new in AI infrastructure and orchestration in September",
+      "canonicalUrl": "https://cloud.google.com/blog/topics/ai-infrastructure/whats-new-in-ai-infrastructure-this-month",
+      "publishedAt": "2026-09-30T16:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">We hereby declare September to be scalability month! As the world prepares for a surge of agentic fleets, we are shoring up our AI infrastructure and orchestration offerings to gracefully — and quick",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">We hereby declare September to be scalability month! As the world prepares for",
+      "eventKey": "event-c032f35481808d3d",
+      "contentFingerprint": "d5aaeb278d17b752",
+      "riskLevel": "high",
+      "riskReasons": [
+        "high risk requires manual review",
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜What’s new in AI infrastructure and orchestration in September",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-B0C8AED354355F28",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "What the Gemini agent means for startups",
+      "canonicalUrl": "https://cloud.google.com/blog/topics/startups/what-the-gemini-agent-means-for-startups",
+      "publishedAt": "2026-10-15T16:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Small teams, short runway, and constant pressure to ship faster — it’s the reality we see every day among the founders we work with at Google for Startups. When you are building a company from the gr",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Small teams, short runway, and constant pressure to ship faster — it’s the real",
+      "eventKey": "event-ebf73fca9043d174",
+      "contentFingerprint": "7bafb9da4d565826",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜What the Gemini agent means for startups",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-B283643B5D135F32",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "SentinelOne cuts malware analysis from weeks to hours",
+      "canonicalUrl": "https://openai.com/index/sentinelone",
+      "publishedAt": "2026-10-14T12:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "With OpenAI Daybreak, SentinelOne cuts weeks of malware analysis to hours, creating capacity to investigate more threats.",
+      "evidenceExcerpt": "With OpenAI Daybreak, SentinelOne cuts weeks of malware analysis to hours, creating capacity to investigate more threats.",
+      "eventKey": "event-c048fba8fb2cdbfc",
+      "contentFingerprint": "1f0981901525d23d",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜SentinelOne cuts malware analysis from weeks to hours",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-B373892BBBFCCB2F",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Advancing computer use with Ironclad",
+      "canonicalUrl": "https://openai.com/index/advancing-computer-use-with-ironclad",
+      "publishedAt": "2026-10-06T10:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Learn how OpenAI and Ironclad are training and evaluating AI agents on complex contracting workflows to advance computer use for professional work.",
+      "evidenceExcerpt": "Learn how OpenAI and Ironclad are training and evaluating AI agents on complex contracting workflows to advance computer use for professional work.",
+      "eventKey": "event-128264ec37f53d49",
+      "contentFingerprint": "e27fcb799bce7c73",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Advancing computer use with Ironclad",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-B8BBDB4DE6A66E67",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Radisson Hotel Group brings hotel discovery into ChatGPT",
+      "canonicalUrl": "https://openai.com/index/radisson",
+      "publishedAt": "2026-10-07T07:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Radisson partnered with Accenture to build a ChatGPT plugin using OpenAI technology, helping travelers find, compare, and book hotels while planning their trips.",
+      "evidenceExcerpt": "Radisson partnered with Accenture to build a ChatGPT plugin using OpenAI technology, helping travelers find, compare, and book hotels while planning their trips",
+      "eventKey": "event-bcdd87c3aa5dbe1b",
+      "contentFingerprint": "8b89cead5e7e50b2",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Radisson Hotel Group brings hotel discovery into ChatGPT",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-BA8B5946D84F966B",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "How Orange built FinOps accountability, and why agents are next",
+      "canonicalUrl": "https://cloud.google.com/blog/topics/telecommunications/how-orange-uses-agents-to-make-finops-everyones-responsibility",
+      "publishedAt": "2026-09-16T16:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">At </span><a href=\"https://cloud.google.com/customers/orange\"><span style=\"text-decoration: underline; vertical-align: baseline;\">Orange</span></a><span style=\"vertical-align: baseline;\">, the leadin",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">At </span><a href=\"https://cloud.google.com/customers/orange\"><span style=\"text",
+      "eventKey": "event-38f4b2397985c40b",
+      "contentFingerprint": "57a97e52705682fe",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜How Orange built FinOps accountability, and why agents are next",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-C23D9C8972271994",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "The Lenfest Institute grows landmark program with expanded OpenAI support",
+      "canonicalUrl": "https://openai.com/index/lenfest-ai-collaborative-expansion",
+      "publishedAt": "2026-09-28T07:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "OpenAI is expanding the Lenfest AI Collaborative and Fellowship Program with $5 million in funding and up to $5 million in software credits and engineering support.",
+      "evidenceExcerpt": "OpenAI is expanding the Lenfest AI Collaborative and Fellowship Program with $5 million in funding and up to $5 million in software credits and engineering supp",
+      "eventKey": "event-9cfeed026ebaab8b",
+      "contentFingerprint": "38358425b7916069",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜The Lenfest Institute grows landmark program with expanded OpenAI support",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-C388CD4130CE37B2",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "How KDDI built Buffmee, a faster, reliable consumer RAG app",
+      "canonicalUrl": "https://cloud.google.com/blog/topics/customers/how-kddi-optimized-rag-performance-with-agent-development-kit",
+      "publishedAt": "2026-09-08T16:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">When building consumer-facing generative AI applications, balancing high generation quality with fast response times across diverse media types, can be challenging. KDDI, a major telecommunications c",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">When building consumer-facing generative AI applications, balancing high genera",
+      "eventKey": "event-a9cfa2154a8fcbe1",
+      "contentFingerprint": "f0efd6128bffe701",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜How KDDI built Buffmee, a faster, reliable consumer RAG app",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-C8E46CF77F1C9894",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "How we will do better for Australia",
+      "canonicalUrl": "https://openai.com/index/how-we-will-do-better-for-australia",
+      "publishedAt": "2026-09-28T19:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "OpenAI apologises for incidents involving Australian government websites and outlines stronger safeguards and support to strengthen Australia’s cyber defences.",
+      "evidenceExcerpt": "OpenAI apologises for incidents involving Australian government websites and outlines stronger safeguards and support to strengthen Australia’s cyber defences.",
+      "eventKey": "event-279e1d2902189c3c",
+      "contentFingerprint": "35267e55fe3eff65",
+      "riskLevel": "high",
+      "riskReasons": [
+        "high risk requires manual review",
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜How we will do better for Australia",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-D090CF437EC1AC6B",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Towards safety cases for frontier AI training",
+      "canonicalUrl": "https://openai.com/index/towards-safety-cases-for-frontier-ai-training",
+      "publishedAt": "2026-09-28T19:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Our early guidelines for safety cases in frontier AI training cover technical safeguards, operational practices, and investigating misalignment incidents",
+      "evidenceExcerpt": "Our early guidelines for safety cases in frontier AI training cover technical safeguards, operational practices, and investigating misalignment incidents",
+      "eventKey": "event-ccb1aae68cdc9b31",
+      "contentFingerprint": "c7925656267c5508",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Towards safety cases for frontier AI training",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-D2D4EB86E56213A8",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "How Albertsons Companies is reimagining retail from the inside out",
+      "canonicalUrl": "https://openai.com/index/albertsons-reimagining-retail",
+      "publishedAt": "2026-10-01T16:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Albertsons Cos. is using ChatGPT Enterprise and the OpenAI API to help teams work faster and make grocery shopping easier for millions of customers.",
+      "evidenceExcerpt": "Albertsons Cos. is using ChatGPT Enterprise and the OpenAI API to help teams work faster and make grocery shopping easier for millions of customers.",
+      "eventKey": "event-b672038005ee8a1b",
+      "contentFingerprint": "8b029fc9190dd811",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜How Albertsons Companies is reimagining retail from the inside out",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-D7672C91A209EE10",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Sullivan & Cromwell brings legal expertise into agreement review",
+      "canonicalUrl": "https://openai.com/index/sullivan-cromwell",
+      "publishedAt": "2026-10-15T00:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "In collaboration with OpenAI, Sullivan & Cromwell developed Agreement Analyzer, an AI tool for identifying issues in a draft agreement.",
+      "evidenceExcerpt": "In collaboration with OpenAI, Sullivan & Cromwell developed Agreement Analyzer, an AI tool for identifying issues in a draft agreement.",
+      "eventKey": "event-3bdd6f01a5bf90c2",
+      "contentFingerprint": "2d39fbdf20e9ccc4",
+      "riskLevel": "high",
+      "riskReasons": [
+        "high risk requires manual review",
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Sullivan & Cromwell brings legal expertise into agreement review",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-D861130D6BB0ABF3",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "Architecting autonomy: A design pattern for high-compute, governed agents in biotech",
+      "canonicalUrl": "https://cloud.google.com/blog/topics/healthcare-life-sciences/architecting-scalable-agentic-biotech-workloads",
+      "publishedAt": "2026-10-16T16:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p style=\"text-align: justify;\"><span style=\"vertical-align: baseline;\">In production systems today, most AI agents operate as lightweight dispatchers. They parse a prompt, make an API call, retrieve a record, and hand back control. Their exe",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p style=\"text-align: justify;\"><span style=\"vertical-align: baseline;\">In production systems today, most AI agents operat",
+      "eventKey": "event-223619cec7b9aa29",
+      "contentFingerprint": "79933190b91e14ec",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Architecting autonomy: A design pattern for high-compute, governed agents in biotech",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-DAC1697796E8AEB0",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Our approach to EU text provenance rules",
+      "canonicalUrl": "https://openai.com/index/eu-text-provenance",
+      "publishedAt": "2026-10-05T15:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "How OpenAI is approaching text watermarking under EU rules. Learn where watermarks apply, how detection works, and why access starts with researchers.",
+      "evidenceExcerpt": "How OpenAI is approaching text watermarking under EU rules. Learn where watermarks apply, how detection works, and why access starts with researchers.",
+      "eventKey": "event-c63de72ed02d1c05",
+      "contentFingerprint": "8f73c3eb5271285b",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Our approach to EU text provenance rules",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-E028821B787A2848",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "GPT-6 and Intelligent UI for everyone",
+      "canonicalUrl": "https://openai.com/index/gpt-6-for-everyone",
+      "publishedAt": "2026-10-07T00:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "GPT‑6 is rolling out globally in ChatGPT with Intelligent UI, delivering faster responses with visuals and interactive experiences you can explore and use directly.",
+      "evidenceExcerpt": "GPT‑6 is rolling out globally in ChatGPT with Intelligent UI, delivering faster responses with visuals and interactive experiences you can explore and use direc",
+      "eventKey": "event-22431f52e76ee5ab",
+      "contentFingerprint": "f298a56e61988f0f",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜GPT-6 and Intelligent UI for everyone",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-E77EB370F17F4894",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "Disrupting a coordinated model-distillation campaign",
+      "canonicalUrl": "https://openai.com/index/disrupting-a-coordinated-model-distillation-campaign",
+      "publishedAt": "2026-09-30T10:30:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Learn how OpenAI disrupted a campaign to extract protected model reasoning and is strengthening defenses against adversarial distillation.",
+      "evidenceExcerpt": "Learn how OpenAI disrupted a campaign to extract protected model reasoning and is strengthening defenses against adversarial distillation.",
+      "eventKey": "event-1d25509d62b548a9",
+      "contentFingerprint": "d5f4f895268a6b50",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Disrupting a coordinated model-distillation campaign",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-E9DCA04E335CEC76",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "How Jump Trading is scaling quant research with ChatGPT",
+      "canonicalUrl": "https://openai.com/index/jump-trading",
+      "publishedAt": "2026-10-06T12:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Jump Trading uses OpenAI to expand quantitative research. See how longer-running AI workflows combine multiple data sources with human review.",
+      "evidenceExcerpt": "Jump Trading uses OpenAI to expand quantitative research. See how longer-running AI workflows combine multiple data sources with human review.",
+      "eventKey": "event-b49a80358ea47db9",
+      "contentFingerprint": "38a56e30a271ff7c",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜How Jump Trading is scaling quant research with ChatGPT",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-F12E3DB3A30988E2",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "How Block is building AI-powered security with OpenAI technology",
+      "canonicalUrl": "https://openai.com/index/block-ai-powered-security",
+      "publishedAt": "2026-10-14T07:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Block is building AI-powered security with OpenAI. Its security team investigates threats faster and proposes patches in minutes.",
+      "evidenceExcerpt": "Block is building AI-powered security with OpenAI. Its security team investigates threats faster and proposes patches in minutes.",
+      "eventKey": "event-e0f5850d1847533d",
+      "contentFingerprint": "cc3a45305fa649f5",
+      "riskLevel": "high",
+      "riskReasons": [
+        "high risk requires manual review",
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜How Block is building AI-powered security with OpenAI technology",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-F3DFAA4BE9CAC494",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "Innovation in Ireland: How Irish brands scale with Gemini Enterprise",
+      "canonicalUrl": "https://cloud.google.com/blog/topics/customers/ireland-innovation-companies-startups-governments-scale-with-gemini",
+      "publishedAt": "2026-10-08T12:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">In recent decades, Ireland has grown into a vibrant hub for global technology. As modernization accelerates, Irish organizations — spanning government agencies, established enterprise brands, and gro",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">In recent decades, Ireland has grown into a vibrant hub for global technology.",
+      "eventKey": "event-0aca4768c9cb4144",
+      "contentFingerprint": "c2409d7d7d506705",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Innovation in Ireland: How Irish brands scale with Gemini Enterprise",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-F51151FF2DE7F9EE",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "How growing Latin American midsize businesses are building in the AI era",
+      "canonicalUrl": "https://cloud.google.com/blog/topics/customers/how-midsize-latam-companies-build-with-ai",
+      "publishedAt": "2026-09-24T14:30:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Latin America’s small and medium-sized businesses are the heartbeat of the region's economy — accounting for more than </span><a href=\"https://www.undp.org/latin-america/blog/yes-there-hope-msmes-reg",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Latin America’s small and medium-sized businesses are the heartbeat of the regi",
+      "eventKey": "event-b4de5a00f914be52",
+      "contentFingerprint": "ad9288d4fc62a090",
+      "riskLevel": "medium",
+      "riskReasons": [
+        "medium risk requires manual review",
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜How growing Latin American midsize businesses are building in the AI era",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-F86C38F2A67DB9A0",
+      "sourceId": "google-cloud-ai-blog",
+      "sourceName": "AI & Machine Learning",
+      "originalTitle": "Empower your agents with the Google Cloud CLI remote MCP server",
+      "canonicalUrl": "https://cloud.google.com/blog/products/ai-machine-learning/google-cloud-cli-remote-mcp-server-in-preview",
+      "publishedAt": "2026-09-30T16:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Today, we’re expanding our ecosystem of managed remote MCP servers by introducing the </span><a href=\"https://docs.cloud.google.com/sdk/use-gcloud-mcp\"><span style=\"text-decoration: underline; vertic",
+      "evidenceExcerpt": "<div class=\"block-paragraph_advanced\"><p><span style=\"vertical-align: baseline;\">Today, we’re expanding our ecosystem of managed remote MCP servers by introduci",
+      "eventKey": "event-9da76427ae7ff79f",
+      "contentFingerprint": "dbbff3fbf4115031",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜Empower your agents with the Google Cloud CLI remote MCP server",
+        "summaryZh": "Google Cloud AI & Machine Learning Blog 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-FCD8F7A8BBD7C3DD",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "The EU’s next chapter in AI is agentic",
+      "canonicalUrl": "https://openai.com/index/the-eus-next-chapter-in-ai-is-agentic",
+      "publishedAt": "2026-10-14T00:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "New analysis shows how agentic AI adoption is growing across EU enterprises and small businesses—and where deeper use could unlock more value.",
+      "evidenceExcerpt": "New analysis shows how agentic AI adoption is growing across EU enterprises and small businesses—and where deeper use could unlock more value.",
+      "eventKey": "event-d9ec7db2c254a292",
+      "contentFingerprint": "38238794584a98ae",
+      "riskLevel": "low",
+      "riskReasons": [
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜The EU’s next chapter in AI is agentic",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    },
+    {
+      "candidateId": "ED-FE8C0FEE0A87E1C8",
+      "sourceId": "openai-news-rss",
+      "sourceName": "OpenAI News",
+      "originalTitle": "DevDay 2026 Recap",
+      "canonicalUrl": "https://openai.com/index/devday-2026-recap",
+      "publishedAt": "2026-09-29T10:00:00.000Z",
+      "fetchedAt": "2026-10-19T01:31:11.479Z",
+      "sourceSummary": "Explore more than 20 announcements from OpenAI DevDay 2026, including GPT-6 Astra, ChatGPT, Codex, APIs, security, and new tools for builders.",
+      "evidenceExcerpt": "Explore more than 20 announcements from OpenAI DevDay 2026, including GPT-6 Astra, ChatGPT, Codex, APIs, security, and new tools for builders.",
+      "eventKey": "event-ecd8f1cc2827c799",
+      "contentFingerprint": "98a0a79a35638df0",
+      "riskLevel": "high",
+      "riskReasons": [
+        "high risk requires manual review",
+        "automatic publishing is disabled",
+        "publishing stop switch is engaged"
+      ],
+      "editorialDraft": {
+        "mode": "deterministic_fallback",
+        "fallbackReason": "ai_not_configured",
+        "titleZh": "待核实候选｜DevDay 2026 Recap",
+        "summaryZh": "OpenAI News RSS 提供了这条更新线索。当前仅保留来源元数据与短摘录，需人工核验原文；正文不足以支持完整讲解的部分仍待核实。",
+        "whyItMattersZh": "待核实：这项变化解决什么问题、如何工作，现有短摘录尚不足以说明。",
+        "salesImplicationZh": "待核实：尚不能据此判断具体行业、客户业务影响或实际采用效果。",
+        "roleOrgImplicationZh": "待核实：岗位与组织影响、所需条件和适用边界尚缺少依据。",
+        "nextActionZh": "理解自测：这条短摘录能证明客户已经取得业务效果吗？参考解释：不能；还需核对原文、事实依据及其适用条件。"
+      },
+      "reviewState": "pending_owner_review",
+      "publicationState": "not_published"
+    }
+  ],
+  "manualReviewRecords": []
+}
